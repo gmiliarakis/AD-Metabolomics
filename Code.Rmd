@@ -1,0 +1,524 @@
+---
+title: "Thesis.GM.ADmetabolites.Code"
+output: html.notebook
+editor.options: 
+  chunk.output.type: console
+---
+
+## Package installation and loading
+
+```{r}
+##Packages (install and invoke)
+pkgs <- rownames(installed.packages())
+if(!"caret" %in% pkgs) install.packages("caret")
+if(!"rags2ridges" %in% pkgs) install.packages("rags2ridges")
+if(!"leaps" %in% pkgs) install.packages("leaps")
+if(!"car" %in% pkgs) install.packages("car")
+if(!"pls" %in% pkgs) install.packages("pls")
+if(!"MASS" %in% pkgs) install.packages("MASS")
+if(!"ISLR" %in% pkgs) install.packages("ISLR")
+if(!"glmnet" %in% pkgs) install.packages("glmnet")
+if(!"plotmo" %in% pkgs) install.packages("plotmo")
+if(!"tree" %in% pkgs) install.packages("tree")
+if(!"randomForest" %in% pkgs) install.packages("randomForest")
+if(!"finalfit" %in% pkgs) install.packages("finalfit")
+if(!"pROC" %in% pkgs) install.packages("pROC")
+if(!"caTools" %in% pkgs) install.packages("caTools")
+if(!"neuralnet" %in% pkgs) install.packages("neuralnet")
+
+
+##Load library
+library(caret)
+library(dplyr)
+library(rags2ridges)
+library(leaps)
+library(car)
+library(pls)
+library(glmnet)
+library(plotmo)
+library(tree)
+library(randomForest)
+library(MASS)
+library(ISLR)
+library(finalfit)
+library(caTools)
+library(Metrics)
+library(FMradio)
+library(neuralnet)
+```
+
+## Data loading
+
+```{r}
+##Invoke data, get to know objects
+data(ADdata)
+objects()
+```
+
+## Data preparation
+
+```{r}
+##Replace values of ApoEClass with 0 and 1 to facilitate machine learning
+y <- as.character(sampleInfo$ApoEClass)
+y <- replace(y, y == 'Class 1',0)
+y <- replace(y, y == 'Class 2',1)
+y <- as.factor(y)
+```
+
+## Data preparation for modelling
+
+```{r}
+X <- as.matrix(scale(t(ADmetabolites)))
+```
+
+```{r}
+df <- cbind.data.frame(X,y)
+seed <- 5
+```
+
+## Ridge Logistic Regression
+
+```{r}
+#Find the lambda that minimizes the CV error
+set.seed(seed)
+ridge.cv <- cv.glmnet(X, y, nfolds = 10,family='binomial', alpha=0, type.measure = "class")
+plot(ridge.cv)
+ridge.lambda <- ridge.cv$lambda.min
+
+```
+
+```{r}
+#Use 10-fold CV to assess model performance
+
+#Generate a shuffled sequence of row indices
+nfolds <- 10
+
+#Generate shuffled indices for the entire dataset
+folds <- split(sample(nrow(df)), 1:nfolds)
+
+#here we'll store the classification metrics for each fold
+ridge.KfoldAccuracies <- numeric(nfolds)
+ridge.KfoldPrecision <- numeric(nfolds)
+ridge.KfoldRecall <- numeric(nfolds)
+ridge.KfoldF1 <- numeric(nfolds)
+ridge.KfoldAuc <- numeric(nfolds)
+
+set.seed(seed)
+#the outer for loop is across the folds
+for(i in 1:nfolds) {  
+  #we select the objects that are to be left out in this iteration
+  outofbag <- folds[[i]]
+  #out of the training set
+  train <- df[-outofbag,]
+  X.train <- train[,-231]
+  
+  #and into the test set
+  test <- df[outofbag,]
+  X.test <- test[,-231]
+  
+  #Fit a logistic regression model with ridge penalty (alpha=0)
+  ridge <- glmnet(X.train, train$y, family='binomial', alpha=0)
+  
+  #Predict probabilities for the test data using the selected lambda
+  yhat.ridge <- as.numeric(predict(ridge, newx= as.matrix(X.test), s=ridge.lambda, type='class'))
+  
+  #Obtain predictions for test observations
+  ridge.KfoldAccuracies[i] <- mean(yhat.ridge == test$y) #Classification accuracy
+  
+  ##Create a confusion matrix
+  #confusion.matrix <- table(Actual=test$y, Predicted=yhat.ridge)
+  #
+  ##Print the confusion matrix
+  #print(confusion.matrix)
+  #
+  ##Create ROC object
+  #roc.ridge <- roc(as.factor(test$y), yhat.ridge)
+  #plot(roc.ridge,  xlim= c(1,0),legacy.axes=TRUE, asp=0.5)
+  
+  #Calculate precision
+  test$y <- as.numeric(test$y) -1
+  ridge.KfoldPrecision[i] <- precision(test$y, yhat.ridge)
+  
+  #Calculate recall
+  ridge.KfoldRecall[i] <- recall(test$y, yhat.ridge)
+  
+  #Calculate F1-score
+  ridge.KfoldF1[i] <- f1(test$y, yhat.ridge)
+  
+  #Calculate Area under the ROC (AUC)
+  ridge.KfoldAuc[i] <- pROC::auc(test$y, yhat.ridge)
+}
+
+#hist(ridge.KfoldAccuracies)
+ridge.accuracy <- mean(ridge.KfoldAccuracies)
+#hist(ridge.KfoldPrecision)
+ridge.precision <- mean(ridge.KfoldPrecision)
+#hist(ridge.KfoldRecall)
+ridge.recall <- mean(ridge.KfoldRecall)
+#hist(ridge.KfoldF1)
+ridge.f1 <- mean(ridge.KfoldF1)
+#hist(ridge.KfoldAuc)
+ridge.auc <- mean(ridge.KfoldAuc)
+```
+
+## Lasso Logistic Regression model
+
+```{r}
+#Use CV to find the best lambda
+set.seed(seed)
+lasso.cv <- cv.glmnet(X, y, nfolds = 10,family='binomial', alpha=1, type.measure = "class")
+plot(lasso.cv)
+lasso.lambda <- lasso.cv$lambda.min
+```
+
+```{r}
+#Generate a shuffled sequence of row indices
+nfolds <- 10
+
+#Generate shuffled indices for the entire dataset
+folds <- split(sample(nrow(df)), 1:nfolds)
+
+#here we'll store the classification metrics for each fold
+lasso.KfoldAccuracies <- numeric(nfolds)
+lasso.KfoldPrecision <- numeric(nfolds)
+lasso.KfoldRecall <- numeric(nfolds)
+lasso.KfoldF1 <- numeric(nfolds)
+lasso.KfoldAuc <- numeric(nfolds)
+
+#the outer for loop is across the folds
+for(i in 1:nfolds) {  
+  #we select the objects that are to be left out in this iteration
+  outofbag <- folds[[i]]
+  #out of the training set
+  train <- df[-outofbag,]
+  X.train <- train[,-231]
+  #and into the test set
+  test <- df[outofbag,]
+  X.test <- test[,-231]
+  
+  #Fit a logistic regression model with LASSO penalties (alpha=1)
+  lasso <- glmnet(X.train, train$y, family='binomial', alpha=1)
+  
+  #Predict probabilities for the test data using the selected lambda
+  yhat.lasso <- as.numeric(predict(lasso, newx= as.matrix(X.test), s=lasso.lambda, type='response'))
+  yhat.lasso <- ifelse(yhat.lasso >= 0.5, 1, 0)
+  
+  #Obtain predictions for test observations
+  lasso.KfoldAccuracies[i] <- mean(yhat.lasso == test$y) #Classification accuracy
+  
+  test$y <- as.numeric(test$y) -1
+  
+  #Calculate precision
+  lasso.KfoldPrecision[i] <- precision(test$y, yhat.lasso)
+  
+  #Calculate recall
+  lasso.KfoldRecall[i] <- recall(test$y, yhat.lasso)
+  
+  #Calculate F1-score
+  lasso.KfoldF1[i] <- f1(test$y, yhat.lasso)
+  
+  #Calculate Area under the ROC (AUC)
+  lasso.KfoldAuc[i] <- pROC::auc(test$y, yhat.lasso)
+}
+
+#hist(lasso.KfoldAccuracies)
+lasso.accuracy <- mean(lasso.KfoldAccuracies)
+#hist(lasso.KfoldPrecision)
+lasso.precision <- mean(lasso.KfoldPrecision)
+#hist(lasso.KfoldRecall)
+lasso.recall <- mean(lasso.KfoldRecall)
+#hist(lasso.KfoldF1)
+lasso.f1 <- mean(lasso.KfoldF1)
+#hist(lasso.KfoldAuc)
+lasso.auc <- mean(lasso.KfoldAuc)
+```
+
+## Elastic net Logistic Regression
+
+```{r}
+#Fit a logistic regression model with Elastic Net (alpha=0.3)
+#net.model <- glmnet(X.train, y.train, family='binomial', alpha=0.3)
+
+#Find the lambda value that minimizes the CV error for Elastic Net
+net.cv <- cv.glmnet(X, y, family='binomial', alpha=0.3, type.measure = "class")
+net.lambda <- net.cv$lambda.min
+
+#here we'll store the classification metrics for each fold
+net.KfoldAccuracies <- numeric(nfolds)
+net.KfoldPrecision <- numeric(nfolds)
+net.KfoldRecall <- numeric(nfolds)
+net.KfoldF1 <- numeric(nfolds)
+net.KfoldAuc <- numeric(nfolds)
+
+#the outer for loop is across the folds
+for(i in 1:nfolds) {  
+  #we select the objects that are to be left out in this iteration
+  outofbag <- folds[[i]]
+  #out of the training set
+  train <- df[-outofbag,]
+  X.train <- train[,-231]
+  #and into the test set
+  test <- df[outofbag,]
+  X.test <- test[,-231]
+  
+  #Fit a logistic regression model with glmnet using elastic net penalties (mix of L1 and L2) (alpha=0.3)
+  net <- glmnet(X.train, train$y, family='binomial', alpha=0.3)
+  
+  #Predict probabilities for the test data using the selected lambda
+  yhat.net <- as.numeric(predict(net, newx= as.matrix(X.test), s=net.lambda, type='class'))
+  
+  #Obtain predictions for test observations
+  net.KfoldAccuracies[i] <- mean(yhat.net == test$y) #Classification accuracy
+  
+  test$y <- as.numeric(test$y) -1
+  #Calculate precision
+  net.KfoldPrecision[i] <- precision(test$y, yhat.net)
+  
+  #Calculate recall
+  net.KfoldRecall[i] <- recall(test$y, yhat.net)
+  
+  #Calculate F1-score
+  net.KfoldF1[i] <- f1(test$y, yhat.net)
+  
+  #Calculate Area under the ROC (AUC)
+  net.KfoldAuc[i] <- pROC::auc(test$y, yhat.net)
+}
+
+#hist(net.KfoldAccuracies)
+net.accuracy <- mean(net.KfoldAccuracies)
+#hist(net.KfoldPrecision)
+net.precision <- mean(net.KfoldPrecision)
+#hist(net.KfoldRecall)
+net.recall <- mean(net.KfoldRecall)
+#hist(net.KfoldF1)
+net.f1 <- mean(net.KfoldF1)
+#hist(net.KfoldAuc)
+net.auc <- mean(net.KfoldAuc)
+```
+
+## Decision Tree
+
+```{r}
+#df <- data.frame(df)
+#dtree <- tree(y~., data =df)
+#tree.cv <-cv.tree(dtree, FUN= prune.misclass, rand =c(40,87))
+
+#here we'll store the classification metrics for each fold
+tree.KfoldAccuracies <- numeric(nfolds)
+tree.KfoldPrecision <- numeric(nfolds)
+tree.KfoldRecall <- numeric(nfolds)
+tree.KfoldF1 <- numeric(nfolds)
+tree.KfoldAuc <- numeric(nfolds)
+
+#the outer for loop is across the folds
+for(i in 1:nfolds) {  
+  #we select the objects that are to be left out in this iteration
+  outofbag <- folds[[i]]
+  #out of the training set
+  train <- df[-outofbag,]
+  #and into the test set
+  test <- df[outofbag,]
+  
+  #Fit a decision tree 
+  train$y <- as.factor(train$y)
+  tree <- tree(y~., data =train)
+  
+  #Predict probabilities for the test data using the selected lambda
+  test$y <- as.numeric(test$y)-1
+  yhat.tree <- predict(tree, newdata=test, type= 'class')
+  
+  #Obtain predictions for test observations
+  yhat.tree.n <- as.numeric(yhat.tree)-1
+  tree.KfoldAccuracies[i] <- mean(yhat.tree == test$y) #Classification accuracy
+  
+  #Calculate precision
+  tree.KfoldPrecision[i] <- precision(test$y, yhat.tree.n)
+  
+  #Calculate recall
+  tree.KfoldRecall[i] <- recall(test$y, yhat.tree.n)
+  
+  #Calculate F1-score
+  tree.KfoldF1[i] <- f1(test$y, yhat.tree.n)
+  
+  #Calculate Area under the ROC (AUC)
+  tree.KfoldAuc[i] <- pROC::auc(test$y, yhat.tree.n)
+}
+
+#hist(tree.KfoldAccuracies)
+tree.accuracy <- mean(tree.KfoldAccuracies)
+#hist(tree.KfoldPrecision)
+tree.precision <- mean(tree.KfoldPrecision)
+#hist(tree.KfoldRecall)
+tree.recall <- mean(tree.KfoldRecall)
+#hist(tree.KfoldF1)
+tree.f1 <- mean(tree.KfoldF1)
+#hist(tree.KfoldAuc)
+tree.auc <- mean(tree.KfoldAuc)
+```
+
+```{r}
+dtree <- tree(y~. -y, data =df)
+summary(dtree)
+plot(dtree)
+text(dtree)
+```
+
+## Random Forest
+
+```{r}
+library(caret)
+customRF <- list(type = "Classification",
+                 library = "randomForest",
+                 loop = NULL)
+
+customRF$parameters <- data.frame(parameter = c("mtry", "ntree"),
+                                  class = rep("numeric", 2),
+                                  label = c("mtry", "ntree"))
+
+customRF$grid <- function(x, y, len = NULL, search = "grid") {}
+
+customRF$fit <- function(x, y, wts, param, lev, last, weights, classProbs) {
+  randomForest(x, y,
+               mtry = param$mtry,
+               ntree=param$ntree)
+}
+
+#Predict label
+customRF$predict <- function(modelFit, newdata, preProc = NULL, submodels = NULL)
+   predict(modelFit, newdata)
+
+#Predict prob
+customRF$prob <- function(modelFit, newdata, preProc = NULL, submodels = NULL)
+   predict(modelFit, newdata, type = "prob")
+
+customRF$sort <- function(x) x[order(x[,1]),]
+customRF$levels <- function(x) x$classes
+```
+
+```{r}
+
+control <- trainControl(method="repeatedcv", 
+                        number=10, 
+                        repeats=3,
+                        allowParallel = TRUE)
+
+tunegrid <- expand.grid(.mtry=c(15,230),.ntree=c(150,2300))
+
+set.seed(123)
+
+custom <- train(y~., data=df, 
+                method=customRF, 
+                metric='Accuracy', 
+                tuneGrid=tunegrid, 
+                trControl=control)
+
+summary(custom)
+
+```
+
+```{r}
+nfolds <- 10
+#here we'll store the classification metrics for each fold
+rf.KfoldAccuracies <- numeric(nfolds)
+rf.KfoldPrecision <- numeric(nfolds)
+rf.KfoldRecall <- numeric(nfolds)
+rf.KfoldF1 <- numeric(nfolds)
+rf.KfoldAuc <- numeric(nfolds)
+
+#the outer for loop is across the folds
+for(i in 1:nfolds) {  
+  #we select the objects that are to be left out in this iteration
+  outofbag <- folds[[i]]
+  #out of the training set
+  train <- df[-outofbag,]
+  train$y <- as.factor(train$y)
+  #and into the test set
+  test <- df[outofbag,]
+  
+  #Fit a Random Forest (RF)
+  rf <- randomForest(y~., data= train, test= test,ntree = 2300, mtry=230)
+  
+  #Predict probabilities for the test data using the selected lambda
+  yhat.rf <- predict(rf, newdata=test)
+  
+  #Obtain predictions for test observations
+  rf.KfoldAccuracies[i] <- mean(yhat.rf == test$y) #Classification accuracy
+  
+  #Calculate precision
+  test$y <- as.numeric(test$y)-1
+  yhat.rf <- as.numeric(yhat.rf)-1
+  rf.KfoldPrecision[i] <- precision(test$y, yhat.rf)
+  
+  #Calculate recall
+  rf.KfoldRecall[i] <- recall(test$y, yhat.rf)
+  
+  #Calculate F1-score
+  rf.KfoldF1[i] <- f1(test$y, yhat.rf)
+  
+  
+  #Calculate Area under the ROC (AUC)
+  rf.KfoldAuc[i] <- pROC::auc(test$y, yhat.rf)
+}
+
+#hist(rf.KfoldAccuracies)
+rf.accuracy <- mean(rf.KfoldAccuracies)
+#hist(rf.KfoldPrecision)
+rf.precision <- mean(rf.KfoldPrecision)
+#hist(rf.KfoldRecall)
+rf.recall <- mean(rf.KfoldRecall)
+#hist(rf.KfoldF1)
+rf.f1 <- mean(rf.KfoldF1)
+#hist(rf.KfoldAuc)
+rf.auc <- mean(rf.KfoldAuc)
+```
+
+```{r}
+library(neuralnet)
+#Fit a shallow neural network
+split <- sample.split(df$y, SplitRatio = 2/3)
+train <- subset(df, split == "TRUE") 
+test <- subset(df, split == "FALSE") 
+nn <- neuralnet(y~., train, 
+                    hidden=1, 
+                    threshold = 0.01, 
+                    stepmax= 1e+07, 
+                    rep=1, 
+                    algorithm = "rprop+",
+                    err.fct = 'sse',
+                    likelihood = T,
+                linear.output = F)
+
+yhat.nn <- compute(nn, test)$net.result[,-2]
+yhat.nn <- ifelse(yhat.nn >= 0.5, 1, 0)
+
+nn.accuracy <- accuracy(test$y, yhat.nn)
+
+#Calculate precision
+test$y <- as.numeric(test$y)-1
+
+nn.precision <- precision(test$y, yhat.nn)
+
+#Calculate recall
+nn.recall <- recall(test$y, yhat.nn)
+
+#Calculate F1-score
+nn.f1 <- f1(test$y, yhat.nn)
+
+#Calculate Area under the ROC (AUC)
+nn.auc <- pROC::auc(test$y, yhat.nn)
+```
+
+```{r}
+#Create a data frame to store the metrics
+model.metrics <- data.frame(
+  Model = c("Lasso", "Ridge", "Elastic Net", "Decision Tree", "Random Forest", 'Neural Network'),
+  Accuracy = c(lasso.accuracy,ridge.accuracy,net.accuracy,tree.accuracy,rf.accuracy,nn.accuracy),
+  Precision = c(lasso.precision, ridge.precision, net.precision, tree.precision, rf.precision, nn.precision),
+  Recall = c(lasso.recall, ridge.recall, net.recall, tree.recall, rf.recall,nn.recall),
+  F1.Score = c(lasso.f1, ridge.f1, net.f1, tree.f1, rf.f1,nn.f1),
+  AUC = c(lasso.auc, ridge.auc, net.auc, tree.auc, rf.auc, nn.auc)
+)
+
+#Display the table of metrics
+print(model.metrics)
+```
