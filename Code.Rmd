@@ -24,7 +24,6 @@ if(!"randomForest" %in% pkgs) install.packages("randomForest")
 if(!"finalfit" %in% pkgs) install.packages("finalfit")
 if(!"pROC" %in% pkgs) install.packages("pROC")
 if(!"caTools" %in% pkgs) install.packages("caTools")
-if(!"neuralnet" %in% pkgs) install.packages("neuralnet")
 
 
 ##Load library
@@ -44,7 +43,6 @@ library(finalfit)
 library(caTools)
 library(Metrics)
 library(FMradio)
-library(neuralnet)
 ```
 
 ## Data loading
@@ -73,7 +71,47 @@ X <- as.matrix(scale(t(ADmetabolites)))
 
 ```{r}
 df <- cbind.data.frame(X,y)
-seed <- 5
+```
+
+Projection to Latent Structures
+
+```{r}
+seed <- 1
+set.seed(seed)
+cov <- cor(X)
+
+#Find redundant features
+filter <- RF(cov)
+
+#Filter out redundant features
+filtered <- subSet(X, filter)
+
+#Regularized correlation matrix estimation
+M <- regcor(filtered)
+```
+
+```{r}
+#Get the regularized correlation matrix of the filtered dataset
+R <- M$optCor
+
+#Get the Guttman bounds for R
+Guttman.bounds <- dimGB(R)
+```
+
+```{r}
+#Perform a Maximum Likelihood (ML) Factor Analysis of 84
+mlfa <- mlFA(R, m=84)
+thomson <- facScore(filtered,mlfa$Loadings,mlfa$Uniqueness)
+```
+
+```{r}
+X <- as.matrix(thomson)
+```
+
+## Data preparation for modelling
+
+```{r}
+df <- cbind.data.frame(X,y)
 ```
 
 ## Ridge Logistic Regression
