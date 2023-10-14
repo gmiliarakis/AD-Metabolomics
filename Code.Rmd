@@ -9,31 +9,33 @@ editor.options:
 
 ```{r}
 ##Packages (install and invoke)
-pkgs <- rownames(installed.packages())
-if(!"caret" %in% pkgs) install.packages("caret")
-if(!"rags2ridges" %in% pkgs) install.packages("rags2ridges")
-if(!"leaps" %in% pkgs) install.packages("leaps")
-if(!"car" %in% pkgs) install.packages("car")
-if(!"pls" %in% pkgs) install.packages("pls")
-if(!"MASS" %in% pkgs) install.packages("MASS")
-if(!"ISLR" %in% pkgs) install.packages("ISLR")
-if(!"glmnet" %in% pkgs) install.packages("glmnet")
-if(!"plotmo" %in% pkgs) install.packages("plotmo")
-if(!"tree" %in% pkgs) install.packages("tree")
-if(!"randomForest" %in% pkgs) install.packages("randomForest")
-if(!"finalfit" %in% pkgs) install.packages("finalfit")
-if(!"pROC" %in% pkgs) install.packages("pROC")
-if(!"caTools" %in% pkgs) install.packages("caTools")
+pkgs <- c('car',
+          'caret',
+          'leaps',
+          'MASS',
+          'ISLR',
+          'tree',
+          'randomForest',
+          'pROC',
+          'caTools',
+          'plotmo',
+          'FMradio',
+          "RCurl",
+          "jsonlite",
+          'rags2ridges')
+for (pkg in pkgs) {
+  if (! (pkg %in% rownames(installed.packages()))) { install.packages(pkg) }
+}
+
+install.packages("h2o", type="source", repos=(c("http://h2o-release.s3.amazonaws.com/h2o/latest_stable_R")))
 
 
 ##Load library
+library(car)
 library(caret)
 library(dplyr)
 library(rags2ridges)
 library(leaps)
-library(car)
-library(pls)
-library(glmnet)
 library(plotmo)
 library(tree)
 library(randomForest)
