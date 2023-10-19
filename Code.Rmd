@@ -16,7 +16,7 @@ pkgs <- c('car',
           'MASS',
           'ISLR',
           'tree',
-          'randomForest',
+          'xgboost',
           'ROCR',
           'caTools',
           'plotmo',
@@ -36,7 +36,7 @@ library(glm2)
 library(dplyr)
 library(rags2ridges)
 library(tree)
-library(randomForest)
+library(xgboost)
 library(FMradio)
 library(ROCR)
 ```
@@ -55,6 +55,7 @@ X <- as.matrix(scale(t(ADmetabolites)))
 ```
 
 ## Data preparation for modelling
+
 ```{r}
 ## Replace values of ApoEClass with 0 and 1 to facilitate machine learning
 y <- as.character(sampleInfo$ApoEClass)
@@ -64,6 +65,7 @@ y <- as.factor(y)
 ```
 
 ##Training-test split
+
 ```{r}
 #Merge X and y into df
 df <- cbind.data.frame(X,y)
@@ -89,8 +91,8 @@ labels <- test$y
 
 ```{r}
 ctrl <- trainControl(method = "repeatedcv",
-                     number = 5,
-                     repeats = 100,
+                     number = 10,
+                     repeats = 10,
                      classProbs = TRUE,
                      summaryFunction = twoClassSummary)
 
@@ -119,7 +121,7 @@ plot(perf.lr,
 yhat.lr <- as.factor(yhat.lr)
 labels <- as.factor(labels)
 
-cm.lr <- confusionMatrix(labels,yhat, positive='1')
+cm.lr <- confusionMatrix(labels,yhat.lr, positive='1')
 
 #Create a data drame to store the performance metrics
 metrics.lr <- data.frame(cm.lr$byClass)
@@ -127,13 +129,13 @@ auc.lr <- perf.lr@y.values[[1]]
 colnames(metrics.lr) <- 'Logistic Regression'
 ```
 
-## Boosted Decision Tree
+## Decision Tree
 
 ```{r}
 tree <- train(y ~.,
              train,
-             method = "ada",
-             tuneGrid=expand.grid(iter=10, maxdepth=5, nu=0.01),
+             method = "rpart2",
+             tuneLength=4,
              metric = "ROC",
              trControl = ctrl)
 #Predict
@@ -171,10 +173,19 @@ text(dtree)
 ## Random Forest
 
 ```{r}
+tuneGrid <- expand.grid(
+  nrounds = c(10, 50),            # Number of boosting iterations
+  max_depth = 2,              # Maximum tree depth
+  eta =  0.1,            # Learning rate (shrinkage)
+  gamma =  0.2,             # Minimum loss reduction required to make a further partition
+  colsample_bytree = 1, # Subsample ratio of columns
+  min_child_weight = 1,    # Minimum sum of instance weight needed in a child
+  subsample = c(0.8,1)       # Subsample percentage of the training data
+)
 rf <- train(y ~.,
              train,
-             method = "rf",
-             tuneLength=6,
+             method = "xgbTree",
+             tuneGrid = tuneGrid,
              metric = "ROC",
              trControl = ctrl)
 #Predict
@@ -194,9 +205,8 @@ yhat.rf <- as.factor(yhat.rf)
 labels <- as.factor(labels)
 auc.rf <- perf.rf@y.values[[1]]
 
-cm.rf <- confusionMatrix(labels,yhat.rf, positive='1')
+cm.rf <- confusionMatrix(labels, yhat.rf, positive='1')
 metrics.rf <- data.frame(cm.rf$byClass)
-metrics.rf <- rbind(metrics.rf, data.frame(AUC=perf.rf@y.values[2]))
 colnames(metrics.rf) <- 'Random Forest'
 ```
 

@@ -1,39 +1,37 @@
 ---
 title: "Thesis_GM_ADmetabolites_Code"
 output: html_notebook
+editor_options: 
+  chunk_output_type: inline
 ---
 
 Package installation and loading
 
 ```{r}
 ## Packages (install and invoke)
-pkgs <- c('car',
-          'caret',
-          'ada',
+pkgs <- c('caret',
+          'rpart',
           'plyr',
           'dplyr',
-          'randomForest',
-          'party',
+          'xgboost',
           'ROCR',
           'FMradio',
-          'rags2ridges')
+          'rags2ridges'
+          )
 for (pkg in pkgs) {
   if (! (pkg %in% rownames(installed.packages()))) { install.packages(pkg) }
 }
-
+devtools::install_github("souravc83/fastAdaboost")
 
 ##Load library
-library(car)
-library(caret)
 library(rpart)
+library(caret)
 library(plyr)
 library(dplyr)
-library(rags2ridges)
-library(ada)
-library(randomForest)
-library(party)
-library(FMradio)
+library(xgboost)
 library(ROCR)
+library(FMradio)
+library(rags2ridges)
 ```
 
 Data loading
@@ -87,6 +85,7 @@ thomson <- facScore(filtered,mlfa$Loadings,mlfa$Uniqueness)
 ```
 
 ## Data preparation for modelling
+
 ```{r}
 X <- thomson
 
@@ -96,7 +95,6 @@ y <- replace(y, y == 'Class 1',0)
 y <- replace(y, y == 'Class 2',1)
 y <- as.factor(y)
 ```
-
 
 ```{r}
 df <- cbind.data.frame(X,y)
@@ -115,8 +113,8 @@ labels <- test$y
 
 ```{r}
 ctrl <- trainControl(method = "repeatedcv",
-                     number = 5,
-                     repeats = 100,
+                     number = 10,
+                     repeats = 10,
                      classProbs = TRUE,
                      summaryFunction = twoClassSummary)
 
@@ -144,17 +142,17 @@ labels <- as.factor(labels)
 
 cm.lr <- confusionMatrix(labels,yhat.lr, positive='1')
 metrics.lr <- data.frame(cm.lr$byClass)
+auc.lr <- perf.lr@y.values[[1]]
 colnames(metrics.lr) <- 'Logistic Regression'
 ```
 
-
-## Boosted Decision Tree
+## Decision Tree
 
 ```{r}
 tree <- train(y ~.,
              train,
-             method = "ada",
-             tuneLength=6,
+             method = "rpart2",
+             tuneLength=2,
              metric = "ROC",
              trControl = ctrl)
 #Predict
@@ -175,7 +173,7 @@ labels <- as.factor(labels)
 
 cm.tree <- confusionMatrix(labels,yhat.tree, positive='1')
 metrics.tree <- data.frame(cm.tree$byClass)
-metrics.tree <- rbind(metrics.tree,)
+auc.tree <- perf.tree@y.values[[1]]
 colnames(metrics.tree) <- 'Decision Tree'
 ```
 
@@ -189,10 +187,19 @@ text(dtree)
 ## Random Forest
 
 ```{r}
+tuneGrid <- expand.grid(
+  nrounds = 10,            # Number of boosting iterations
+  max_depth = 2,              # Maximum tree depth
+  eta = 0.1,            # Learning rate (shrinkage)
+  gamma =  0.2,             # Minimum loss reduction required to make a further partition
+  colsample_bytree = 1, # Subsample ratio of columns
+  min_child_weight = 5,     # Minimum sum of instance weight needed in a child
+  subsample = 1       # Subsample percentage of the training data
+)
 rf <- train(y ~.,
              train,
-             method = "rf",
-             tuneLength=6,
+             method = "xgbTree",
+             tuneGrid=tuneGrid,
              metric = "ROC",
              trControl = ctrl)
 #Predict
@@ -213,6 +220,7 @@ labels <- as.factor(labels)
 
 cm.rf <- confusionMatrix(labels,yhat.rf, positive='1')
 metrics.rf <- data.frame(cm.rf$byClass)
+auc.rf <- perf.rf@y.values[[1]]
 colnames(metrics.rf) <- 'Random Forest'
 ```
 
@@ -220,6 +228,10 @@ colnames(metrics.rf) <- 'Random Forest'
 #Create a data frame to store the metrics
 metrics <- cbind(metrics.lr,metrics.tree,metrics.rf)
 
+auc <- cbind(auc.lr,auc.tree,auc.rf)
+auc <- auc[2,]
+metrics <- rbind(metrics,auc)
+row.names(metrics)[12] <- 'AUC'
 
 #Display the table of metrics
 print(metrics)
