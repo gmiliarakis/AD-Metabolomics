@@ -162,6 +162,14 @@ plot(lr.perf,
      lwd=2,
      main='ROC curves from 10-fold cross-validation')
 lr.auc <- mean(perf@y.values[[1]])
+
+yhat.lr <- do.call(c, yhat.lr)
+yhat.lr <- as.factor(ifelse(yhat.lr>=0.5,1,0))
+labels <- as.factor(do.call(c, labels))
+
+cm.lr <- confusionMatrix(labels,yhat.lr, positive='1')
+metrics.lr <- data.frame(cm.lr$byClass)
+colnames(metrics.lr) <- 'Logistic Regression'
 ```
 
 
@@ -218,6 +226,13 @@ tree.roc <- pROC::roc(yhat.tree,labels)
 plot(tree.roc)
 #Calculate the mean 10-fold CV AUC
 tree.auc <- mean(tree.roc$auc)
+
+yhat.tree <- as.factor(yhat.tree)
+labels <- as.factor(labels)
+
+cm.tree <- confusionMatrix(labels,yhat.tree, positive='1')
+metrics.tree <- data.frame(cm.tree$byClass)
+colnames(metrics.tree) <- 'Decision Tree'
 ```
 
 ```{r}
@@ -275,15 +290,20 @@ rf.roc <- pROC::roc(yhat.rf,labels)
 plot(rf.roc)
 #Calculate the mean 10-fold CV AUC
 rf.auc <- mean(rf.roc$auc)
+
+yhat.rf <- as.factor(yhat.rf)
+labels <- as.factor(labels)
+
+cm.rf <- confusionMatrix(labels,yhat.rf, positive='1')
+metrics.rf <- data.frame(cm.rf$byClass)
+colnames(metrics.rf) <- 'Random Forest'
 ```
 
 ```{r}
 #Create a data frame to store the metrics
-model.performance <- data.frame(
-  Model = c("Logistic Regression", "Decision Tree", "Random Forest"),
-  AUC = c(lr.auc, tree.auc, rf.auc)
-)
+metrics <- cbind(metrics.lr,metrics.tree,metrics.rf)
+
 
 #Display the table of metrics
-print(model.performance)
+print(metrics)
 ```
