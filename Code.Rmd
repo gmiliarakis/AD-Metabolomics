@@ -46,17 +46,6 @@ library(ROCR)
 ```{r}
 ##Invoke data, get to know objects
 data(ADdata)
-objects()
-```
-
-## Data preparation
-
-```{r}
-## Replace values of ApoEClass with 0 and 1 to facilitate machine learning
-y <- as.character(sampleInfo$ApoEClass)
-y <- replace(y, y == 'Class 1',0)
-y <- replace(y, y == 'Class 2',1)
-y <- as.factor(y)
 ```
 
 ## Data preparation for modelling
@@ -65,173 +54,110 @@ y <- as.factor(y)
 X <- as.matrix(scale(t(ADmetabolites)))
 ```
 
-```{r}
-df <- cbind.data.frame(X,y)
-```
-
-Projection to Latent Structures
-
-```{r}
-seed <- 1
-set.seed(seed)
-cov <- cor(X)
-
-#Find redundant features
-filter <- RF(cov)
-
-#Filter out redundant features
-filtered <- subSet(X, filter)
-
-#Regularized correlation matrix estimation
-M <- regcor(filtered)
-```
-
-```{r}
-#Get the regularized correlation matrix of the filtered dataset
-R <- M$optCor
-
-#Get the Guttman bounds for R
-Guttman.bounds <- dimGB(R)
-```
-
-```{r}
-#Perform a Maximum Likelihood (ML) Factor Analysis of 84
-mlfa <- mlFA(R, m=6)
-loadings <-mlfa$Loadings
-thomson <- facScore(filtered,loadings,mlfa$Uniqueness)
-```
-
-```{r}
-X <- as.matrix(thomson)
-```
-
 ## Data preparation for modelling
-
 ```{r}
-df <- cbind.data.frame(X,y)
+## Replace values of ApoEClass with 0 and 1 to facilitate machine learning
+y <- as.character(sampleInfo$ApoEClass)
+y <- replace(y, y == 'Class 1',0)
+y <- replace(y, y == 'Class 2',1)
+y <- as.factor(y)
 ```
 
-## lr Logistic Regression
+##Training-test split
+```{r}
+#Merge X and y into df
+df <- cbind.data.frame(X,y)
+set.seed(1635664)
+
+#Create a matrix with the training indexes
+split_index <- createDataPartition(df$y, p = 0.7, list = FALSE)
+
+#Encode y so valid R variables can be created from its classes
+levels(df$y) <- make.names(levels(df$y))
+
+#Create the training set
+train <- df[split_index, ]
+
+#Create the test set
+test <- df[-split_index, ]
+
+#Store the test y in labels
+labels <- test$y
+```
+
+## Logistic Regression
 
 ```{r}
+ctrl <- trainControl(method = "repeatedcv",
+                     number = 5,
+                     repeats = 100,
+                     classProbs = TRUE,
+                     summaryFunction = twoClassSummary)
 
-# Use 10-fold CV to assess model performance
-nfolds <- 10
+## Simple logistic model with meta-features as predictors
+set.seed(1635664)
 
-# Calculate the number of observations per fold
-fold_size <- nrow(df) %/% nfolds
+lr <- train(y ~.,
+             train,
+             method = "glm",
+             metric = "ROC",
+             trControl = ctrl)
+#Predict
+yhat.lr <- as.numeric(predict(lr, test))-1
+labels <- as.numeric(labels)-1
 
-# Shuffle the row indices
-shuffled_indices <- sample(nrow(df))
-
-# Store the classification metrics for each fold
-yhat.lr <- vector("list", length = nfolds)
-labels <- vector("list", length = nfolds)
-
-# The outer for loop is across the folds
-for (i in 1:nfolds) {  
-  # Calculate the indices for the test set
-  start_index <- (i - 1) * fold_size + 1
-  end_index <- i * fold_size
-  test_indices <- shuffled_indices[start_index:end_index]
-  
-  # Calculate the indices for the training set (exclude test indices)
-  train_indices <- setdiff(shuffled_indices, test_indices)
-  
-  # Create the test and training sets
-  test <- df[test_indices, ]
-  labels[[i]] <- as.numeric(test$y) -1
-  train <- df[train_indices, ]
-  
-  # Fit a logistic regression model
-  lr <- glm2(y ~ .,
-             data = train,
-             family = 'binomial'(link = "logit"),
-             control= glm.control(maxit= 1000))
-  
-  # Predict probabilities for the test data
-  yhat.lr[[i]] <- predict(lr, newdata = test, type = 'response')
-}
-
-
-lr.pred <- prediction(yhat.lr,labels)
-lr.perf <- performance(pred,"tpr", "fpr")
-plot(lr.perf,
+#Plot ROC curve
+pred.lr <- prediction(yhat.lr,labels)
+perf.lr <- performance(pred.lr, "tpr", "fpr")
+plot(perf.lr,
      colorize=TRUE,
      avg='threshold',
      lwd=2,
      main='ROC curves from 10-fold cross-validation')
-lr.auc <- mean(perf@y.values[[1]])
 
-yhat.lr <- do.call(c, yhat.lr)
-yhat.lr <- as.factor(ifelse(yhat.lr>=0.5,1,0))
-labels <- as.factor(do.call(c, labels))
+#Create a confusion matrix and get performance metrics from caret
+yhat.lr <- as.factor(yhat.lr)
+labels <- as.factor(labels)
 
-cm.lr <- confusionMatrix(labels,yhat.lr, positive='1')
+cm.lr <- confusionMatrix(labels,yhat, positive='1')
+
+#Create a data drame to store the performance metrics
 metrics.lr <- data.frame(cm.lr$byClass)
+auc.lr <- perf.lr@y.values[[1]]
 colnames(metrics.lr) <- 'Logistic Regression'
 ```
 
-
-## Decision Tree
+## Boosted Decision Tree
 
 ```{r}
-#df <- data.frame(df)
-#dtree <- tree(y~., data =df)
-#tree.cv <-cv.tree(dtree, FUN= prune.misclass, rand =c(40,87))
+tree <- train(y ~.,
+             train,
+             method = "ada",
+             tuneGrid=expand.grid(iter=10, maxdepth=5, nu=0.01),
+             metric = "ROC",
+             trControl = ctrl)
+#Predict
+yhat.tree <- as.numeric(predict(tree, test))-1
+labels <- as.numeric(labels)-1
 
-# Calculate the number of observations per fold
-fold_size <- nrow(df) %/% nfolds
+#Create a ROC curve
+pred.tree <- prediction(yhat.tree,labels)
+perf.tree <- performance(pred.tree, "tpr", "fpr")
+plot(perf.tree,
+     colorize=TRUE,
+     avg='threshold',
+     lwd=2,
+     main='ROC curves from 10-fold cross-validation')
 
-# Shuffle the row indices
-shuffled_indices <- sample(nrow(df))
-
-# Store the classification metrics for each fold
-yhat.tree <- vector("list", length = nfolds)
-labels <- vector("list", length = nfolds)
-
-# The outer for loop is across the folds
-for (i in 1:nfolds) {  
-  # Calculate the indices for the test set
-  start_index <- (i - 1) * fold_size + 1
-  end_index <- i * fold_size
-  test_indices <- shuffled_indices[start_index:end_index]
-  
-  # Calculate the indices for the training set (exclude test indices)
-  train_indices <- setdiff(shuffled_indices, test_indices)
-  
-  # Create the test and training sets
-  test <- df[test_indices, ]
-  labels[[i]] <- as.numeric(test$y) -1
-  train <- df[train_indices, ]
-  
-  #Fit a decision tree 
-  train$y <- as.factor(train$y)
-  tree <- tree(y~., data =train)
-  
-  #Predict probabilities for the test data using the selected lambda
-  test$y <- as.numeric(test$y)-1
-  yhat.tree[[i]] <- as.numeric(predict(tree, newdata=test, type='class'))-1
-  
-}
-
-#Flatten the 10 vectors into one list
-yhat.tree <- do.call(c, yhat.tree)
-labels <- do.call(c, labels)
-
-#Create a ROC object using the pROC package
-tree.roc <- pROC::roc(yhat.tree,labels)
-
-#Plot the ROC obtained from 10-fold CV
-plot(tree.roc)
-#Calculate the mean 10-fold CV AUC
-tree.auc <- mean(tree.roc$auc)
-
+#Create a confusion matrix and get metrics
 yhat.tree <- as.factor(yhat.tree)
 labels <- as.factor(labels)
 
 cm.tree <- confusionMatrix(labels,yhat.tree, positive='1')
+
+#Store in a new dataframe
 metrics.tree <- data.frame(cm.tree$byClass)
+auc.tree <- perf.tree@y.values[[1]]
 colnames(metrics.tree) <- 'Decision Tree'
 ```
 
@@ -245,64 +171,43 @@ text(dtree)
 ## Random Forest
 
 ```{r}
-# Calculate the number of observations per fold
-fold_size <- nrow(df) %/% nfolds
+rf <- train(y ~.,
+             train,
+             method = "rf",
+             tuneLength=6,
+             metric = "ROC",
+             trControl = ctrl)
+#Predict
+yhat.rf <- as.numeric(predict(rf, test))-1
+labels <- as.numeric(labels)-1
 
-# Shuffle the row indices
-shuffled_indices <- sample(nrow(df))
-
-# Store the classification metrics for each fold
-yhat.rf <- vector("list", length = nfolds)
-labels <- vector("list", length = nfolds)
-
-# The outer for loop is across the folds
-for (i in 1:nfolds) {  
-  # Calculate the indices for the test set
-  start_index <- (i - 1) * fold_size + 1
-  end_index <- i * fold_size
-  test_indices <- shuffled_indices[start_index:end_index]
-  
-  # Calculate the indices for the training set (exclude test indices)
-  train_indices <- setdiff(shuffled_indices, test_indices)
-  
-  # Create the test and training sets
-  test <- df[test_indices, ]
-  labels[[i]] <- as.numeric(test$y) -1
-  train <- df[train_indices, ]
-  
-  #Fit a Random Forest
-  rf <- randomForest(y~., data= train, test= test, ntree = 2300, mtry=230)
-  
-  #Predict probabilities for the test data using the selected lambda
-  test$y <- as.numeric(test$y)-1
-  yhat.rf[[i]] <- as.numeric(predict(rf, newdata=test, type='class'))-1
-  
-}
-
-#Flatten the 10 vectors into one list
-yhat.rf <- do.call(c, yhat.rf)
-labels <- do.call(c, labels)
-
-#Create a ROC object using the pROC package
-rf.roc <- pROC::roc(yhat.rf,labels)
-
-#Plot the ROC obtained from 10-fold CV
-plot(rf.roc)
-#Calculate the mean 10-fold CV AUC
-rf.auc <- mean(rf.roc$auc)
+#Create a ROC curve
+pred.rf <- prediction(yhat.rf,labels)
+perf.rf <- performance(pred.rf, "tpr", "fpr")
+plot(perf.rf,
+     colorize=TRUE,
+     avg='threshold',
+     lwd=2,
+     main='ROC curves from 10-fold cross-validation')
 
 yhat.rf <- as.factor(yhat.rf)
 labels <- as.factor(labels)
+auc.rf <- perf.rf@y.values[[1]]
 
 cm.rf <- confusionMatrix(labels,yhat.rf, positive='1')
 metrics.rf <- data.frame(cm.rf$byClass)
+metrics.rf <- rbind(metrics.rf, data.frame(AUC=perf.rf@y.values[2]))
 colnames(metrics.rf) <- 'Random Forest'
 ```
 
 ```{r}
-#Create a data frame to store the metrics
+#Create a data frame to store and compare the metrics
 metrics <- cbind(metrics.lr,metrics.tree,metrics.rf)
 
+auc <- cbind(auc.lr,auc.tree,auc.rf)
+auc <- auc[2,]
+metrics <- rbind(metrics,auc)
+row.names(metrics)[12] <- 'AUC'
 
 #Display the table of metrics
 print(metrics)
