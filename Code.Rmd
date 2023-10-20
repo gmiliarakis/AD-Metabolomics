@@ -1,14 +1,16 @@
 ---
-title: "Thesis.GM.ADmetabolites.Code"
-output: html.notebook
-editor.options: 
-  chunk.output.type: console
+title: "Classification with original data"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
 ---
 
-## Package installation and loading
+# Classification with the original data
+
+### Package installation and loading
 
 ```{r}
-##Packages (install and invoke)
+#Packages (install and invoke)
 pkgs <- c('car',
           'caret',
           'leaps',
@@ -29,7 +31,7 @@ for (pkg in pkgs) {
 }
 
 
-##Load library
+#Load library
 library(car)
 library(caret)
 library(glm2)
@@ -41,10 +43,10 @@ library(FMradio)
 library(ROCR)
 ```
 
-## Data loading
+### Data loading
 
 ```{r}
-##Invoke data, get to know objects
+#Invoke data, get to know objects
 data(ADdata)
 ```
 
@@ -54,17 +56,15 @@ data(ADdata)
 X <- as.matrix(scale(t(ADmetabolites)))
 ```
 
-## Data preparation for modelling
-
 ```{r}
-## Replace values of ApoEClass with 0 and 1 to facilitate machine learning
+# Replace values of ApoEClass with 0 and 1 to facilitate machine learning
 y <- as.character(sampleInfo$ApoEClass)
 y <- replace(y, y == 'Class 1',0)
 y <- replace(y, y == 'Class 2',1)
 y <- as.factor(y)
 ```
 
-##Training-test split
+### Training-test split
 
 ```{r}
 #Merge X and y into df
@@ -87,7 +87,7 @@ test <- df[-split_index, ]
 labels <- test$y
 ```
 
-## Logistic Regression
+### Logistic Regression
 
 ```{r}
 ctrl <- trainControl(method = "repeatedcv",
@@ -96,7 +96,7 @@ ctrl <- trainControl(method = "repeatedcv",
                      classProbs = TRUE,
                      summaryFunction = twoClassSummary)
 
-## Simple logistic model with meta-features as predictors
+# Simple logistic model with meta-features as predictors
 set.seed(1635664)
 
 lr <- train(y ~.,
@@ -129,7 +129,7 @@ auc.lr <- perf.lr@y.values[[1]]
 colnames(metrics.lr) <- 'Logistic Regression'
 ```
 
-## Decision Tree
+### Decision Tree
 
 ```{r}
 tree <- train(y ~.,
@@ -170,7 +170,7 @@ plot(dtree)
 text(dtree)
 ```
 
-## Random Forest
+### Extreme Gradient Booster
 
 ```{r}
 tuneGrid <- expand.grid(
@@ -201,6 +201,7 @@ plot(perf.rf,
      lwd=2,
      main='ROC curves from 10-fold cross-validation')
 
+#Get the confusion matrix and other metrics
 yhat.rf <- as.factor(yhat.rf)
 labels <- as.factor(labels)
 auc.rf <- perf.rf@y.values[[1]]
@@ -209,6 +210,8 @@ cm.rf <- confusionMatrix(labels, yhat.rf, positive='1')
 metrics.rf <- data.frame(cm.rf$byClass)
 colnames(metrics.rf) <- 'Random Forest'
 ```
+
+### Model comparison
 
 ```{r}
 #Create a data frame to store and compare the metrics

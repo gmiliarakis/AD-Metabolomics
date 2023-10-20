@@ -1,11 +1,13 @@
 ---
-title: "Thesis_GM_ADmetabolites_Code"
+title: "Classification with Thomson scores"
 output: html_notebook
 editor_options: 
   chunk_output_type: inline
 ---
 
-Package installation and loading
+# Classification with Thomson scores
+
+### Package installation and loading
 
 ```{r}
 ## Packages (install and invoke)
@@ -34,21 +36,21 @@ library(FMradio)
 library(rags2ridges)
 ```
 
-Data loading
+### Data loading
 
 ```{r}
 ## Invoke data, get to know objects
 data(ADdata)
 ```
 
-Data preprocessing
+### Data preprocessing
 
 ```{r}
 X <- as.matrix(scale(t(ADmetabolites)))
 
 ```
 
-Projection to Latent Structures
+### Projection to Latent Structures
 
 ```{r}
 seed <- 123
@@ -84,7 +86,7 @@ mlfa <- mlFA(R, m=6)
 thomson <- facScore(filtered,mlfa$Loadings,mlfa$Uniqueness)
 ```
 
-## Data preparation for modelling
+### Data preparation for modelling
 
 ```{r}
 X <- thomson
@@ -109,7 +111,7 @@ test <- df[-split_index, ]
 labels <- test$y
 ```
 
-## Logistic Regression
+### Logistic Regression
 
 ```{r}
 ctrl <- trainControl(method = "repeatedcv",
@@ -146,9 +148,10 @@ auc.lr <- perf.lr@y.values[[1]]
 colnames(metrics.lr) <- 'Logistic Regression'
 ```
 
-## Decision Tree
+### Decision Tree
 
 ```{r}
+#Fit a Decision Tree
 tree <- train(y ~.,
              train,
              method = "rpart2",
@@ -168,6 +171,7 @@ plot(perf.tree,
      lwd=2,
      main='ROC curves from 10-fold cross-validation')
 
+#Get the confusion matrix and other metrics
 yhat.tree <- as.factor(yhat.tree)
 labels <- as.factor(labels)
 
@@ -178,15 +182,17 @@ colnames(metrics.tree) <- 'Decision Tree'
 ```
 
 ```{r}
+#Plot the tree
 dtree <- tree(y~. -y, data =df)
 summary(dtree)
 plot(dtree)
 text(dtree)
 ```
 
-## Random Forest
+### Extreme gradient booster
 
 ```{r}
+#Define the hyperparameter grid
 tuneGrid <- expand.grid(
   nrounds = 10,            # Number of boosting iterations
   max_depth = 2,              # Maximum tree depth
@@ -196,6 +202,8 @@ tuneGrid <- expand.grid(
   min_child_weight = 5,     # Minimum sum of instance weight needed in a child
   subsample = 1       # Subsample percentage of the training data
 )
+
+#Fit an Extreme Gradient Boost tree
 rf <- train(y ~.,
              train,
              method = "xgbTree",
@@ -215,6 +223,7 @@ plot(perf.rf,
      lwd=2,
      main='ROC curves from 10-fold cross-validation')
 
+#Get the confusion matric and other metrics
 yhat.rf <- as.factor(yhat.rf)
 labels <- as.factor(labels)
 
@@ -223,6 +232,8 @@ metrics.rf <- data.frame(cm.rf$byClass)
 auc.rf <- perf.rf@y.values[[1]]
 colnames(metrics.rf) <- 'Random Forest'
 ```
+
+### Model comparison
 
 ```{r}
 #Create a data frame to store the metrics
