@@ -181,14 +181,6 @@ auc.tree <- perf.tree@y.values[[1]]
 colnames(metrics.tree) <- 'Decision Tree'
 ```
 
-```{r}
-#Plot the tree
-dtree <- tree(y~. -y, data =df)
-summary(dtree)
-plot(dtree)
-text(dtree)
-```
-
 ### Extreme gradient booster
 
 ```{r}

@@ -163,24 +163,17 @@ auc.tree <- perf.tree@y.values[[1]]
 colnames(metrics.tree) <- 'Decision Tree'
 ```
 
-```{r}
-dtree <- tree(y~. -y, data =df)
-summary(dtree)
-plot(dtree)
-text(dtree)
-```
-
 ### Extreme Gradient Booster
 
 ```{r}
 tuneGrid <- expand.grid(
-  nrounds = c(10, 50),            # Number of boosting iterations
+  nrounds = 10,            # Number of boosting iterations
   max_depth = 2,              # Maximum tree depth
   eta =  0.1,            # Learning rate (shrinkage)
   gamma =  0.2,             # Minimum loss reduction required to make a further partition
   colsample_bytree = 1, # Subsample ratio of columns
   min_child_weight = 1,    # Minimum sum of instance weight needed in a child
-  subsample = c(0.8,1)       # Subsample percentage of the training data
+  subsample = 1       # Subsample percentage of the training data
 )
 rf <- train(y ~.,
              train,
