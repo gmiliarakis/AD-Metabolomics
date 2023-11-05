@@ -19,35 +19,18 @@ knitr::opts_chunk$set(
 
 ## Package installation and loading
 
-```{r, echo=FALSE}
-## Packages (install and invoke)
-pkgs <- c('caret',
-          'rpart',
-          'plyr',
-          'dplyr',
-          'randomForest',
-          'ROCR',
-          'FMradio',
-          'rags2ridges'
-          )
-for (pkg in pkgs) {
-  if (! (pkg %in% rownames(installed.packages()))) { install.packages(pkg) }
-}
-
-##Load library
-library(rpart)
-library(caret)
-library(plyr)
-library(dplyr)
-library(randomForest)
-library(ROCR)
-library(FMradio)
-library(rags2ridges)
+```{r, packages, echo=FALSE}
+require(caret)
+require(FMradio)
+require(rags2ridges)
+require(rpart)
+require(randomForest)
+require(ROCR)
 ```
 
 ## Data loading
 
-```{r}
+```{r, 'data loading'}
 # Invoke data
 data(ADdata)
 ```
@@ -56,12 +39,12 @@ data(ADdata)
 
 ### Data Preparation
 
-```{r}
+```{r, Y}
 # Transpose, standardize and store the metabolite data in Y
 Y <- as.matrix(scale(t(ADmetabolites)))
 ```
 
-```{r}
+```{r,  'x,df'}
 # Store the ApoE genotype in x as a facgor
 x <- as.factor(sampleInfo$ApoEClass)
 df <- cbind.data.frame(Y,x)
@@ -69,20 +52,20 @@ df <- cbind.data.frame(Y,x)
 
 ### Analysis of Variance (ANOVA)
 
-```{r}
+```{r,  aov}
 # Store the ANOVA model summaries in summaries
 summaries <- purrr::map(df[,1:230], ~summary(aov(.x ~ df$x)))
 ```
 
-Correction for Multiple Testing
+#### Correction for Multiple Testing
 
-```{r, echo=FALSE}
+```{r, 'FDR adjust', echo=FALSE}
 #Extract and adjust p-values for FDR control
 
 #Create a list to store the p-values
 p_values <- list(1:230)
 
-#Extract the p-values of the F-tests from the summaries matrix and store them in p_values
+#Extract the p-values of the F-tests from the aov summaries matrix and store them in p_values
 for (i in 1:230){
   p_values[[i]] <- summaries[[i]][[1]][["Pr(>F)"]][[1]]
 }
@@ -104,9 +87,9 @@ p_values
 
 ## Classification of metabolites based on ApoE class
 
-A function was created to streamline the analysis of mulyiple (tidy tabular standardised) predictors and response. The function *fit* takes the arguments *X = data frame of predictors* and *Y = response*, fits a Logistic Regression, a Decision Tree and a (bagging) Random Forest. It subsequently creates a dataframe with the repeated 10-fold Cross-Validation(CV) model performance evaluation metrics and plots the ROC curves.
+A function was created to streamline the analysis of multiple (tidy tabular standardised) predictors and response. The function *fit* takes the arguments *X = data frame of predictors* and *Y = response*, fits a Logistic Regression, a Decision Tree and a (bagging) Random Forest. It subsequently creates a dataframe with the repeated 10-fold Cross-Validation(CV) model performance evaluation metrics and plots the ROC curves.
 
-```{r}
+```{r, 'fit function def'}
 fit <- function(X = NULL,
                 Y = NULL,
                 max_depth= 4,
@@ -254,7 +237,7 @@ fit <- function(X = NULL,
 
 ### Original data
 
-```{r}
+```{r, 'fit original data'}
 #Invoke the function
 X <- Y
 fit(X = X,
@@ -265,7 +248,7 @@ fit(X = X,
 
 ### Using ML-estimated factor scores
 
-```{r}
+```{r, 'filter X'}
 seed <- 123
 set.seed(seed)
 cov <- cor(X)
@@ -280,7 +263,7 @@ filtered <- subSet(X, filter)
 M <- regcor(filtered)
 ```
 
-```{r}
+```{r, optCor}
 #Get the regularized correlation matrix of the filtered dataset
 R <- M$optCor
 
@@ -288,21 +271,131 @@ R <- M$optCor
 Guttman.bounds <- dimGB(R)
 ```
 
-```{r}
+```{r, dimVar}
 #Assess the proportion of cumulative variances for 6 factor solutions
 dimVAR(R, maxdim=6)
 ```
 
-Maximum Likelihood (ML) Factor Analysis with 6 factors
+#### Maximum Likelihood (ML) Factor Analysis with 6 factors
 
-```{r}
+```{r, 'mlfa thomson'}
 mlfa <- mlFA(R, m=6)
 thomson <- facScore(filtered,mlfa$Loadings,mlfa$Uniqueness)
 ```
 
-```{r}
+```{r, 'fit thomson'}
 fit(X = thomson,
     Y = sampleInfo)
 ```
 
 ## Network Analysis
+
+```{r, 'C1, C2, Slist, Tlist, Ylist, optf, P0s'}
+# Store all observations of Class 1 in C1
+C1 <- scale(t(ADmetabolites[, sampleInfo$ApoEClass == "Class 1"]))
+# Store all observations of Class 2 in C2
+C2 <- scale(t(ADmetabolites[, sampleInfo$ApoEClass == "Class 2"]))
+
+#Get the covariance matrices of C1 and C2
+S1<- covML(C1)
+S2<- covML(C2)
+
+#Store them in a list
+Slist<- list(S1 = S1, S2 = S2)
+
+#Get the total number of samples
+n <- c(nrow(S1), nrow(S2))
+
+# Create a list of fused covariance matrices T
+Tlist<- default.target.fused(Slist = Slist, ns = n, type = "DUPV")
+
+# Create a list of the two-class data Y
+Ylist<- list(C1 = C1, C2 = C2)
+
+
+# Get the optimal lambdas per class and fused with 10-fold CC
+set.seed(8910)
+optf <- optPenalty.fused(Ylist = Ylist,
+                         Tlist = Tlist,
+                         lambda = as.matrix(cbind(c("ridge1", "fusion"),
+                                                  c("fusion", "ridge2"))),
+                         cv.method = "kCV",
+                         k = 10,
+                         verbose = FALSE)
+# Sparsify the l2-regularised high precision matrices, correcting for FDR at .001
+P0s <- sparsify.fused(optf$Plist,
+                      threshold = "localFDR",
+                      FDRcut = 0.999,
+                      verbose = FALSE)
+```
+
+```{r, 'GGMs per class and diff'}
+#Merge the sparse high precision matrices
+TST <- Union(P0s$C1$sparseParCor, P0s$C2$sparseParCor)
+PCclass1 <- TST$M1subset
+PCclass2 <- TST$M2subset
+
+# Create a color map
+Colors <- rownames(PCclass2)
+Colors[grep("Amine", rownames(PCclass2))]     <- "lightblue"
+Colors[grep("Org.Acid", rownames(PCclass2))]  <- "orange"
+Colors[grep("Lip", rownames(PCclass2))]       <- "yellow"
+Colors[grep("Ox.Stress", rownames(PCclass2))] <- "purple"
+
+
+set.seed(111213)
+opar <- par(mfrow = c(1, 3))
+#Plot the sparsified ridge matrix of AD Class 2
+Coords <- Ugraph(PCclass2, type = "fancy", lay = "layout_with_fr",
+    Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
+    main = "AD Class 2")
+#Plot he sparsified ridge matrix of AD Class 1
+Ugraph(PCclass1, type = "fancy", lay = NULL, coords = Coords,
+    Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
+    main = "AD Class 1")
+
+#Plot the differential network
+DiffGraph(PCclass1, PCclass2, lay = NULL, coords = Coords,
+    Vcolor = Colors, Vsize = 7, Vcex = 0.3,
+    main = "Differential Network")
+par(opar)
+```
+
+```{r, 'degree scores'}
+PC0list      <- list(PCclass1 = PCclass1, PCclass2 = PCclass2)
+# Get the network statistics
+NetStatsList <- GGMnetworkStats.fused(PC0list)
+
+# Get the centrality degree scores for each class
+DegreesAD1   <- data.frame(rownames(NetStatsList),NetStatsList$PCclass1.degree)
+DegreesAD2   <- data.frame(rownames(NetStatsList),NetStatsList$PCclass2.degree)
+
+# Order and show the centrality degree scores
+DegreesAD1o  <- DegreesAD1[order(DegreesAD1[, 2], decreasing = TRUE), ]
+DegreesAD2o  <- DegreesAD2[order(DegreesAD2[, 2], decreasing = TRUE), ]
+head(DegreesAD1o, 7)
+head(DegreesAD2o, 7)
+```
+
+```{r, 'communities per class'}
+# Get the communities per class
+set.seed(141516)
+opar <- par(mfrow = c(1, 2))
+CommC1 <- Communities(PCclass1, Vcolor = Colors, Vsize = 7,  Vcex = 0.3, main = "Modules AD Class 1")
+
+CommC2 <- Communities(PCclass2, Vcolor = Colors, Vsize = 7,  Vcex = 0.3, main = "Modules AD Class 2")
+par(opar)
+```
+
+```{r, 'degree density plot'}
+# Plot the densities of centrality degree scores
+plot(density(DegreesAD1[, 2]), col = "blue", xlim = c(-1, 8), xlab = "Degree", main = "")
+lines(density(DegreesAD2[, 2]), col = "red")
+legenda <- c("AD class 1", "AD class 2")
+legend(5, 0.5, legend = legenda, lwd = rep(1, 2), lty = rep(1, 2), col = c("blue", "red"), cex = 0.7)
+```
+
+```{r, 'wilcoxon rank sum'}
+#Perform a Wilcoxon signed rank test to test if the centrality degree scores are different between the classes
+wilcox.test(DegreesAD1[, 2], DegreesAD2[, 2], paired = TRUE, alternative = "less")
+```
