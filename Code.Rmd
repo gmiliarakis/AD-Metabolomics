@@ -1,26 +1,31 @@
 ---
 title: "Analysis"
 output:
+  html_document: 
+    toc: yes
+    toc_depth: 4
+    theme: journal
+    fig_width: 6
   pdf_document:
     toc: yes
-  html_notebook:
+  html_notebook: 
     toc: yes
+    theme: flatly
+    toc_depth: 5
+    highlight: pygments
 editor_options:
   chunk_output_type: inline
 ---
 
-# Analysis
-
-```{r, setup, include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  comment = '', fig.width = 6, fig.height = 6, echo = FALSE
+  comment = '', fig.width = 6, fig.height = 6, warning = FALSE
 )
 ```
 
-## Package installation and loading
-
-```{r, packages, echo=FALSE}
+```{r packages, include=FALSE}
 require(caret)
+require(dplyr)
 require(FMradio)
 require(rags2ridges)
 require(rpart)
@@ -30,7 +35,7 @@ require(ROCR)
 
 ## Data loading
 
-```{r, 'data loading'}
+```{r data loading, echo=FALSE}
 # Invoke data
 data(ADdata)
 ```
@@ -39,33 +44,33 @@ data(ADdata)
 
 ### Data Preparation
 
-```{r, Y}
+```{r Y}
 # Transpose, standardize and store the metabolite data in Y
 Y <- as.matrix(scale(t(ADmetabolites)))
 ```
 
-```{r,  'x,df'}
-# Store the ApoE genotype in x as a facgor
+```{r df}
+# Store the ApoE genotype in x as a factor
 x <- as.factor(sampleInfo$ApoEClass)
 df <- cbind.data.frame(Y,x)
 ```
 
 ### Analysis of Variance (ANOVA)
 
-```{r,  aov}
+```{r aov}
 # Store the ANOVA model summaries in summaries
 summaries <- purrr::map(df[,1:230], ~summary(aov(.x ~ df$x)))
 ```
 
 #### Correction for Multiple Testing
 
-```{r, 'FDR adjust', echo=FALSE}
+```{r FDR adjust}
 #Extract and adjust p-values for FDR control
 
 #Create a list to store the p-values
 p_values <- list(1:230)
 
-#Extract the p-values of the F-tests from the aov summaries matrix and store them in p_values
+#Extract the p-values of the F-tests from the aov summaries list and store them in p_values
 for (i in 1:230){
   p_values[[i]] <- summaries[[i]][[1]][["Pr(>F)"]][[1]]
 }
@@ -78,25 +83,39 @@ p_values <- data.frame(p_values, row.names = colnames(Y))
 
 # Calculate the FDR-adjusted p-values
 p_values$p_adj <- p.adjust(p_values[,], method = "fdr")
-
-# Filter out the non-significant (a=0.05) FDR-adjusted p-values
-p_values <- filter(p_values, p_adj <= 0.05)
-
-p_values
 ```
 
-## Classification of metabolites based on ApoE class
+The presence of ApoE4 has an effect on serum levels of Lipid_23 and Lip_49 (FDR-adjusted p= 0.03).
 
-A function was created to streamline the analysis of multiple (tidy tabular standardised) predictors and response. The function *fit* takes the arguments *X = data frame of predictors* and *Y = response*, fits a Logistic Regression, a Decision Tree and a (bagging) Random Forest. It subsequently creates a dataframe with the repeated 10-fold Cross-Validation(CV) model performance evaluation metrics and plots the ROC curves.
+```{r}
+# Filter out the non-significant (a=0.05) FDR-adjusted p-values
+filter(p_values, p_adj <= 0.05)
+```
 
-```{r, 'fit function def'}
+## Classification of metabolites on ApoE class
+
+A function was created to streamline the analysis of multiple (tidy tabular standardised) predictors and response. The function *fit* fits a Logistic Regression, a Decision Tree and a (bagging) Random Forest. It takes the arguments:
+
+-   X = data frame of predictors,
+
+-   Y = response vector,
+
+-   max_depth = maximum depth of the Decision Tree,
+
+-   mtry = the number of random predictors to be used per training of the Random Forest and
+
+-   seed
+
+It first binds *X* and *Y* into *df* which is then split into a training and test set (maintaining class balances). Next it fits the 3 models, returns a dataframe with their repeated (100 times) 10-fold Cross-Validation(CV) performance metrics and plots their ROC curves.
+
+```{r fit function def}
 fit <- function(X = NULL,
                 Y = NULL,
                 max_depth= 4,
                 mtry= 6,
                 seed= 123) {
   
-  # Replace values of ApoEClass with 0 and 1 to facilitate machine learning
+  # set y as a factor
   y <- as.factor(x)
   
   #Encode y so valid R variables can be created from its classes
@@ -124,7 +143,7 @@ fit <- function(X = NULL,
   ctrl <- trainControl(
     method = "repeatedcv",
     number = 10,
-    repeats = 10,
+    repeats = 100,
     classProbs = TRUE,
     summaryFunction = twoClassSummary
   )
@@ -159,7 +178,7 @@ fit <- function(X = NULL,
   colnames(metrics.lr) <- 'Logistic Regression'
   
   ### Decision Tree
-  
+  set.seed(seed)
   # Define the tree training hyperparameters
   tree <- train(
     y ~ .,
@@ -192,6 +211,8 @@ fit <- function(X = NULL,
   
   
   ### Random Forest
+  
+  set.seed(seed)
   rf <- train(
     y ~ .,
     train,
@@ -228,7 +249,7 @@ fit <- function(X = NULL,
   #Create a data frame to store and compare the metrics
   metrics <<- cbind(metrics.lr, metrics.tree, metrics.rf)
   metrics[12,] <- auc <<- c(auc.lr, auc.tree, auc.rf)
-  row.names(metrics)[12] <- 'AUC'
+  row.names(metrics)[12] <- 'AUC' 
   
   #Display the table of metrics
   return(metrics)
@@ -237,20 +258,20 @@ fit <- function(X = NULL,
 
 ### Original data
 
-```{r, 'fit original data'}
-#Invoke the function
+```{r fit_original}
 X <- Y
+#Invoke the function
 fit(X = X,
     Y = sampleInfo,
     max_depth = 2,
     mtry=5)
+save(metrics,file='metrics_og.Rdata')
 ```
 
-### Using ML-estimated factor scores
+### Using 6 ML-estimated factor scores
 
-```{r, 'filter X'}
-seed <- 123
-set.seed(seed)
+```{r filterX, include=FALSE}
+set.seed(123)
 cov <- cor(X)
 
 #Find redundant features
@@ -263,7 +284,7 @@ filtered <- subSet(X, filter)
 M <- regcor(filtered)
 ```
 
-```{r, optCor}
+```{r optCor, echo=FALSE, include=FALSE}
 #Get the regularized correlation matrix of the filtered dataset
 R <- M$optCor
 
@@ -271,26 +292,29 @@ R <- M$optCor
 Guttman.bounds <- dimGB(R)
 ```
 
-```{r, dimVar}
+```{r dimVar, eval=FALSE, include=FALSE}
 #Assess the proportion of cumulative variances for 6 factor solutions
 dimVAR(R, maxdim=6)
 ```
 
-#### Maximum Likelihood (ML) Factor Analysis with 6 factors
-
-```{r, 'mlfa thomson'}
+```{r mlfa, include=FALSE}
 mlfa <- mlFA(R, m=6)
 thomson <- facScore(filtered,mlfa$Loadings,mlfa$Uniqueness)
 ```
 
-```{r, 'fit thomson'}
+```{r fit_thomson, warning=FALSE}
 fit(X = thomson,
-    Y = sampleInfo)
+    Y = sampleInfo,
+    max_depth = 3,
+    mtry = 5)
+save(metrics, file='metrics_fa.Rdata')
 ```
 
 ## Network Analysis
 
-```{r, 'C1, C2, Slist, Tlist, Ylist, optf, P0s'}
+Code from rags2ridges
+
+```{r preparation}
 # Store all observations of Class 1 in C1
 C1 <- scale(t(ADmetabolites[, sampleInfo$ApoEClass == "Class 1"]))
 # Store all observations of Class 2 in C2
@@ -301,41 +325,48 @@ S1<- covML(C1)
 S2<- covML(C2)
 
 #Store them in a list
-Slist<- list(S1 = S1, S2 = S2)
+S<- list(S1 = S1, S2 = S2)
 
 #Get the total number of samples
 n <- c(nrow(S1), nrow(S2))
 
 # Create a list of fused covariance matrices T
-Tlist<- default.target.fused(Slist = Slist, ns = n, type = "DUPV")
+Ts<- default.target.fused(Slist = S, ns = n, type = "DUPV")
 
-# Create a list of the two-class data Y
-Ylist<- list(C1 = C1, C2 = C2)
+```
 
-
-# Get the optimal lambdas per class and fused with 10-fold CC
+```{r, eval=FALSE}
+# Get the optimal lambdas per class and fused with 10-fold CV
 set.seed(8910)
-optf <- optPenalty.fused(Ylist = Ylist,
-                         Tlist = Tlist,
+optf <- optPenalty.fused(Ylist = Ys,
+                         Tlist = Ts,
                          lambda = as.matrix(cbind(c("ridge1", "fusion"),
                                                   c("fusion", "ridge2"))),
                          cv.method = "kCV",
                          k = 10,
                          verbose = FALSE)
-# Sparsify the l2-regularised high precision matrices, correcting for FDR at .001
-P0s <- sparsify.fused(optf$Plist,
+```
+
+```{r sparsify}
+# Create a list of the two-class data Y
+Ys<- list(C1 = C1, C2 = C2)
+
+load('opt.rda')
+Ps <- optf$Plist
+# Get the sparsified high precision matrices, correcting FDR at .001
+P0s <- sparsify.fused(Ps,
                       threshold = "localFDR",
                       FDRcut = 0.999,
                       verbose = FALSE)
 ```
 
-```{r, 'GGMs per class and diff'}
+```{r GGMs per class and diff, message=FALSE}
 #Merge the sparse high precision matrices
 TST <- Union(P0s$C1$sparseParCor, P0s$C2$sparseParCor)
 PCclass1 <- TST$M1subset
 PCclass2 <- TST$M2subset
 
-# Create a color map
+# Create a color map per metabolite class
 Colors <- rownames(PCclass2)
 Colors[grep("Amine", rownames(PCclass2))]     <- "lightblue"
 Colors[grep("Org.Acid", rownames(PCclass2))]  <- "orange"
@@ -361,14 +392,14 @@ DiffGraph(PCclass1, PCclass2, lay = NULL, coords = Coords,
 par(opar)
 ```
 
-```{r, 'degree scores'}
+```{r centrality}
 PC0list      <- list(PCclass1 = PCclass1, PCclass2 = PCclass2)
 # Get the network statistics
-NetStatsList <- GGMnetworkStats.fused(PC0list)
+NetStats <- GGMnetworkStats.fused(PC0list)
 
 # Get the centrality degree scores for each class
-DegreesAD1   <- data.frame(rownames(NetStatsList),NetStatsList$PCclass1.degree)
-DegreesAD2   <- data.frame(rownames(NetStatsList),NetStatsList$PCclass2.degree)
+DegreesAD1   <- data.frame(rownames(NetStats),NetStats$PCclass1.degree)
+DegreesAD2   <- data.frame(rownames(NetStats),NetStats$PCclass2.degree)
 
 # Order and show the centrality degree scores
 DegreesAD1o  <- DegreesAD1[order(DegreesAD1[, 2], decreasing = TRUE), ]
@@ -377,7 +408,7 @@ head(DegreesAD1o, 7)
 head(DegreesAD2o, 7)
 ```
 
-```{r, 'communities per class'}
+```{r communities}
 # Get the communities per class
 set.seed(141516)
 opar <- par(mfrow = c(1, 2))
@@ -387,7 +418,7 @@ CommC2 <- Communities(PCclass2, Vcolor = Colors, Vsize = 7,  Vcex = 0.3, main = 
 par(opar)
 ```
 
-```{r, 'degree density plot'}
+```{r degree density plot }
 # Plot the densities of centrality degree scores
 plot(density(DegreesAD1[, 2]), col = "blue", xlim = c(-1, 8), xlab = "Degree", main = "")
 lines(density(DegreesAD2[, 2]), col = "red")
@@ -395,7 +426,7 @@ legenda <- c("AD class 1", "AD class 2")
 legend(5, 0.5, legend = legenda, lwd = rep(1, 2), lty = rep(1, 2), col = c("blue", "red"), cex = 0.7)
 ```
 
-```{r, 'wilcoxon rank sum'}
+```{r wilcoxon rank sum }
 #Perform a Wilcoxon signed rank test to test if the centrality degree scores are different between the classes
 wilcox.test(DegreesAD1[, 2], DegreesAD2[, 2], paired = TRUE, alternative = "less")
 ```
