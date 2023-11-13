@@ -37,7 +37,7 @@ require(ROCR)
 
 ```{r data loading, echo=FALSE}
 # Invoke data
-data(ADdata)
+load('ADdata.Rda')
 ```
 
 ## Differential expression of metabolites per ApoE genotype
@@ -46,12 +46,13 @@ data(ADdata)
 
 ```{r Y}
 # Transpose, standardize and store the metabolite data in Y
-Y <- as.matrix(scale(t(ADmetabolites)))
+Y <- as.matrix(ADmets)
 ```
 
 ```{r df}
 # Store the ApoE genotype in x as a factor
-x <- as.factor(sampleInfo$ApoEClass)
+x <- as.factor(geno$APOEb)
+sex <- as.factor(geno$sex)
 df <- cbind.data.frame(Y,x)
 ```
 
@@ -65,8 +66,7 @@ summaries <- purrr::map(df[,1:230], ~summary(aov(.x ~ df$x)))
 #### Correction for Multiple Testing
 
 ```{r FDR adjust}
-#Extract and adjust p-values for FDR control
-
+##Extract and adjust p-values for FDR control
 #Create a list to store the p-values
 p_values <- list(1:230)
 
@@ -85,11 +85,10 @@ p_values <- data.frame(p_values, row.names = colnames(Y))
 p_values$p_adj <- p.adjust(p_values[,], method = "fdr")
 ```
 
-The presence of ApoE4 has an effect on serum levels of Lipid_23 and Lip_49 (FDR-adjusted p= 0.03).
 
 ```{r}
 # Filter out the non-significant (a=0.05) FDR-adjusted p-values
-filter(p_values, p_adj <= 0.05)
+filter(p_values, p_adj < 0.05)
 ```
 
 ## Classification of metabolites on ApoE class
@@ -109,149 +108,68 @@ A function was created to streamline the analysis of multiple (tidy tabular stan
 It first binds *X* and *Y* into *df* which is then split into a training and test set (maintaining class balances). Next it fits the 3 models, returns a dataframe with their repeated (100 times) 10-fold Cross-Validation(CV) performance metrics and plots their ROC curves.
 
 ```{r fit function def}
-fit <- function(X = NULL,
-                Y = NULL,
-                max_depth= 4,
-                mtry= 6,
-                seed= 123) {
-  
-  # set y as a factor
-  y <- as.factor(x)
-  
-  #Encode y so valid R variables can be created from its classes
-  levels(y) <- make.names(levels(y))
-  
-  ### Training-test split
+  ## Function fit
+fit <- function(title,
+                X,
+                y,
+                split = 0.8,
+                model,
+                times,
+                ctrl= trainControl(method = "cv",
+                                   number = 5,
+                                   classProbs = TRUE,
+                                   summaryFunction = twoClassSummary),
+                grid = NULL,
+                seed=123,
+                auc = numeric(times),
+                metrics  = matrix(nrow = 11, ncol = times)) {
+    ### Training-test split
   #Merge X and y into df
   df <- cbind.data.frame(X, y)
-  set.seed(seed)
   
-  #Create a matrix with the training indexes
-  split_index <- createDataPartition(df$y, p = 0.7, list = FALSE)
-  
-  #Create the training set
-  train <- df[split_index,]
-  
-  #Create the test set
-  test <- df[-split_index,]
-  
-  #Store the test y in labels
-  labels <- test$y
-  labels.n <- as.numeric(labels) - 1
-  
-  #Define the training control hyperparameters
-  ctrl <- trainControl(
-    method = "repeatedcv",
-    number = 10,
-    repeats = 100,
-    classProbs = TRUE,
-    summaryFunction = twoClassSummary
-  )
-  
-  ### Logistic Regression
-  set.seed(seed)
-  
-  lr <- train(y ~ .,
-              train,
-              method = "glm",
-              metric = "ROC",
-              trControl = ctrl)
-  #Predict
-  yhat.lr <- predict(lr, test)
-  
-  #Create a confusion matrix and get performance metrics from caret
-  cm.lr <- confusionMatrix(labels, yhat.lr, positive = 'Class.2')
-  
-  #Plot ROC curve for LR
-  yhat.lr <- as.numeric(yhat.lr) -1
-  pred.lr <- prediction(yhat.lr, labels.n)
-  perf.lr <<- performance(pred.lr, "tpr", "fpr")
-  plot(perf.lr,
-    col=1,
-    lwd = 2,
-    main = 'ROC curves from repeated 10-fold CV'
-  )
-  
-  #Create a data frame to store the performance metrics
-  metrics.lr <<- data.frame(cm.lr$byClass)
-  auc.lr <<- perf.lr@y.values[[1]][2]
-  colnames(metrics.lr) <- 'Logistic Regression'
-  
-  ### Decision Tree
-  set.seed(seed)
-  # Define the tree training hyperparameters
-  tree <- train(
-    y ~ .,
-    train,
-    method = "rpart2",
-    tuneLength = max_depth,
-    metric = "ROC",
-    trControl = ctrl
-  )
-  #Predict
-  yhat.tree <- predict(tree, test)
-  
-  #Create a confusion matrix and get metrics
-  cm.tree <- confusionMatrix(labels, yhat.tree, positive = 'Class.2')
-  
-  #Create a ROC curve
-  yhat.tree <- as.numeric(yhat.tree) - 1
-  pred.tree <- prediction(yhat.tree, labels.n)
-  perf.tree <<- performance(pred.tree, "tpr", "fpr")
-  plot(perf.tree,
-    col=2,
-    lwd = 2,
-    add = TRUE
-  )
-  
-  #Store metrics in a new dataframe
-  metrics.tree <<- data.frame(cm.tree$byClass)
-  auc.tree <<- perf.tree@y.values[[1]][2]
-  colnames(metrics.tree) <- 'Decision Tree'
-  
-  
-  ### Random Forest
-  
-  set.seed(seed)
-  rf <- train(
-    y ~ .,
-    train,
-    method = "rf",
-    tuneLength = mtry,
-    metric = "ROC",
-    trControl = ctrl
-  )
-  #Predict
-  yhat.rf <- predict(rf, test)
-
-  #Get the confusion matrix and other metrics
-  cm.rf <- confusionMatrix(labels,yhat.rf, positive='Class.2')
-
-  #Create a ROC curve
-  yhat.rf <- as.numeric(yhat.rf) -1
-  pred.rf <- prediction(yhat.rf, labels.n)
-  perf.rf <- performance(pred.rf, "tpr", "fpr")
-  plot(
-    perf.rf,
-    col= 3,
-    lwd = 2,
-    add= TRUE
-  )
-  legend("bottomright", c("LR", "DT","RF"), lwd=2, 
-    col = c(1:3), bty="n")
-  #Store metrics in a new dataframe
-  metrics.rf <- data.frame(cm.rf$byClass)  
-  #Add AUC
-  auc.rf <- perf.rf@y.values[[1]][2]
-  colnames(metrics.rf) <- 'Random Forest'
-  ### Model comparison
-  
-  #Create a data frame to store and compare the metrics
-  metrics <<- cbind(metrics.lr, metrics.tree, metrics.rf)
-  metrics[12,] <- auc <<- c(auc.lr, auc.tree, auc.rf)
-  row.names(metrics)[12] <- 'AUC' 
-  
-  #Display the table of metrics
+  # Perform 10-fold CV repeated 100 times
+  for (i in 1:times) {
+    set.seed(seed + i)  # Set a different seed for each iteration
+    # Create a matrix with the training indexes
+    split_index <- createDataPartition(df$y, p = split, list = FALSE)
+    
+    # Create the training set
+    train <- df[split_index,]
+    
+    # Create the test set
+    test <- df[-split_index,]
+    
+    # Store the test y in labels
+    labels <- test$y
+    labels.n <- as.numeric(labels) - 1
+    
+    # Train the model
+    mdl <- train(y ~ .,
+      train,
+      method = model,
+      tuneGrid = grid,
+      metric = "ROC",
+      trControl = ctrl
+    )
+    
+    # Create a confusion matrix and get performance metrics from caret
+    cm <- confusionMatrix(labels, predict(mdl, test), positive = 'E4YES')
+    # Store the model performance metrics in the cumulative data frame
+    metrics[,i] <- cm$byClass
+    # Store cumulative ROC curve
+    yhat <- predict(mdl, test, type= 'prob')
+    auc[i] <- pROC::auc(labels.n,
+                         yhat[,2],
+                         levels=c(0,1),
+                         ci=TRUE,
+                         boot.n=100,
+                         ci.alpha=0.95,
+                         stratified=T,
+                         quiet=T)
+  } 
+  metrics <- data.frame(c(rowMeans(metrics, na.rm=TRUE), mean(unlist(auc))),
+                             row.names = c(names(cm$byClass),'AUC'))
+  names(metrics) <- title
   return(metrics)
 }
 ```
@@ -261,11 +179,34 @@ fit <- function(X = NULL,
 ```{r fit_original}
 X <- Y
 #Invoke the function
-fit(X = X,
-    Y = sampleInfo,
-    max_depth = 2,
-    mtry=5)
-save(metrics,file='metrics_og.Rdata')
+## Logistic Regression
+metrics.lr <- fit(title='Logistic Regression',
+                  df=df,
+                  model='glm',
+                  times=100,
+                  grid=NULL)
+
+## Decision Tree
+metrics.tree <- fit(title='Decision Tree',
+                  df=df,
+                  model='rpart2',
+                  grid = expand.grid(maxdepth=5),
+                  times=100)
+
+## Ensemble Classifiers
+metrics.rf <- fit(title='Random Forest',
+                  df=df,
+                  model='rf',
+                  grid= expand.grid(mtry=10),
+                  times=100)
+
+metrics.gbm <- fit(title='Stochastic Gradient Boosting',
+                   df=df,
+                   model='gbm',
+                   grid = expand.grid(gbm$bestTune),
+                   times=10)
+metrics <- cbind(metrics.lr, metrics.tree, metrics.rf)
+metrics
 ```
 
 ### Using 6 ML-estimated factor scores
