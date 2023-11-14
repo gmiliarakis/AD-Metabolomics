@@ -30,14 +30,14 @@ require(FMradio)
 require(rags2ridges)
 require(rpart)
 require(randomForest)
-require(ROCR)
+require(pROC)
 ```
 
 ## Data loading
 
 ```{r data loading, echo=FALSE}
 # Invoke data
-load('ADdata.Rda')
+load('ADdata.Rdata')
 ```
 
 ## Differential expression of metabolites per ApoE genotype
@@ -126,7 +126,7 @@ fit <- function(title,
     ### Training-test split
   #Merge X and y into df
   df <- cbind.data.frame(X, y)
-  
+
   # Perform 10-fold CV repeated 100 times
   for (i in 1:times) {
     set.seed(seed + i)  # Set a different seed for each iteration
@@ -181,27 +181,28 @@ X <- Y
 #Invoke the function
 ## Logistic Regression
 metrics.lr <- fit(title='Logistic Regression',
-                  df=df,
+                  X = X,
+                  y = y
                   model='glm',
                   times=100,
                   grid=NULL)
 
 ## Decision Tree
 metrics.tree <- fit(title='Decision Tree',
-                  df=df,
+                  
                   model='rpart2',
                   grid = expand.grid(maxdepth=5),
                   times=100)
 
 ## Ensemble Classifiers
 metrics.rf <- fit(title='Random Forest',
-                  df=df,
+                  
                   model='rf',
                   grid= expand.grid(mtry=10),
                   times=100)
 
 metrics.gbm <- fit(title='Stochastic Gradient Boosting',
-                   df=df,
+                   
                    model='gbm',
                    grid = expand.grid(gbm$bestTune),
                    times=10)
