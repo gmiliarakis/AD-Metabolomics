@@ -1,13 +1,22 @@
 # Fdb version 4
 ["biber GM_ThesisBiometris"] 0 "GM_ThesisBiometris.bcf" "GM_ThesisBiometris.bbl" "GM_ThesisBiometris" 0 -1
   "./references.bib" 1699984644 79378 986223091f50fde38853e0eae8258b0c ""
+<<<<<<< HEAD
   "GM_ThesisBiometris.bcf" 1699996925 113191 83f3220c488f362b4bf46bebff629f5f "pdflatex"
+=======
+  "GM_ThesisBiometris.bcf" 1699990997 113191 83f3220c488f362b4bf46bebff629f5f "pdflatex"
+>>>>>>> 9cdef2d4a4826616d947ff88178239d78b961891
   (generated)
   "GM_ThesisBiometris.bbl"
   "GM_ThesisBiometris.blg"
   (rewritten before read)
+<<<<<<< HEAD
 ["pdflatex"] 1699996913 "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" "GM_ThesisBiometris.pdf" "GM_ThesisBiometris" 1699996926 2
   "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" 1699996901 24303 939cba6032a8c7b536fdfbaa6dac7b39 ""
+=======
+["pdflatex"] 1699990988 "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" "GM_ThesisBiometris.pdf" "GM_ThesisBiometris" 1699990998 2
+  "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" 1699988611 24292 7bfc4b3d0d4e219d3637d93adb6bd7d6 ""
+>>>>>>> 9cdef2d4a4826616d947ff88178239d78b961891
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf-pc.enc" 1600636029 2211 c42193888177bc8f86d55dca129a9358 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc" 1422827479 2083 60e36f8eac802fcaf19eabe2633b406e ""
@@ -55,6 +64,10 @@
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/txfonts/txsyb.tfm" 1136768653 988 098ca7e8cc5647b9ac21b82dbdce1f01 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/txfonts/txsyc.tfm" 1136768653 1084 75e807e9e71f7a312e4e1187dce5e93b ""
   "/usr/local/texlive/2023/texmf-dist/fonts/tfm/public/txfonts/txtt.tfm" 1136768653 1200 1032be7d597a4dce33bcda3c08fc1be0 ""
+<<<<<<< HEAD
+=======
+  "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1248133631 35752 024fb6c41858982481f6968b5fc26508 ""
+>>>>>>> 9cdef2d4a4826616d947ff88178239d78b961891
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/newtx/ztmb.pfb" 1698694482 255251 958c6ad4e5518904a53cf1118c612893 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/newtx/ztmr.pfb" 1698694482 286816 82db2bfe6920054b1a43661c07078412 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/type1/public/newtx/ztmri.pfb" 1698694482 248316 6c047e35119cde1bffb3263909816feb ""
@@ -267,6 +280,7 @@
   "/usr/local/texlive/2023/texmf-dist/tex/latex/xpatch/xpatch.sty" 1585258158 8314 7803f78066c4f9d008405191a4b43073 ""
   "/usr/local/texlive/2023/texmf-dist/web2c/texmf.cnf" 1697057529 41009 84b61f42d16d06bedb915f57aa2374cf ""
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1699990908 4713544 47512cea233037491e0151ff6d6ea774 ""
+<<<<<<< HEAD
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1699991158 8213690 42cd6fc0644a004867685747aaa8b93c ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
   "GM_ThesisBiometris.aux" 1699996925 14041 4eef43119a2edc3ef4949aa4cc266e92 "pdflatex"
@@ -274,6 +288,15 @@
   "GM_ThesisBiometris.out" 1699996925 1136 1033e0f6ec5b3f38a5e4b61344af82e9 "pdflatex"
   "GM_ThesisBiometris.tex" 1699996901 24303 939cba6032a8c7b536fdfbaa6dac7b39 ""
   "GM_ThesisBiometris.toc" 1699996925 999 4a9e2f38aa3d7031b66b69488b13870f "pdflatex"
+=======
+  "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1699989552 7883460 b553c5aa3892175e1b4b8969cf4e89f0 ""
+  "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
+  "GM_ThesisBiometris.aux" 1699990997 14433 4046706789554d153aee392f22f9d8bd "pdflatex"
+  "GM_ThesisBiometris.bbl" 1699989465 132399 45fd44c6cd08be95a3a4cc049225305f "biber GM_ThesisBiometris"
+  "GM_ThesisBiometris.out" 1699990997 1136 1033e0f6ec5b3f38a5e4b61344af82e9 "pdflatex"
+  "GM_ThesisBiometris.tex" 1699988611 24292 7bfc4b3d0d4e219d3637d93adb6bd7d6 ""
+  "GM_ThesisBiometris.toc" 1699990997 999 4a9e2f38aa3d7031b66b69488b13870f "pdflatex"
+>>>>>>> 9cdef2d4a4826616d947ff88178239d78b961891
   "figures/ApoE@2x.png" 1699984644 664484 40377c9024d4459e700610bef58d72f9 ""
   "figures/WURlogo.png" 1699984644 3938 cbfd110376a1a638491526f219779a39 ""
   "figures/biometris_logo.png" 1699984644 57717 92c170a4eba56294c04c75a18edb216e ""
