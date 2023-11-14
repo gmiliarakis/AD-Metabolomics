@@ -50,17 +50,17 @@ Y <- as.matrix(ADmets)
 ```
 
 ```{r df}
-# Store the ApoE genotype in x as a factor
-x <- as.factor(geno$APOEb)
+# Store the ApoE genotype in APOE as a factor
+APOE <- as.factor(geno$APOEb)
 sex <- as.factor(geno$sex)
-df <- cbind.data.frame(Y,x)
+df <- cbind.data.frame(Y,APOE)
 ```
 
 ### Analysis of Variance (ANOVA)
 
 ```{r aov}
 # Store the ANOVA model summaries in summaries
-summaries <- purrr::map(df[,1:230], ~summary(aov(.x ~ df$x)))
+summaries <- purrr::map(df[,1:230], ~summary(aov(.x ~ df$APOE)))
 ```
 
 #### Correction for Multiple Testing
@@ -178,36 +178,36 @@ fit <- function(title,
 
 ```{r fit_original}
 X <- Y
-#Invoke the function
-## Logistic Regression
-metrics.lr <- fit(title='Logistic Regression',
-                  X = X,
-                  y = y
-                  model='glm',
-                  times=100,
-                  grid=NULL)
+# #Invoke the function
+# ## Logistic Regression
+# metrics.lr <- fit(title='Logistic Regression',
+#                   X = X,
+#                   y = y
+#                   model='glm',
+#                   times=100,
+#                   grid=NULL)
 
-## Decision Tree
-metrics.tree <- fit(title='Decision Tree',
+# ## Decision Tree
+# metrics.tree <- fit(title='Decision Tree',
                   
-                  model='rpart2',
-                  grid = expand.grid(maxdepth=5),
-                  times=100)
+#                   model='rpart2',
+#                   grid = expand.grid(maxdepth=5),
+#                   times=100)
 
-## Ensemble Classifiers
-metrics.rf <- fit(title='Random Forest',
+# ## Ensemble Classifiers
+# metrics.rf <- fit(title='Random Forest',
                   
-                  model='rf',
-                  grid= expand.grid(mtry=10),
-                  times=100)
+#                   model='rf',
+#                   grid= expand.grid(mtry=10),
+#                   times=100)
 
-metrics.gbm <- fit(title='Stochastic Gradient Boosting',
+# metrics.gbm <- fit(title='Stochastic Gradient Boosting',
                    
-                   model='gbm',
-                   grid = expand.grid(gbm$bestTune),
-                   times=10)
-metrics <- cbind(metrics.lr, metrics.tree, metrics.rf)
-metrics
+#                    model='gbm',
+#                    grid = expand.grid(gbm$bestTune),
+#                    times=10)
+# metrics <- cbind(metrics.lr, metrics.tree, metrics.rf)
+# metrics
 ```
 
 ### Using 6 ML-estimated factor scores
@@ -245,11 +245,7 @@ thomson <- facScore(filtered,mlfa$Loadings,mlfa$Uniqueness)
 ```
 
 ```{r fit_thomson, warning=FALSE}
-fit(X = thomson,
-    Y = sampleInfo,
-    max_depth = 3,
-    mtry = 5)
-save(metrics, file='metrics_fa.Rdata')
+
 ```
 
 ## Network Analysis
@@ -258,9 +254,9 @@ Code from rags2ridges
 
 ```{r preparation}
 # Store all observations of Class 1 in C1
-C1 <- scale(t(ADmetabolites[, sampleInfo$ApoEClass == "Class 1"]))
+C1 <- scale(df[, APOE == 'APOE4NO'])
 # Store all observations of Class 2 in C2
-C2 <- scale(t(ADmetabolites[, sampleInfo$ApoEClass == "Class 2"]))
+C2 <- scale(df[, APOE == "APOE4YES"])
 
 #Get the covariance matrices of C1 and C2
 S1<- covML(C1)
