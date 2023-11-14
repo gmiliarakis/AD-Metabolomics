@@ -19,7 +19,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  comment = '', fig.width = 6, fig.height = 6, warning = FALSE
+  comment = "", fig.width = 6, fig.height = 6, warning = FALSE
 )
 ```
 
@@ -37,7 +37,7 @@ require(pROC)
 
 ```{r data loading, echo=FALSE}
 # Invoke data
-load('ADdata.Rdata')
+load("ADdata.Rdata")
 ```
 
 ## Differential expression of metabolites per ApoE genotype
@@ -53,36 +53,36 @@ Y <- as.matrix(ADmets)
 # Store the ApoE genotype in APOE as a factor
 APOE <- as.factor(geno$APOEb)
 sex <- as.factor(geno$sex)
-df <- cbind.data.frame(Y,APOE)
+df <- cbind.data.frame(Y, APOE)
 ```
 
 ### Analysis of Variance (ANOVA)
 
 ```{r aov}
 # Store the ANOVA model summaries in summaries
-summaries <- purrr::map(df[,1:230], ~summary(aov(.x ~ df$APOE)))
+summaries <- purrr::map(df[, 1:230], ~ summary(aov(.x ~ df$APOE)))
 ```
 
 #### Correction for Multiple Testing
 
 ```{r FDR adjust}
-##Extract and adjust p-values for FDR control
-#Create a list to store the p-values
+## Extract and adjust p-values for FDR control
+# Create a list to store the p-values
 p_values <- list(1:230)
 
-#Extract the p-values of the F-tests from the aov summaries list and store them in p_values
-for (i in 1:230){
+# Extract the p-values of the F-tests from the aov summaries list and store them in p_values
+for (i in 1:230) {
   p_values[[i]] <- summaries[[i]][[1]][["Pr(>F)"]][[1]]
 }
 
-# Coerce p_values to dataframe and transpose it 
+# Coerce p_values to dataframe and transpose it
 p_values <- t(data.frame(p_values))
 
 # Set as row names the metabolites
 p_values <- data.frame(p_values, row.names = colnames(Y))
 
 # Calculate the FDR-adjusted p-values
-p_values$p_adj <- p.adjust(p_values[,], method = "fdr")
+p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
 ```
 
 
@@ -108,41 +108,41 @@ A function was created to streamline the analysis of multiple (tidy tabular stan
 It first binds *X* and *Y* into *df* which is then split into a training and test set (maintaining class balances). Next it fits the 3 models, returns a dataframe with their repeated (100 times) 10-fold Cross-Validation(CV) performance metrics and plots their ROC curves.
 
 ```{r fit function def}
-  ## Function fit
+## Function fit
 fit <- function(title,
                 X,
                 y,
                 split = 0.8,
                 model,
                 times,
-                ctrl= trainControl(method = "cv",
-                                   number = 5,
-                                   classProbs = TRUE,
-                                   summaryFunction = twoClassSummary),
+                ctrl = trainControl(
+                  method = "cv",
+                  number = 5, classProbs = TRUE,
+                  summaryFunction = twoClassSummary
+                ),
                 grid = NULL,
-                seed=123,
+                seed = 123,
                 auc = numeric(times),
-                metrics  = matrix(nrow = 11, ncol = times)) {
-    ### Training-test split
-  #Merge X and y into df
+                metrics = matrix(nrow = 11, ncol = times)) {
+  ### Training-test split
+  # Merge X and y into df
   df <- cbind.data.frame(X, y)
 
   # Perform 10-fold CV repeated 100 times
   for (i in 1:times) {
-    set.seed(seed + i)  # Set a different seed for each iteration
+    set.seed(seed + i) # Set a different seed for each iteration
     # Create a matrix with the training indexes
     split_index <- createDataPartition(df$y, p = split, list = FALSE)
-    
+
     # Create the training set
-    train <- df[split_index,]
-    
+    train <- df[split_index, ]
+
     # Create the test set
-    test <- df[-split_index,]
-    
+    test <- df[-split_index, ]
+
     # Store the test y in labels
     labels <- test$y
     labels.n <- as.numeric(labels) - 1
-    
     # Train the model
     mdl <- train(y ~ .,
       train,
@@ -151,24 +151,26 @@ fit <- function(title,
       metric = "ROC",
       trControl = ctrl
     )
-    
+
     # Create a confusion matrix and get performance metrics from caret
-    cm <- confusionMatrix(labels, predict(mdl, test), positive = 'E4YES')
+    cm <- confusionMatrix(labels, predict(mdl, test), positive = "E4YES")
     # Store the model performance metrics in the cumulative data frame
-    metrics[,i] <- cm$byClass
+    metrics[, i] <- cm$byClass
     # Store cumulative ROC curve
-    yhat <- predict(mdl, test, type= 'prob')
+    yhat <- predict(mdl, test, type = "prob")
     auc[i] <- pROC::auc(labels.n,
-                         yhat[,2],
-                         levels=c(0,1),
-                         ci=TRUE,
-                         boot.n=100,
-                         ci.alpha=0.95,
-                         stratified=T,
-                         quiet=T)
-  } 
-  metrics <- data.frame(c(rowMeans(metrics, na.rm=TRUE), mean(unlist(auc))),
-                             row.names = c(names(cm$byClass),'AUC'))
+      yhat[, 2],
+      levels = c(0, 1),
+      ci = TRUE,
+      boot.n = 100,
+      ci.alpha = 0.95,
+      stratified = T,
+      quiet = T
+    )
+  }
+  metrics <- data.frame(c(rowMeans(metrics, na.rm = TRUE), mean(unlist(auc))),
+    row.names = c(names(cm$byClass), "AUC")
+  )
   names(metrics) <- title
   return(metrics)
 }
@@ -189,20 +191,20 @@ X <- Y
 
 # ## Decision Tree
 # metrics.tree <- fit(title='Decision Tree',
-                  
+
 #                   model='rpart2',
 #                   grid = expand.grid(maxdepth=5),
 #                   times=100)
 
 # ## Ensemble Classifiers
 # metrics.rf <- fit(title='Random Forest',
-                  
+
 #                   model='rf',
 #                   grid= expand.grid(mtry=10),
 #                   times=100)
 
 # metrics.gbm <- fit(title='Stochastic Gradient Boosting',
-                   
+
 #                    model='gbm',
 #                    grid = expand.grid(gbm$bestTune),
 #                    times=10)
@@ -216,32 +218,32 @@ X <- Y
 set.seed(123)
 cov <- cor(X)
 
-#Find redundant features
+# Find redundant features
 filter <- RF(cov)
 
-#Filter out redundant features
+# Filter out redundant features
 filtered <- subSet(X, filter)
 
-#Regularized correlation matrix estimation
+# Regularized correlation matrix estimation
 M <- regcor(filtered)
 ```
 
 ```{r optCor, echo=FALSE, include=FALSE}
-#Get the regularized correlation matrix of the filtered dataset
+# Get the regularized correlation matrix of the filtered dataset
 R <- M$optCor
 
-#Get the Guttman bounds for R
+# Get the Guttman bounds for R
 Guttman.bounds <- dimGB(R)
 ```
 
 ```{r dimVar, eval=FALSE, include=FALSE}
-#Assess the proportion of cumulative variances for 6 factor solutions
-dimVAR(R, maxdim=6)
+# Assess the proportion of cumulative variances for 6 factor solutions
+dimVAR(R, maxdim = 6)
 ```
 
 ```{r mlfa, include=FALSE}
-mlfa <- mlFA(R, m=6)
-thomson <- facScore(filtered,mlfa$Loadings,mlfa$Uniqueness)
+mlfa <- mlFA(R, m = 6)
+thomson <- facScore(filtered, mlfa$Loadings, mlfa$Uniqueness)
 ```
 
 ```{r fit_thomson, warning=FALSE}
@@ -254,94 +256,104 @@ Code from rags2ridges
 
 ```{r preparation}
 # Store all observations of Class 1 in C1
-C1 <- scale(df[, APOE == 'APOE4NO'])
+C1 <- scale(df[, APOE == "APOE4NO"])
 # Store all observations of Class 2 in C2
 C2 <- scale(df[, APOE == "APOE4YES"])
 
-#Get the covariance matrices of C1 and C2
-S1<- covML(C1)
-S2<- covML(C2)
+# Get the covariance matrices of C1 and C2
+S1 <- covML(C1)
+S2 <- covML(C2)
 
-#Store them in a list
-S<- list(S1 = S1, S2 = S2)
+# Store them in a list
+S <- list(S1 = S1, S2 = S2)
 
-#Get the total number of samples
+# Get the total number of samples
 n <- c(nrow(S1), nrow(S2))
 
 # Create a list of fused covariance matrices T
-Ts<- default.target.fused(Slist = S, ns = n, type = "DUPV")
-
+Ts <- default.target.fused(Slist = S, ns = n, type = "DUPV")
 ```
 
 ```{r, eval=FALSE}
 # Get the optimal lambdas per class and fused with 10-fold CV
 set.seed(8910)
-optf <- optPenalty.fused(Ylist = Ys,
-                         Tlist = Ts,
-                         lambda = as.matrix(cbind(c("ridge1", "fusion"),
-                                                  c("fusion", "ridge2"))),
-                         cv.method = "kCV",
-                         k = 10,
-                         verbose = FALSE)
+optf <- optPenalty.fused(
+  Ylist = Ys,
+  Tlist = Ts,
+  lambda = as.matrix(cbind(
+    c("ridge1", "fusion"),
+    c("fusion", "ridge2")
+  )),
+  cv.method = "kCV",
+  k = 10,
+  verbose = FALSE
+)
 ```
 
 ```{r sparsify}
 # Create a list of the two-class data Y
-Ys<- list(C1 = C1, C2 = C2)
+Ys <- list(C1 = C1, C2 = C2)
 
-load('opt.rda')
+load("opt.rda")
 Ps <- optf$Plist
 # Get the sparsified high precision matrices, correcting FDR at .001
 P0s <- sparsify.fused(Ps,
-                      threshold = "localFDR",
-                      FDRcut = 0.999,
-                      verbose = FALSE)
+  threshold = "localFDR",
+  FDRcut = 0.999,
+  verbose = FALSE
+)
 ```
 
 ```{r GGMs per class and diff, message=FALSE}
-#Merge the sparse high precision matrices
+# Merge the sparse high precision matrices
 TST <- Union(P0s$C1$sparseParCor, P0s$C2$sparseParCor)
 PCclass1 <- TST$M1subset
 PCclass2 <- TST$M2subset
 
 # Create a color map per metabolite class
 Colors <- rownames(PCclass2)
-Colors[grep("Amine", rownames(PCclass2))]     <- "lightblue"
-Colors[grep("Org.Acid", rownames(PCclass2))]  <- "orange"
-Colors[grep("Lip", rownames(PCclass2))]       <- "yellow"
+Colors[grep("Amine", rownames(PCclass2))] <- "lightblue"
+Colors[grep("Org.Acid", rownames(PCclass2))] <- "orange"
+Colors[grep("Lip", rownames(PCclass2))] <- "yellow"
 Colors[grep("Ox.Stress", rownames(PCclass2))] <- "purple"
 
 
 set.seed(111213)
 opar <- par(mfrow = c(1, 3))
-#Plot the sparsified ridge matrix of AD Class 2
-Coords <- Ugraph(PCclass2, type = "fancy", lay = "layout_with_fr",
-    Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
-    main = "AD Class 2")
-#Plot he sparsified ridge matrix of AD Class 1
-Ugraph(PCclass1, type = "fancy", lay = NULL, coords = Coords,
-    Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
-    main = "AD Class 1")
+# Plot the sparsified ridge matrix of AD Class 2
+Coords <- Ugraph(PCclass2,
+  type = "fancy", lay = "layout_with_fr",
+  Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
+  main = "AD Class 2"
+)
+# Plot he sparsified ridge matrix of AD Class 1
+Ugraph(PCclass1,
+  type = "fancy", lay = NULL, coords = Coords,
+  Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
+  main = "AD Class 1"
+)
 
-#Plot the differential network
-DiffGraph(PCclass1, PCclass2, lay = NULL, coords = Coords,
-    Vcolor = Colors, Vsize = 7, Vcex = 0.3,
-    main = "Differential Network")
+# Plot the differential network
+DiffGraph(PCclass1, PCclass2,
+  lay = NULL, coords = Coords,
+  Vcolor = Colors, Vsize = 7, Vcex = 0.3,
+  main = "Differential Network"
+)
 par(opar)
 ```
 
 ```{r centrality}
-PC0list      <- list(PCclass1 = PCclass1, PCclass2 = PCclass2)
+PC0list <- list(PCclass1 = PCclass1, PCclass2 = PCclass2)
 # Get the network statistics
 NetStats <- GGMnetworkStats.fused(PC0list)
 
 # Get the centrality degree scores for each class
-DegreesAD1   <- data.frame(rownames(NetStats),NetStats$PCclass1.degree)
-DegreesAD2   <- data.frame(rownames(NetStats),NetStats$PCclass2.degree)
+DegreesAD1 <- data.frame(rownames(NetStats), NetStats$PCclass1.degree)
+DegreesAD2 <- data.frame(rownames(NetStats), NetStats$PCclass2.degree)
 
 # Order and show the centrality degree scores
-DegreesAD1o  <- DegreesAD1[order(DegreesAD1[, 2], decreasing = TRUE), ]
-DegreesAD2o  <- DegreesAD2[order(DegreesAD2[, 2], decreasing = TRUE), ]
+DegreesAD1o <- DegreesAD1[order(DegreesAD1[, 2], decreasing = TRUE), ]
+DegreesAD2o <- DegreesAD2[order(DegreesAD2[, 2], decreasing = TRUE), ]
 head(DegreesAD1o, 7)
 head(DegreesAD2o, 7)
 ```
@@ -350,9 +362,9 @@ head(DegreesAD2o, 7)
 # Get the communities per class
 set.seed(141516)
 opar <- par(mfrow = c(1, 2))
-CommC1 <- Communities(PCclass1, Vcolor = Colors, Vsize = 7,  Vcex = 0.3, main = "Modules AD Class 1")
+CommC1 <- Communities(PCclass1, Vcolor = Colors, Vsize = 7, Vcex = 0.3, main = "Modules AD Class 1")
 
-CommC2 <- Communities(PCclass2, Vcolor = Colors, Vsize = 7,  Vcex = 0.3, main = "Modules AD Class 2")
+CommC2 <- Communities(PCclass2, Vcolor = Colors, Vsize = 7, Vcex = 0.3, main = "Modules AD Class 2")
 par(opar)
 ```
 
@@ -365,6 +377,6 @@ legend(5, 0.5, legend = legenda, lwd = rep(1, 2), lty = rep(1, 2), col = c("blue
 ```
 
 ```{r wilcoxon rank sum }
-#Perform a Wilcoxon signed rank test to test if the centrality degree scores are different between the classes
+# Perform a Wilcoxon signed rank test to test if the centrality degree scores are different between the classes
 wilcox.test(DegreesAD1[, 2], DegreesAD2[, 2], paired = TRUE, alternative = "less")
 ```

@@ -1,0 +1,335 @@
+%%%%%%%%%-----------------------------------------------------------------
+%%%%%%%%% Thesis template, v1
+%%%%%%%%% Mathematical & Statistical Methods group - Biometris
+%%%%%%%%% Wageningen University & Research
+%%%%%%%%%-----------------------------------------------------------------
+
+
+\documentclass{amsart}
+
+\usepackage{booktabs}
+\usepackage{lipsum}
+
+% Setting margins
+\usepackage[a4paper, left=3cm,right=3cm]{geometry}
+
+% Packages for the titlepage
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{graphicx}
+\usepackage{newtxtext}
+\usepackage{float}
+\usepackage{svg}
+
+% Packages for mathematical writing
+\usepackage{amsmath}                           % Enables the align enviroment
+\usepackage{amssymb}                           % Math symbols (e.g. \mathbb{})
+\usepackage{dsfont} 	                         % For \mathds{1} blackboard bold 1
+\usepackage{bm}                                % For roman (upright) bold latin letters
+\usepackage{mathtools}                         % Better math
+\usepackage[hypertexnames=false]{hyperref}     % For urls and hyperlinks
+\usepackage[scientific-notation=true]{siunitx} % For scientific notation
+\usepackage{euscript}[mathcal]
+\usepackage{txfonts}
+
+% For theorems, remarks, lemmas etc.
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}%[section]
+%% >> Define your newtheorems here
+
+% For algorithms
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+% Often used math operators:
+% You can define these yourself using \DeclareMathOperator and \newcommand
+%\DeclareMathOperator*{\argmax}{arg\,max}    % maxmizing argument
+%\newcommand{\LA}{\mathbf{\Lambda}}
+
+% For bibliography
+\usepackage[
+    backend=biber,
+    style=ieee, 
+    maxcitenames=1,
+    mincitenames=1]
+    {biblatex}
+\addbibresource{references.bib}
+\def\bibfont{\footnotesize}
+
+
+%--------------------------------------------------------------------
+%--------------- Front and Main matter style ------------------------
+\newcommand{\frontmatter}{
+    \pagenumbering{roman}   % Setting page numbering to lower-case roman
+}
+\newcommand{\mainmatter}{
+    \newpage
+    \pagenumbering{arabic}  % Setting page numbering to normal integers
+}
+%--------------- Front and Main matter style ------------------------
+%--------------------------------------------------------------------
+
+
+\begin{document}
+% \input{Thesis_Template_Biometris-concordance}
+
+
+% Add title page:
+%------------------------------------------------------------------------------
+% In this segment, enter the desired student data to be shown at the title page
+\newcommand{\thesisAuthor}{George Miliarakis}                             % State your name
+\newcommand{\thesisTitle}{Mechanistic links between ApoE genotype and serum metabolites in Alzheimer's Disease}                                      % State title thesis
+\newcommand{\thesisSubTitle}{a Data Science approach}                            % State subtitle thesis
+\newcommand{\thesisDegree}{MSc Thesis}      % Choose type
+\newcommand{\university}{Wageningen University \& Research}                % You generally don't need to touch this
+\newcommand{\thesisPlaceDate}{Wageningen, November 2023}                      % State month and year
+%------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------
+% In this segment, enter the desired supervisor data to be shown at the title page
+\newcommand{\supervisor}{C.F.W. Peeters}                                                % State name of supervisor
+\newcommand{\departmentSUP}{Mathematical \& Statistical Methods (Biometris)} % State department supervisor (generally Biometris)
+\newcommand{\universitySUP}{Wageningen University \& Research}                              % State university supervisor (generally WUR)
+%------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------
+% In this segment, enter the desired co-supervisor data to be shown at the title page
+\newcommand{\cosupervisor}{Yannick Vermeiren}                                         % State name of co-supervisor
+\newcommand{\departmentCOSUP}{Nutrition, Brain and Cognitive Ageing}                             % State department or division co-supervisor
+\newcommand{\universityCOSUP}{Wageningen University \& Research}                              % State university or company co-supervisor
+%------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------
+% Logos and visuals
+\begin{titlepage}
+\thispagestyle{empty}
+
+% Adding logos
+\begin{figure} [H]
+\vspace{-3cm}
+ \centering
+\begin{minipage}[t]{.45\linewidth}
+  \raggedright
+  % Upload and include SLU loggo here:
+  \hspace*{-2cm}\includegraphics[width=\linewidth]{figures/WURlogo.png}
+
+\end{minipage}%
+  \begin{minipage}[t]{.45\linewidth}
+  \vspace{-2.6cm}
+ \raggedleft
+%% Inclusion Biometris logo
+ \hspace*{+2cm}\includegraphics[width =.95\textwidth]{figures/biometris_logo.png}
+
+\end{minipage}
+\end{figure}
+
+% Bottom/background picture
+\begin{tikzpicture}[overlay, remember picture]
+\node[anchor=south west,
+      xshift=+6.5cm,
+      yshift=-0.2cm]
+     at (current page.south west)
+     {\includegraphics[width = 0.5\textwidth]{figures/torontodeclaration.png}};
+\end{tikzpicture}
+%------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------
+% Title information
+\vspace{1cm}
+\begin{center}
+\par
+\noindent
+\rule[0.2cm]{\linewidth}{1.5pt}
+\Huge
+\textbf{\thesisTitle}
+\vspace{0.2cm}
+\LARGE
+\par
+\noindent
+\thesisSubTitle\\
+\rule[0.2cm]{\linewidth}{1.5pt}
+\Large
+\end{center}
+%------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------
+% Author information
+\vspace{2cm}
+\noindent
+\LARGE
+\thesisAuthor\\
+\vspace{.2 cm}
+\small
+\par \noindent
+\thesisDegree
+\par \noindent
+\university
+\par \noindent
+\thesisPlaceDate
+%------------------------------------------------------------------------------
+
+
+%------------------------------------------------------------------------------
+% Supervision information
+\vspace{4cm}
+\begin{flushright}
+\emph{Supervisor} \\
+\textbf{\supervisor} \\
+\departmentSUP \\
+\universitySUP
+\end{flushright}
+
+\vspace{.5cm}
+\begin{flushright}
+\emph{Supervisor} \\
+\textbf{\cosupervisor} \\
+\departmentCOSUP \\
+\universityCOSUP
+\end{flushright}
+%------------------------------------------------------------------------------
+
+
+\end{titlepage}
+
+\frontmatter
+
+
+
+
+
+
+% Inserting table of contents
+\tableofcontents
+%--------------- Front matter ---------------------------------------
+%--------------------------------------------------------------------
+
+
+
+
+
+
+%--------------------------------------------------------------------
+%--------------- Main matter ----------------------------------------
+\mainmatter
+
+\section{Introduction}\label{Intro}
+\subsection{Background}
+Alzheimer’s Disease (AD) is a complex, progressive neurodegenerative disorder and the most prevalent form of dementia \cite{Penke2023NewDisease}. One person is diagnosed with AD every 3 seconds, with a two-fold increase in incidence every 10 years, i.e., 10\% at the age of 65, 20\% at 75, and 40\% at 85 \cite{MartinPrince2015WorldTrends}. The impact AD has on patients, their caregivers, and healthcare systems is detrimental. In fact, it has an estimated annual global societal cost that exceeds the GDP of The Netherlands \cite{Wimo2023The2019}. To date, there is no successful disease or outcome modifying therapy for AD.
+
+The main risk factor for AD is age, while several genetic and lifestyle risk factors, as well as biochemical pathways contribute to its development \cite{Penke2023NewDisease}. AD occurs in various histopathological phenotypes and presents a broad spectrum of clinical signs and symptoms \cite{Heneka2015NeuroinflammationDisease, Edwards2019ANeurodegeneration}. The Alzheimer's disease continuum starts with subjective cognitive decline (SCD), followed by mild cognitive impairment (MCI) \cite{Rasmussen2019AlzheimersDiagnosis}, and continues with progressive loss of global cognition, of which particularly memory, processing speed and executive functioning, spanning a total period of 10-15 years \cite{Scheltens2016AlzheimersDisease} 
+
+The most prevalent phenotype of AD is sporadic or late-onset AD (SAD, LOAD; \>95\% of cases), typically appearing after 65 years of ages \cite{Beydoun2014EpidemiologicMeta-analysis}. A rarer phenotype is early-onset familial AD (FAD), usually starting at ages 30–65 and passed in an autosomal dominant fashion \cite{VanCauwenberghe2015ThePerspectives}.
+Even though FAD mutations explain only a small percentage of AD cases, they have a great impact on AD research given their appealing genotype-phenotype links.
+
+The amyloid cascade hypothesis has been the most predominant in explaining the pathogenesis of FAD. In historical terms, its impact was profound, as it helped distinguish and identify AD as a single disease that may be studied for treatment \cite{Hardy2006AlzheimersReappraisal}. It suggests that chronic neuroinflammation promotes protein misfolding and accumulation in the brain, forming plaques (consisting of oligomerized amyloid A$\beta_{42}$) and tangles (consisting of hyperphosphorylated tau protein) \cite{Edwards2019ANeurodegeneration}. Nevertheless, it does not necessarily cover all the AD cases; clinical trials of A$\beta$ anti-bodies as treatment prove the amyloid cascade hypothesis insufficient \cite{Kepp2023TheReview,Kurkinen2023TheThinking}. Evidence suggests that oxidative stress, metabolic abnormalities, atherosclerosis, cardiovascular effects, imbalances of intra-neuron calcium and other metal ions contribute to the development of AD \cite{Kepp2023TheReview}. \citeauthor{Kepp2023TheReview} in their recent review propose a more complex and holistic view of AD pathology, by integrating (epi-)genetic, environmental, vascular, neuro-inflammatory and metabolic factors in predictive models \cite{Kepp2023TheReview}. The present study focuses on integrating and linking genetic and metabolic nuances in AD.
+
+Metabolism entails the repertoire of chemical reactions that keep living organisms alive. Metabolites  --especially lipid \cite{Barupal2019SetsPathophysiology,Fernandez-Calle2022APOEDiseases, Proitsi2017AssociationAnalysis}-- , perceived as functional intermediates of AD development, are rigorously studied for bio-markers or targets for treatment \cite{Oeckl2019ADisease}.
+
+The apo-lipoprotein-$\varepsilon$ (ApoE) is a brain-specific fat-binding protein that comprises several types of lipoproteins found in blood, interstitial fluid (ISF) of brain parenchyma and CSF, i.e., chilomicra, IDL and VLDL \cite{Husain2021APOETherapeutics}. Humans have three versions of the gene: $\varepsilon_2$ which is protective, $\varepsilon_3$ that is neutral and $\varepsilon_4$ that is predisposing of AD \cite{Husain2021APOETherapeutics}. The ApoE polymorphism is found in 6 different genotypes [Fig. \ref{fig1}], and affects serum levels of several lipids \cite{Gan2022EffectsPopulation}.
+
+The APO$\varepsilon_4$ form has the highest lipid-binding affinity and leads to poor ApoE recycling, A$\beta$ clearance, glucose uptake and mitochondrial deregulation in the brain \cite{Husain2021APOETherapeutics}. Moreover, ApoE4 is associated with tau misfolding and increased pro-inflammatory response (e.g. via microglia and astrocyte activation) which compromise the blood-brain barrier (BBB), leading to neurodegeneration and cognitive decline \cite{Parhizkar2022APOEDisease, Husain2021APOETherapeutics}. Notably, sex (60\% females) and ApoE4 allelic composition (50\% has at least one $\varepsilon_4$ allele) are the strongest genetic risk factors for SAD \cite{Husain2021APOETherapeutics, Arnold2020SexMetabolome}. In this regard, it is shown that the ApoE4 genotype has a larger impact on females, as they present greater impairment of mitochondrial energy production, compared to males \cite{Arnold2020SexMetabolome}.
+
+Perturbed serum metabolites associated with AD are amines, aminoacids \cite{deLeeuw2017Blood-basedDisease, Green2023InvestigatingDisease}, cholesteryl esters \cite{Proitsi2017AssociationAnalysis}, sphingolipids \cite{Varma2018BrainStudy,Sun2022AssociationDisease,Green2023InvestigatingDisease,Oeckl2019ADisease,Barupal2019SetsPathophysiology}, fatty acids \cite{Fernandez-Calle2022APOEDiseases,deLeeuw2017Blood-basedDisease}, glycerophospholipids \cite{Varma2018BrainStudy, Jia2022ATypes,Huo2020BrainAnalysis, Weng2019TheImpairment}, phosphatidylcholines \cite{Simpson2016BloodAging} and lipid peroxidation compounds \cite{Fernandez-Calle2022APOEDiseases}. These molecules are usually identified via high-throughput metabolomic pipelines (coupled with Mass Spectrometry (MS) detectors) that trace all compounds in a sample and result in high-dimensional data \cite{Oka2023MultiomicsCohort}. The latter often require advanced statistical methods e.g. projection to latent structures \cite{Weng2019TheImpairment, Peeters2019StableData} or graphical models \cite{Peeters2022Rags2ridges:Matrices} in order to extract putatively meaningful information. 
+With such techniques, \citeauthor{deLeeuw2017Blood-basedDisease} discovered distinct serum metabolic signatures among AD patients-controls and those carrying at least one ApoE $\varepsilon_4$ allele \cite{deLeeuw2017Blood-basedDisease}, as they appear in Fig. \ref{fig2}. The different metabolic profiles, however, among ApoE4 non-carriers remain obscure. A data science approach can potentially reveal differentially expressed metabolites between the 6 ApoE genotypes, thus unveiling distinct pathways of metabolic deregulation in AD.
+
+\begin{figure}[]
+  \includegraphics[width=0.7\textwidth]{figures/ApoE@2x.png}
+    \caption{Sankey chart showing the allele distribution among the 6 ApoE genotypes.}
+  \label{fig1}
+\end{figure}
+
+\begin{figure}[b!]
+\vspace*{-1cm}
+  \includegraphics[width=\textwidth]{figures/network.jpeg}
+    \caption{Mutual (left-hand panel) and distinct(right-hand panel) metabolic network topologies between ApoE $\varepsilon4$ carriers and non-carriers in AD, as published by \citeauthor{deLeeuw2017Blood-basedDisease}. Red edges represent links that are present exclusively in ApoeE $\varepsilon4$ carriers with AD. Green edges represent connections found in ApoE $\varepsilon4$ non-carriers. Solid edges represent positive partial correlations, while dashed edges represent negative partial correlations. Abbreviations: SCD, subjective cognitive decline }
+  \label{fig2}
+\end{figure}
+
+\newpage
+\subsection{Research Questions}
+ApoE $\varepsilon_4$ carriers --particularly females-- experience metabolic disturbances and are at increased risk of SAD. The mechanistic links, however, between ApoE genotype, metabolism and AD development are not entirely known \cite{Fernandez-Calle2022APOEDiseases}, more so among $\varepsilon_4$ non-carriers. Linking specific serum metabolites to distinct ApoE genotypes can reveal metabolic disturbances leading to AD, especially in absence of the ApoE $\varepsilon_4$ allele. Hence, in an effort to elucidate potential links between ApoE genotypes and serum metabolites in AD, one could state the following research questions:
+
+\textbf{RQ}: What are the mechanistic links between ApoE genotype and serum metabolites in AD?
+\begin{enumerate}
+    \item What is the effect of the ApoE genotype on the expression of serum metabolites?
+    \item How discriminatory are serum metabolites among ApoE genotypes?
+    \item How do the network topologies of metabolites differ among ApoE genotypes?
+\end{enumerate}
+
+\subsection{Data}
+The data were collected from $n =$ 127 AD patients with or without the ApoE4 allele, in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease} and contain $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at \citeauthor{deLeeuw2017Blood-basedDisease}'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data set is high-dimensional, in the sense that it contains more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
+
+
+\newpage
+\section{Methodology}
+
+\subsection{Data management}
+The FAIR principles for data management and stewardship in science were published by  ~\citeauthor{Wilkinson2016TheStewardship} in 2016 \cite{Wilkinson2016TheStewardship}. FAIR stands for Findable, Accessible, Interactive, and Reusable data; the intention is to create and use data that are well-documented and reproducible. These principles will be considered at every step of the proposed project and implemented when applicable. All analysis will be performed in R, and the final Thesis report will be written in \LaTeX, as is the current proposal.
+
+\subsection{Analysis}
+The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this project to find the optimal balance between the performance of a model with its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}.
+\subsubsection{Differential expression}
+A straight-forward way to test whether the metabolites are differentially expressed between the 6 ApoE genotypes is ANOVA (Analysis of Variance) on $p$ linear models. The dependent or response variable in each model would be a metabolite and the independent or explanatory variable would be the ApoE genotype. Let $m_j$ represent the $j$-th metabolite and $G_k$ the $k$-th possible ApoE genotype, an ANOVA model could be:
+\[m_j = \mu + G_k +\varepsilon \]
+Then, for every $j$ = 1,...,$p$ the hypothesis test would be H$_0$: $G_k=0$ for all $k\in \mathbb{N}, [1,6]$ vs H$_\alpha$: $\exists$ at least one $G_k\neq0$. This implies $p$ hypothesis tests, which creates the problem of multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected hypotheses, globally e.g. at an $\alpha$ of .05.
+
+\subsubsection{Classification}
+
+Considering interpretability, Multinomial Logistic Regression (MNL) is inherently interpretable. Let $y = k$, with $k \in N[1,6]$ representing the k-th ApoE genotype (class) and $\beta_{kj}$ its set of coefficients,  $\beta_{lj}$ the coefficients of the rest of classes for $j$-th metabolite, then an MNL model would calculate the probability
+
+\[\textrm{Pr}(y=k|X=x) =  \dfrac{e^{\sum_{j=1}^{p}\beta_{kj}x_j}}{\sum_{l=1}^{5}\sum_{j=1}^{p}e^{\beta_{lj}x_j}}\]
+
+When $p > n$, the coefficient estimation method has low bias and high variance, in that small changes in the training data can result in very different coefficient estimates \cite{James2023AnEdition}. Regularization trades off a small increase in bias for a great decrease in variance, by shrinking the unimportant coefficients towards zero. LASSO (Least Absolute Shrinkage and Selection Operator) \cite{Tibshiranit1996RegressionLasso}, also called L1-regularization shrinks the MNL coefficients to 0, thus weeding out spurious correlations and reducing the number of predictors \cite{Tibshiranit1996RegressionLasso}. It does so by introducing the term  \[\lambda\sum_{j=1}^{p}|\beta_j|\] where $\lambda \geq 0$ is a tuning parameter that balances the coefficient shrinking effect.
+
+A method to treat collinearity and high dimensionality is a 2-stage Maximum Likelihood(ML) factor analysis (FA), such as the one the package \textbf{FMradio} \cite{Peeters2019StableData} performs. In the 1st stage, a L1-regularised ML estimation is used to filter out redundant features from the data matrix. In the second stage, ML FA projects the aforementioned matrix to an orthogonal space where the features are replaced by -fewer- factors that explain their covariance. One can then use the produced factor scores as predictors in MNL.
+
+Decision Trees (DT) are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data into branches and leaves(nodes) \cite{Song2015DecisionPrediction}. Random Forests (RF) are ensemble learning methods, that bag several DTs and average their decisions with a majority vote. Despite RFs tend to outperform DTs, they often operate as a \textit{black box} and are poorly interpretable.
+
+The classification performance of the aforementioned models will be holistically assessed using repeated 10-fold CV-obtained AUC (Area Under the ROC curve) and other metrics such as Accuracy, Precision, Recall and F1-score.
+
+\subsubsection{Network analysis}
+Network science offers a unifying framework for data and system representation, applicable to any domain \cite{Barabasi2015NetworkScience}. A network, in an abstract sense, consists of nodes connected with links, also referred to as edges. In data science, a network whose nodes represent random features, whose joint probability distribution is defined by the ensemble of their edges is called \textit{graphical model} \cite{Peeters2022Rags2ridges:Matrices}. A \textit{Gaussian graphical model} (GGM) is an undirected graph that represents the conditional independence properties of the features \cite{KollerProbabilisticTechniques}. For instance, let $\mathcal{G=(V,E)}$ be a GGM consisting of a set $\mathcal{V}$ of $p$ vertices, corresponding to random features $Y_1,...,Y_p$ with joint probability distribution $P \sim N_p(\mathbf{0, \Sigma})$, and set of edges $\mathcal{E}$, such that for all pairs $\{Y_i , Y_j\}$ with $i\neq j$:
+
+\[ \mathbf{\Sigma}_{ij}^{-1} = (\mathbf{\Omega}_{ij})=0 \Longleftrightarrow Y_i \Perp Y_j\mid\{Y_k : k \neq i,j\} \Longleftrightarrow (i, j) \notin \mathcal{E} \]
+
+In natural language, a zero value in the inverse covariance matrix (usually referred to as precision matrix $\mathbf{\Omega}$) mutually implies that the respective random features are independent, given the rest of features, which mutually implies that the corresponding features are not connected by an undirected edge $((i, j) \notin \mathcal{E})$ \cite{Peeters2022Rags2ridges:Matrices}.
+
+Network analysis presents a unique approach to visualise high-dimensional and auto-correlated data. In this study, the package \textbf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices} may be used to generate the feature covariance matrix, as well as the precision matrix, regularise it and represent it in a GGM --as shown in Fig. \ref{fig2}.
+
+
+\section{Planning}
+\hspace*{-0.04\linewidth}\includegraphics[width=1.04\linewidth]{figures/plan@2x.png}
+
+%--------------- Main matter ----------------------------------------
+%--------------------------------------------------------------------
+
+
+
+
+%--------------------------------------------------------------------
+%--------------- References -----------------------------------------
+\newpage
+
+\printbibliography
+%--------------- References -----------------------------------------
+%--------------------------------------------------------------------
+
+
+
+
+
+
+
+\end{document}
+
+
+
+% This is a template for a thesis at Biometris created by C.F.W. Peeters in 2021 
