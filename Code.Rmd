@@ -68,19 +68,18 @@ summaries <- purrr::map(df[, 1:230], ~ summary(aov(.x ~ df$APOE)))
 
 ```{r FDR adjust}
 ## Extract and adjust p-values for FDR control
-# Create an empty list to store the p-values
-p_values <- lapply(summaries, function(summary) {
-  summary[[1]][["Pr(>F)"]][[1]]
-})
-
+# Create a list to store the p-values
+p_values <- list(1:230)
+# Extract the p-values of the F-tests from the aov summaries list and store them in p_values
+for (i in 1:230) {
+  p_values[[i]] <- summaries[[i]][[1]][["Pr(>F)"]][[1]]
+}
 # Coerce p_values to dataframe and transpose it
 p_values <- t(data.frame(p_values))
-
-# Set row names for p_values
-rownames(p_values) <- colnames(Y)
-
+# Set as row names the metabolites
+p_values <- data.frame(p_values, row.names = colnames(Y))
 # Calculate the FDR-adjusted p-values
-p_values$p_adj <- p.adjust(p_values, method = "fdr")
+p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
 ```
 
 
@@ -90,7 +89,7 @@ filter(p_values, p_adj < 0.05)
 ```
 
 ## Classification of metabolites on ApoE class
-
+### Fit
 A function was created to streamline the analysis of multiple (tidy tabular standardised) predictors and response. The function *fit* fits a Logistic Regression, a Decision Tree and a (bagging) Random Forest. It takes the arguments:
 
 -   X = data frame of predictors,
@@ -124,67 +123,45 @@ fit <- function(title,
                 metrics = matrix(
                   nrow = 11,
                   ncol = times
-                )) {
+                )){
   ### Training-test split
   # Merge X and y into df
-  df <- data.frame(X, y)
-
-  # Set the seed once before the loop starts
-  set.seed(seed)
-
+  df <- cbind.data.frame(X, y)
   # Perform 10-fold CV repeated 100 times
-  results <- lapply(1:times, function(i) {
+  for (i in 1:times) {
+    set.seed(seed + i) # Set a different seed for each iteration
     # Create a matrix with the training indexes
     split_index <- createDataPartition(df$y, p = split, list = FALSE)
-
     # Create the training set
     train <- df[split_index, ]
-
-    # Create the test set
-    test <- df[-split_index, ]
-
+    test <- df[-split_index,]
     # Store the test y in labels
     labels <- test$y
     labels.n <- as.numeric(labels) - 1
-
     # Train the model
-    mdl <- train(
-      y ~ .,
+    mdl <- train(y ~ .,
       train,
       method = model,
       tuneGrid = grid,
-      metric = "ROC",
-      trControl = ctrl
     )
-
     # Create a confusion matrix and get performance metrics from caret
-    cm <- confusionMatrix(labels, predict(mdl, test), positive = positive_class)
-
+    cm <- confusionMatrix(labels, predict(mdl, test), positive = "E4YES")
     # Store the model performance metrics in the cumulative data frame
     metrics[, i] <- cm$byClass
-
-    # Store predictions in a list
-    yhat_list <- lapply(test, function(x) predict(mdl, x, type = "prob"))
-
-    # Extract the second column of each prediction
-    yhat <- sapply(yhat_list, function(x) x[, 2])
-
-    # Calculate the AUC using the extracted predictions
+    # Store cumulative ROC curve
+    yhat <- predict(mdl, test, type = "prob")
     auc[i] <- pROC::auc(labels.n,
-      yhat,
+      yhat[, 2],
       levels = c(0, 1),
       ci = TRUE,
       boot.n = 100,
-      ci.alpha = 0.95,
       stratified = T,
       quiet = T
     )
-
-    return(list(cm$byClass, auc[i]))
-  })
-
-  metrics <- data.frame(do.call(rbind, lapply(results, `[[`, 1)), mean(sapply(results, `[[`, 2)))
-  names(metrics) <- c(names(cm$byClass), "AUC")
+  }
+  metrics <- data.frame(c(rowMeans(metrics, na.rm = TRUE), mean(unlist(auc))),
+    row.names = c(names(cm$byClass), "AUC")
+  )
   names(metrics) <- title
   return(metrics)
 }
@@ -255,6 +232,7 @@ metrics
 
 ```{r filterX, include=FALSE}
 set.seed(123)
+X <- scale(as.matrix(ADmets))
 cov <- cov(X)
 
 # Find redundant features
@@ -277,7 +255,7 @@ Guttman.bounds <- dimGB(R)
 
 ```{r dimVar, eval=FALSE, include=FALSE}
 # Assess the proportion of cumulative variances for 6 factor solutions
-dimVAR(R, maxdim = 6)
+dimVAR(R, maxdim = 10)
 ```
 
 ```{r mlfa, include=FALSE}
@@ -290,10 +268,10 @@ thomson <- facScore(filtered, mlfa$Loadings, mlfa$Uniqueness)
 ## Logistic Regression
 metrics.lr <- fit(
   title = "Logistic Regression",
-  X = thomson,
+  X = as.matrix(thomson),
   y = APOE,
   model = "glm",
-  times = 100,
+  times = 10,
   grid = NULL
 )
 
@@ -321,13 +299,18 @@ h2o.init()
 gbm <- train(thomson, APOE,
   trControl = trainControl(
     method = "cv",
-    number = 10,
+    number = 5,
     classProbs = TRUE,
     summaryFunction = twoClassSummary
   ),
   method = "gbm_h2o",
   metric = "ROC",
-  tuneLength = 10
+  tuneGrid = expand.grid(
+max_depth =5,
+min_rows = 5,
+col_sample_rate = 1
+  ),
+  tuneLength = 2
 )
 
 metrics.gbm <- fit(
