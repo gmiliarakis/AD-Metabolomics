@@ -123,7 +123,11 @@ fit <- function(title,
                 metrics = matrix(
                   nrow = 11,
                   ncol = times
+<<<<<<< HEAD
                 ),...){
+=======
+                )){
+>>>>>>> 82cb893221344976052e5c93844e1bedf61242ad
   ### Training-test split
   # Merge X and y into df
   df <- cbind.data.frame(X, y)
@@ -142,7 +146,11 @@ fit <- function(title,
     mdl <- train(y ~ .,
       train,
       method = model,
+<<<<<<< HEAD
       tuneGrid = grid,...
+=======
+      tuneGrid = grid,
+>>>>>>> 82cb893221344976052e5c93844e1bedf61242ad
     )
     # Create a confusion matrix and get performance metrics from caret
     cm <- confusionMatrix(labels, predict(mdl, test), positive = "E4YES")
@@ -240,7 +248,11 @@ metrics
 
 ```{r filterX, include=FALSE}
 set.seed(123)
+<<<<<<< HEAD
 X <- scale(as.matrix(X))
+=======
+X <- scale(as.matrix(ADmets))
+>>>>>>> 82cb893221344976052e5c93844e1bedf61242ad
 cov <- cov(X)
 
 # Find redundant features
@@ -314,11 +326,20 @@ gbm <- train(thomson, APOE,
   ),
   method = "gbm_h2o",
   metric = "ROC",
+<<<<<<< HEAD
   tuneGrid = expand.grid(ntrees = 50,
   max_depth =5,
   min_rows = 3,
   learn_rate= 0.1,
   col_sample_rate = 1)
+=======
+  tuneGrid = expand.grid(
+max_depth =5,
+min_rows = 5,
+col_sample_rate = 1
+  ),
+  tuneLength = 2
+>>>>>>> 82cb893221344976052e5c93844e1bedf61242ad
 )
 
 metrics.gbm <- fit(
