@@ -32,6 +32,7 @@ require(rpart)
 require(randomForest)
 require(pROC)
 require(h2o)
+require(ggthemes)
 ```
 
 ## Data loading
@@ -54,7 +55,7 @@ Y <- as.matrix(ADmets)
 # Store the ApoE genotype in APOE as a factor
 APOE <- as.factor(geno$APOEb)
 sex <- as.factor(geno$sex)
-df <- cbind.data.frame(Y, APOE)
+df <- cbind.data.frame(Y, APOE, sex)
 ```
 
 ### Analysis of Variance (ANOVA)
@@ -89,21 +90,6 @@ filter(p_values, p_adj < 0.05)
 ```
 
 ## Classification of metabolites on ApoE class
-### Fit
-A function was created to streamline the analysis of multiple (tidy tabular standardised) predictors and response. The function *fit* fits a Logistic Regression, a Decision Tree and a (bagging) Random Forest. It takes the arguments:
-
--   X = data frame of predictors,
-
--   Y = response vector,
-
--   max_depth = maximum depth of the Decision Tree,
-
--   mtry = the number of random predictors to be used per training of the Random Forest and
-
--   seed
-
-It first binds *X* and *Y* into *df* which is then split into a training and test set (maintaining class balances). Next it fits the 3 models, returns a dataframe with their repeated (100 times) 10-fold Cross-Validation(CV) performance metrics and plots their ROC curves.
-
 ```{r fit function def}
 ## Function fit
 fit <- function(title,
@@ -113,228 +99,204 @@ fit <- function(title,
                 model,
                 times,
                 ctrl = trainControl(
-                  method = "cv",
-                  number = 5, classProbs = TRUE,
-                  summaryFunction = twoClassSummary
+                  method = "cv", number = 10,
+                  classProbs = TRUE, summaryFunction = twoClassSummary,
+                  sampling = "smote"
                 ),
                 grid = NULL,
                 seed = 123,
-                auc = numeric(times),
-                metrics = matrix(
-                  nrow = 11,
-                  ncol = times
-                ),
-                ...){
-  ### Training-test split
+                metrics = matrix(nrow = 11, ncol = times), ...) {
   # Merge X and y into df
   df <- cbind.data.frame(X, y)
+  ys <- yhats <- c()
   # Perform 10-fold CV repeated 100 times
   for (i in 1:times) {
     set.seed(seed + i) # Set a different seed for each iteration
-    # Create a matrix with the training indexes
+    # Create a matrix with the training indices
     split_index <- createDataPartition(df$y, p = split, list = FALSE)
     # Create the training set
     train <- df[split_index, ]
+    # Create the test set
     test <- df[-split_index, ]
     # Store the test y in labels
     labels <- test$y
-    labels.n <- as.numeric(labels) - 1
+    ys <- c(ys, as.numeric(labels) - 1)
     # Train the model
     mdl <- train(y ~ .,
       train,
       method = model,
-      tuneGrid = grid,
-      ...
+      tuneGrid = grid, ...
     )
     # Create a confusion matrix and get performance metrics from caret
     cm <- confusionMatrix(labels, predict(mdl, test), positive = "E4YES")
     # Store the model performance metrics in the cumulative data frame
     metrics[, i] <- cm$byClass
-    # Store cumulative ROC curve
-    yhat <- predict(mdl, test, type = "prob")
-    auc[i] <- pROC::auc(labels.n,
-      yhat[, 2],
-      levels = c(0, 1),
-      ci = TRUE,
-      boot.n = 100,
-      stratified = T,
-      quiet = T
-    )
+    # Predictions
+    yhat <- predict(mdl, test, type = "prob")[, 2]
+    yhats <- c(yhats, yhat)
   }
-  metrics <- data.frame(c(rowMeans(metrics, na.rm = TRUE), mean(unlist(auc))),
+  roc <- roc(ys,
+    yhats,
+    levels = c(0, 1),
+    # arguments for ci
+    ci = TRUE, boot.n = 1000, ci.alpha = 0.95
+  )
+  metrics <- data.frame(c(rowMeans(metrics, na.rm = TRUE), roc$auc),
     row.names = c(names(cm$byClass), "AUC")
   )
   names(metrics) <- title
-  return(metrics)
+  out <- list("metrics" = metrics, "roc" = roc)
+  return(out)
 }
 ```
 
 ### Original data
 
 ```{r fit_original}
-X <- Y
-# Invoke the function
+k <- 10
 ## Logistic Regression
-metrics.lr <- fit(
+lr <- fit(
   title = "Logistic Regression",
   X = X,
   y = APOE,
   model = "glm",
-  times = 100,
-  grid = NULL
+  times = k
 )
 
 ## Decision Tree
-metrics.tree <- fit(
+tree <- fit(
   title = "Decision Tree",
   X = X,
   y = APOE,
   model = "rpart2",
-  grid = expand.grid(maxdepth = 5),
-  times = 100
+  tuneLength=2,
+  times = k
 )
 
 
 ## Ensemble Classifiers
-metrics.rf <- fit(
+rf <- fit(
   title = "Random Forest",
   X = X,
   y = APOE,
   model = "rf",
-  grid = expand.grid(mtry = 10),
-  times = 100,
-  params = list(ntree = 100)
+  grid = expand.grid(mtry = 5),
+  times = k,
+  params = list(ntree = 50)
 )
 
-gbm <- train(X, APOE,
-  trControl = trainControl(
-    method = "cv",
-    number = 10,
-    classProbs = TRUE,
-    summaryFunction = twoClassSummary
-  ),
-  method = "gbm",
-  metric = "ROC",
-  tuneLength = 10
-)
 h2o.init()
-gbm <- train(X, APOE,
-  trControl = trainControl(
-    method = "cv",
-    number = 5,
-    classProbs = TRUE,
-    summaryFunction = twoClassSummary
-  ),
-  method = "gbm_h2o",
-  metric = "ROC",
-  tuneGrid = expand.grid(ntrees = 50,
-  max_depth =5,
-  min_rows = 3,
-  learn_rate= 0.1,
-  col_sample_rate = 1)
+gbm <- fit(
+    title = "Gradient Boosting",
+    X = X,
+    y = APOE,
+    model = "gbm_h2o",
+    grid = expand.grid(gbm$bestTune),
+    times = k
 )
 
-metrics <- cbind(metrics.lr, metrics.tree, metrics.rf, metrics.gbm)
-metrics
+metrics <- cbind(lr$metrics, tree$metrics, rf$metrics, gbm$metrics)
+rocs <- list(lr$roc, tree$roc, rf$roc, gbm$roc)
+
+# Generate labels
+labels <- paste0(names(metrics), " AUC = ", paste(round(metrics[12, ], 2)))
+# plot on a single plot with AUC in labels
+boxplot(metrics)
+ggroc(rocs) +
+  theme_clean() +
+  scale_color_tableau(labels=labels)
 ```
 
-### Using 6 ML-estimated factor scores
+### Projection to Latent Factors
 
-```{r filterX, include=FALSE}
-set.seed(123)
-X <- scale(as.matrix(X))
-cov <- cov(X)
-
-# Find redundant features
-filter <- RF(cov)
-
-# Filter out redundant features
-filtered <- subSet(X, filter)
-
-# Regularized correlation matrix estimation
-M <- regcor(filtered)
-```
-
-```{r optCor, echo=FALSE, include=FALSE}
-# Get the regularized correlation matrix of the filtered dataset
-R <- M$optCor
-
-# Get the Guttman bounds for R
-Guttman.bounds <- dimGB(R)
-```
-
-```{r dimVar, eval=FALSE, include=FALSE}
-# Assess the proportion of cumulative variances for 6 factor solutions
-dimVAR(R, maxdim = 10)
-```
-
-```{r mlfa, include=FALSE}
-mlfa <- mlFA(R, m = 6)
-thomson <- facScore(filtered, mlfa$Loadings, mlfa$Uniqueness)
+```{r get_thomson, include=FALSE}
+project <- function(X, m, seed) {
+  set.seed(seed)
+  X <- scale(as.matrix(X))
+  cov <- cor(X)
+  
+  # Find redundant features
+  filter <- RF(cov)
+  
+  # Filter out redundant features
+  filtered <- subSet(X, filter)
+  
+  # Regularized correlation matrix estimation
+  M <- regcor(filtered)
+  
+  # Get the regularized correlation matrix of the filtered dataset
+  R <- M$optCor
+  
+  mlfa <- mlFA(R, m = m)
+  thomson <- facScore(filtered, mlfa$Loadings, mlfa$Uniqueness)
+  return(thomson)
+}
 ```
 
 ```{r fit_thomson, warning=FALSE}
-# Invoke the function
+#Set k for repeats
+k <- 10
 ## Logistic Regression
-metrics.lr <- fit(
+lrf <- fit(
   title = "Logistic Regression",
-  X = as.matrix(thomson),
+  X = thomson,
   y = APOE,
   model = "glm",
-  times = 10,
+  times = k,
   grid = NULL
 )
 
 ## Decision Tree
-metrics.tree <- fit(
+treef <- fit(
   title = "Decision Tree",
   X = thomson,
   y = APOE,
   model = "rpart2",
   grid = expand.grid(maxdepth = 5),
-  times = 100
+  times = k
 )
 
 
 ## Ensemble Classifiers
-metrics.rf <- fit(
+rff <- fit(
   title = "Random Forest",
   X = thomson,
   y = APOE,
   model = "rf",
   grid = expand.grid(mtry = 5),
-  times = 10,
+  times = k,
   params = list(ntree = 100)
 )
 h2o.init()
-gbm <- train(thomson, APOE,
+gbm2 <- train(thomson, APOE,
   trControl = trainControl(
     method = "cv",
-    number = 5,
+    number = k,
     classProbs = TRUE,
-    summaryFunction = twoClassSummary
+    summaryFunction = twoClassSummary,
+    sampling = 'rose'
   ),
   method = "gbm_h2o",
   metric = "ROC",
-  tuneGrid = expand.grid(ntrees = 50,
-  max_depth =5,
-  min_rows = 3,
-  learn_rate= 0.1,
-  col_sample_rate = 1)
+  tuneLength = 5
 )
 
-metrics.gbm <- fit(
-  title = "Stochastic Gradient Boosting",
-  X = thomson,
-  y = APOE,
-  model = "gbm_h2o",
-  grid = expand.grid(gbm$bestTune),
-  times = 10,
-  params=c(balance_classes = TRUE)
+gbmf <- fit(
+    title = "GB Forest",
+    X = X,
+    y = APOE,
+    model = "gbm_h2o",
+    grid = expand.grid(gbm2$bestTune),
+    times = k
 )
 
-metrics.fa <- cbind(metrics.lr, metrics.tree, metrics.rf, metrics.gbm)
-metrics.fa
+metricsf <- cbind(lrf$metrics, treef$metrics, rff$metrics, gbmf$metrics)
+rocsf <- list(lrf$roc, treef$roc, rff$roc, gbmf$roc)
+
+# plot on a single plot with AUC in labels
+ggroc(rocsf) +
+  theme_clean() +
+  scale_color_tableau(labels=labels)
 ```
 
 ## Network Analysis
