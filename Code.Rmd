@@ -192,7 +192,7 @@ rf <- fit(
                 ),
                 grid = expand.grid(mtry = 10, splitrule = 'gini', min.node.size=10),
   times = k,
-  num.trees = 50
+  num.trees = 100
 )
 
 metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
