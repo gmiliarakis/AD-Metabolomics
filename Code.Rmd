@@ -33,6 +33,7 @@ require(rags2ridges)
 require(rpart)
 require(ranger)
 require(ggthemes)
+require(DMwR2)
 ```
 
 ## Data loading
@@ -147,7 +148,7 @@ fit <- function(title,
     row.names = c(names(cm$byClass), "AUC")
   )
   names(metrics) <- title
-  out <- list("metrics" = metrics, "roc" = roc)
+  out <- list("metrics" = metrics, "roc" = roc, "model" = mdl)
   return(out)
 }
 ```
@@ -155,7 +156,7 @@ fit <- function(title,
 ### Original data
 
 ```{r fit_original}
-k <- 50
+k <- 100
 ## Logistic Regression
 lr <- fit(
   title = "Logistic Regression",
@@ -171,7 +172,7 @@ tree <- fit(
   X = X,
   y = apoe,
   model = "rpart2",
-  tuneLength=expand.grid(maxdepth = 5),
+  grid=expand.grid(maxdepth = 5),
   times = k
 )
 
@@ -187,9 +188,9 @@ rf <- fit(
                   sampling = "smote"
                 ),
                 grid = NULL,
-  tuneLength = 1,
+  tuneLength = 2,
   times = k,
-  num.trees = 50
+  num.trees = 100
 )
 
 metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
