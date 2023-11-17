@@ -4,7 +4,7 @@ output:
   html_document: 
     toc: yes
     toc_depth: 4
-    theme: journal
+    theme: darkly
     fig_width: 6
   pdf_document:
     toc: yes
@@ -25,13 +25,11 @@ knitr::opts_chunk$set(
 
 ```{r packages, include=FALSE}
 require(caret)
-require(dplyr)
 require(FMradio)
+require(pROC)
 require(rags2ridges)
 require(rpart)
-require(randomForest)
-require(pROC)
-require(h2o)
+require(ranger)
 require(ggthemes)
 ```
 
@@ -87,7 +85,7 @@ p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
 
 ```{r}
 # Filter out the non-significant (a=0.05) FDR-adjusted p-values
-filter(p_values, p_adj < 0.05)
+dplyr::filter(p_values, p_adj < 0.05)
 ```
 
 ## Classification of metabolites on ApoE class
@@ -123,10 +121,11 @@ fit <- function(title,
     labels <- test$y
     ys <- c(ys, as.numeric(labels) - 1)
     # Train the model
-    mdl <- train(y ~ .,
-      train,
+    mdl <- caret::train(train[, 1:ncol(X)], train$y,
       method = model,
-      tuneGrid = grid, ...
+      tuneGrid = grid,
+      trControl = ctrl,
+      metric = 'ROC',...
     )
     # Create a confusion matrix and get performance metrics from caret
     cm <- confusionMatrix(labels, predict(mdl, test), positive = "E4YES")
@@ -154,7 +153,7 @@ fit <- function(title,
 ### Original data
 
 ```{r fit_original}
-k <- 10
+k <- 50
 ## Logistic Regression
 lr <- fit(
   title = "Logistic Regression",
@@ -178,25 +177,21 @@ tree <- fit(
 rf <- fit(
   title = "Random Forest",
   X = X,
-  y = apoe,
-  model = "rf",
-  grid = expand.grid(mtry = 5),
+  y = APOE,
+  model = "ranger",
+  ctrl = trainControl(
+                  method = "cv", number = 10,
+                  classProbs = TRUE, summaryFunction = twoClassSummary,
+                  sampling = "smote"
+                ),
+                grid = NULL,
+  tuneLength = 1,
   times = k,
-  params = list(ntree = 50)
+  num.trees = 50
 )
 
-h2o.init()
-gbm <- fit(
-  title = "Gradient Boosting",
-  X = X,
-  y = apoe,
-  model = "gbm_h2o",
-  grid = expand.grid(gbm.params),
-  times = k
-)
-
-metrics <- cbind(lr$metrics, tree$metrics, rf$metrics, gbm$metrics)
-rocs <- list(lr$roc, tree$roc, rf$roc, gbm$roc)
+metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
+rocs <- list(lr$roc, tree$roc, rf$roc)
 
 # Generate labels
 labels <- paste0(names(metrics), " AUC = ", paste(round(metrics[12, ], 2)))
@@ -209,7 +204,7 @@ ggroc(rocs) +
 
 ### Projection to Latent Factors
 
-```{r get_thomson, include=FALSE}
+```{r get_thomson, eval =FALSE, include=FALSE}
 project <- function(X, m, seed) {
   set.seed(seed)
   X <- scale(as.matrix(X))
@@ -235,7 +230,7 @@ project <- function(X, m, seed) {
 
 ```{r fit_thomson, warning=FALSE}
 #Set k for repeats
-k <- 10
+k <- 100
 ## Logistic Regression
 lrf <- fit(
   title = "Logistic Regression",
@@ -256,29 +251,25 @@ treef <- fit(
   times = k
 )
 
-
 ## Ensemble Classifiers
 rff <- fit(
   title = "Random Forest",
   X = thomson,
   y = apoe,
-  model = "rf",
-  grid = expand.grid(mtry = 5),
-  times = k,
-  params = list(ntree = 50)
-)
-h2o.init()
-gbmf <- fit(
-  title = "GB Forest",
-  X = thomson,
-  y = apoe,
-  model = "gbm_h2o",
-  grid = expand.grid(gbm.params),
-  times = k
+  model = "ranger",
+  ctrl = trainControl(
+                  method = "cv", number = 10,
+                  classProbs = TRUE, summaryFunction = twoClassSummary,
+                  sampling = "smote"
+                ),
+                grid = NULL,
+  tuneLength = 2,
+  times = 10,
+  num.trees = 50
 )
 
-metricsf <- cbind(lrf$metrics, treef$metrics, rff$metrics, gbmf$metrics)
-rocsf <- list(lrf$roc, treef$roc, rff$roc, gbmf$roc)
+metricsf <- cbind(lrf$metrics, treef$metrics, rff$metrics)
+rocsf <- list(lrf$roc, treef$roc, rff$roc)
 
 # plot on a single plot with AUC in labels
 ggroc(rocsf) +
@@ -292,9 +283,9 @@ Code from rags2ridges
 
 ```{r preparation}
 # Store all observations of Class 1 in C1
-C1 <- scale(df[, APOE == "APOE4NO"])
+C1 <- scale(df[df$APOE == "E4NO",1:230])
 # Store all observations of Class 2 in C2
-C2 <- scale(df[, APOE == "APOE4YES"])
+C2 <- scale(df[APOE == "E4YES",1:230])
 
 # Get the covariance matrices of C1 and C2
 S1 <- covML(C1)
@@ -313,20 +304,20 @@ Ts <- default.target.fused(Slist = S, ns = n, type = "DUPV")
 ```{r, eval=FALSE}
 # Get the optimal lambdas per class and fused with 10-fold CV
 set.seed(8910)
-optf <- optPenalty.fused(
-  Ylist = Ys,
-  Tlist = Ts,
-  lambda = as.matrix(cbind(
-    c("ridge1", "fusion"),
-    c("fusion", "ridge2")
-  )),
-  cv.method = "kCV",
-  k = 10,
-  verbose = FALSE
-)
+# optf <- optPenalty.fused(
+#   Ylist = Ys,
+#   Tlist = Ts,
+#   lambda = as.matrix(cbind(
+#     c("ridge1", "fusion"),
+#     c("fusion", "ridge2")
+#   )),
+#   cv.method = "kCV",
+#   k = 10,
+#   verbose = FALSE
+# )
 ```
 
-```{r sparsify}
+```{r sparsify, echo = FALSE}
 # Create a list of the two-class data Y
 Ys <- list(C1 = C1, C2 = C2)
 Ps <- optP.fused$Plist
@@ -338,7 +329,7 @@ P0s <- sparsify.fused(Ps,
 )
 ```
 
-```{r GGMs per class and diff, message=FALSE}
+```{r GGMs per class and diff, message=FALSE, echo = FALSE}
 # Merge the sparse high precision matrices
 TST <- Union(P0s$C1$sparseParCor, P0s$C2$sparseParCor)
 PCclass1 <- TST$M1subset
