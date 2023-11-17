@@ -33,13 +33,13 @@ require(rags2ridges)
 require(rpart)
 require(ranger)
 require(ggthemes)
+require(DMwR2)
 ```
 
 ## Data loading
 
 ```{r data loading, echo=FALSE}
 # Invoke data
-load("data.Rda")
 load("ADdata.Rdata")
 ```
 
@@ -108,7 +108,7 @@ fit <- function(title,
                 seed = 123,
                 metrics = matrix(nrow = 11, ncol = times), ...) {
   # Merge X and y into df
-  df <- cbind.data.frame(X, y)
+  df <- merge.data.frame(X, y)
   ys <- yhats <- c()
   # Perform 10-fold CV repeated 100 times
   for (i in 1:times) {
@@ -121,7 +121,7 @@ fit <- function(title,
     test <- df[-split_index, ]
     # Store the test y in labels
     labels <- test$y
-    ys <- c(ys, as.numeric(labels) - 1)
+    ys <- c(ys, labels)
     # Train the model
     mdl <- caret::train(train[, 1:ncol(X)], train$y,
       method = model,
@@ -130,16 +130,16 @@ fit <- function(title,
       metric = 'ROC',...
     )
     # Create a confusion matrix and get performance metrics from caret
-    cm <- confusionMatrix(labels, predict(mdl, test), positive = "E4YES")
-    # Store the model performance metrics in the cumulative data frame
+    cm <- caret::confusionMatrix(labels, predict(mdl, test), positive = "X2")
+    # # Store the model performance metrics in the cumulative data frame
     metrics[, i] <- cm$byClass
     # Predictions
-    yhat <- predict(mdl, test, type = "prob")[, 2]
+    yhat <- predict(mdl, test, type = 'prob')[,2]
     yhats <- c(yhats, yhat)
   }
   roc <- roc(ys,
     yhats,
-    levels = c(0, 1),
+    levels = c('X0', 'X2'),
     # arguments for ci
     ci = TRUE, boot.n = 1000, ci.alpha = 0.95
   )
@@ -147,7 +147,7 @@ fit <- function(title,
     row.names = c(names(cm$byClass), "AUC")
   )
   names(metrics) <- title
-  out <- list("metrics" = metrics, "roc" = roc)
+  out <- list("metrics" = metrics, "roc" = roc, "model" = mdl)
   return(out)
 }
 ```
@@ -155,13 +155,17 @@ fit <- function(title,
 ### Original data
 
 ```{r fit_original}
-k <- 50
-## Logistic Regression
+k <- 1
+y <- as.factor(y)
+levels(y) <- make.names(levels(y))
+require(C50)
+#  Logistic Regression
 lr <- fit(
   title = "Logistic Regression",
   X = X,
-  y = APOE,
-  model = "glm",
+  y = y,
+  model = "C5.0",
+  grid = expand.grid(winnow = c(TRUE,FALSE), trials=c(1,5,10,15,20), model="tree" ),
   times = k
 )
 
@@ -169,39 +173,37 @@ lr <- fit(
 tree <- fit(
   title = "Decision Tree",
   X = X,
-  y = apoe,
+  y = y,
   model = "rpart2",
-  tuneLength=expand.grid(maxdepth = 5),
+  grid=expand.grid(maxdepth = 2:10),
   times = k
 )
-
+levels(y) <- make.names(y)
 ## Random Forest
 rf <- fit(
   title = "Random Forest",
   X = X,
-  y = APOE,
+  y = y,
   model = "ranger",
   ctrl = trainControl(
                   method = "cv", number = 10,
                   classProbs = TRUE, summaryFunction = twoClassSummary,
                   sampling = "smote"
                 ),
-                grid = NULL,
-  tuneLength = 1,
+                grid = expand.grid(mtry = 10, splitrule = 'gini', min.node.size=10),
   times = k,
   num.trees = 50
 )
 
 metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
-rocs <- list(lr$roc, tree$roc, rf$roc)
+rocs <- list(tree$roc, rf$roc)
 
 # Generate labels
 labels <- paste0(names(metrics), " AUC = ", paste(round(metrics[12, ], 2)))
 # plot on a single plot with AUC in labels
-boxplot(metrics)
 ggroc(rocs) +
   theme_clean() +
-  scale_color_tableau(labels=labels)
+  scale_color_tableau()
 ```
 
 ### Projection to Latent Factors
@@ -249,7 +251,7 @@ treef <- fit(
   X = thomson,
   y = apoe,
   model = "rpart2",
-  grid = expand.grid(maxdepth = 5),
+  grid = expand.grid(maxdepth = 10),
   times = k
 )
 
