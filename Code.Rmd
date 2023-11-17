@@ -40,7 +40,6 @@ require(DMwR2)
 
 ```{r data loading, echo=FALSE}
 # Invoke data
-load("data.Rda")
 load("ADdata.Rdata")
 ```
 
@@ -122,20 +121,20 @@ fit <- function(title,
     test <- df[-split_index, ]
     # Store the test y in labels
     labels <- test$y
-    ys <- c(ys, as.numeric(labels) - 1)
+    ys <- c(ys, labels)
     # Train the model
-    mdl <- caret::train(train[, 1:ncol(X)], train$y,
+    mdl <- caret::train(train[, 1:ncol(train)], train$y,
       method = model,
       tuneGrid = grid,
       trControl = ctrl,
       metric = 'ROC',...
     )
     # Create a confusion matrix and get performance metrics from caret
-    cm <- confusionMatrix(labels, predict(mdl, test), positive = "E4YES")
-    # Store the model performance metrics in the cumulative data frame
+    cm <- caret::confusionMatrix(labels, predict(mdl, test), positive = "X1")
+    # # Store the model performance metrics in the cumulative data frame
     metrics[, i] <- cm$byClass
     # Predictions
-    yhat <- predict(mdl, test, type = "prob")[, 2]
+    yhat <- predict(mdl, test, type = 'prob')
     yhats <- c(yhats, yhat)
   }
   roc <- roc(ys,
@@ -156,13 +155,15 @@ fit <- function(title,
 ### Original data
 
 ```{r fit_original}
-k <- 100
+k <- 2
+levels(y) <- make.names(y)
+require(penalised)
 ## Logistic Regression
 lr <- fit(
   title = "Logistic Regression",
   X = X,
-  y = APOE,
-  model = "glm",
+  y = y,
+  model = "penalised",
   times = k
 )
 
@@ -170,39 +171,37 @@ lr <- fit(
 tree <- fit(
   title = "Decision Tree",
   X = X,
-  y = apoe,
+  y = y,
   model = "rpart2",
-  grid=expand.grid(maxdepth = 5),
+  grid=expand.grid(maxdepth = 2:10),
   times = k
 )
-
+levels(y) <- make.names(y)
 ## Random Forest
 rf <- fit(
   title = "Random Forest",
   X = X,
-  y = APOE,
+  y = y,
   model = "ranger",
   ctrl = trainControl(
                   method = "cv", number = 10,
                   classProbs = TRUE, summaryFunction = twoClassSummary,
                   sampling = "smote"
                 ),
-                grid = NULL,
-  tuneLength = 2,
+                grid = expand.grid(mtry = 10, splitrule = 'gini', min.node.size=10),
   times = k,
-  num.trees = 100
+  num.trees = 50
 )
 
 metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
-rocs <- list(lr$roc, tree$roc, rf$roc)
+rocs <- list(tree$roc, rf$roc)
 
 # Generate labels
 labels <- paste0(names(metrics), " AUC = ", paste(round(metrics[12, ], 2)))
 # plot on a single plot with AUC in labels
-boxplot(metrics)
 ggroc(rocs) +
   theme_clean() +
-  scale_color_tableau(labels=labels)
+  scale_color_tableau()
 ```
 
 ### Projection to Latent Factors
@@ -250,7 +249,7 @@ treef <- fit(
   X = thomson,
   y = apoe,
   model = "rpart2",
-  grid = expand.grid(maxdepth = 5),
+  grid = expand.grid(maxdepth = 10),
   times = k
 )
 
