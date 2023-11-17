@@ -25,6 +25,8 @@ knitr::opts_chunk$set(
 
 ```{r packages, include=FALSE}
 require(caret)
+require(dplyr)
+require(e1071)
 require(FMradio)
 require(pROC)
 require(rags2ridges)
