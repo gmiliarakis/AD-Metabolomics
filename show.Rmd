@@ -40,7 +40,6 @@ require(DMwR2)
 
 ```{r data loading, echo=FALSE}
 # Invoke data
-load("data.Rda")
 load("ADdata.Rdata")
 ```
 
@@ -103,7 +102,7 @@ results <- data.frame(p_values, p_adj)
 dplyr::filter(results, p_adj < 0.05)
 
 ```
-
+Testing no E4 vs one E4, no metabolites differ significantly
 ```{r E4no vs E4x1}
 geno$g <- geno$APOE
 geno$g[geno$g == "E3E4"] <- geno$g[geno$g == "E2E4"] <- "E4x1"
@@ -126,6 +125,18 @@ results <- data.frame(p_values, p_adj)
 dplyr::filter(results, p_adj < 0.05)
 ```
 
+### Global test
+```{r}
+load("data/EsetMbolCSFPR2.Rdata")
+load("alldata.Rdata")
+library(globaltest)
+mets <- ESetMbolCSFPR2@assayData$exprs
+y <- as.numeric(y) -1
+mets <- t(mets)
+gt <- globaltest::gt(APOE ~ .-sex-Diagnosis, data = df, model = "multinomial")
+
+
+```
 ## Classification of metabolites on ApoE class
 
 ```{r}
@@ -165,55 +176,50 @@ fit <- function(title,
 
 ```
 
-
 ### Original data
 
 ```{r fit_original}
-k <- 1
-y <- as.factor(y)
-levels(y) <- make.names(levels(y))
-require(C50)
+ctrl <- trainControl(
+                  method = "repeatedcv",
+                  number = 10,
+                  repeats = 10,
+                  classProbs = TRUE,
+                  summaryFunction = twoClassSummary,
+                  savePredictions = TRUE
+                )
+
 #  Logistic Regression
-lr <- fit(
-  title = "Logistic Regression",
-  X = X,
-  y = y,
-  model = "C5.0",
-  grid = expand.grid(winnow = c(TRUE,FALSE), trials=c(1,5,10,15,20), model="tree" ),
-  times = k
+lr <- fit(title = 'Logistic Regression',
+  X = scale(ADmets),
+  y = apoe,
+  model = "glm",
+  ctrl = ctrl
 ) 
  
 ## Decision Tree
-param <-  data.frame(nrounds=c(10), max_depth = c(2),eta =c(0.3),gamma=c(0), colsample_bytree=c(0.5),min_child_weight=c(1),subsample=c(1))
 tree <- fit(
   title = "Decision Tree",
   X = X,
   y = y,
   model = "rpart2",
-  grid=expand.grid(maxdepth = 2:10),
-  times = k
+    ctrl = ctrl,
+  tuneGrid = expand.grid(maxdepth=c(2,3,4))
 )
-levels(y) <- make.names(y)
+
+param <-  data.frame(nrounds=c(10), max_depth = c(2),eta =c(0.3),gamma=c(0), colsample_bytree=c(0.5),min_child_weight=c(1),subsample=c(1))
+
 ## Random Forest
 rf <- fit(
-  title = "Random Forest",
-  X = X,
-  y = APOE,
-  model = "ranger",
-  ctrl = trainControl(
-                  method = "cv", number = 10,
-                  classProbs = TRUE, summaryFunction = twoClassSummary,
-                  sampling = "smote"
-                ),
-                grid = expand.grid(mtry = 10, splitrule = 'gini', min.node.size=10),
-  times = k,
-  num.trees = 100
+X = ADmets,
+  y = apoe,
+  model = "xgbTree",
+  trControl = ctrl,
+  tuneGrid = expand.grid(mtry = 5),
+  num.trees = 50
 )
-ys <- as.numeric(mdl$pred$obs) -1
-yhats <- mdl$pred$E4YES
 
 metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
-rocs <- list(tree$roc, rf$roc)
+rocs <- list(lr$roc, tree$roc, rf$roc)
 
 # Generate labels
 labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
@@ -221,7 +227,7 @@ labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
 # httpgd::hgd()
 ggroc(rocs) +
   theme_clean() +
-  scale_color_tableau()
+  scale_color_tableau(labels=labels)
 ```
 
 ### Projection to Latent Factors
@@ -299,147 +305,3 @@ ggroc(rocsf) +
   scale_color_tableau(labels= labels)
 ```
 
-## Network Analysis
-
-Code from rags2ridges
-
-```{r preparation}
-# Store all observations of Class 1 in C1
-C1 <- scale(df[df$APOE == "E4NO",1:230])
-# Store all observations of Class 2 in C2
-C2 <- scale(df[APOE == "E4YES",1:230])
-
-# Get the covariance matrices of C1 and C2
-S1 <- covML(C1)
-S2 <- covML(C2)
-
-# Store them in a list
-S <- list(S1 = S1, S2 = S2)
-
-# Get the total number of samples
-n <- c(nrow(S1), nrow(S2))
-
-# Create a list of fused covariance matrices T
-Ts <- default.target.fused(Slist = S, ns = n, type = "DUPV")
-```
-
-```{r, eval=FALSE}
-# Get the optimal lambdas per class and fused with 10-fold CV
-set.seed(8910)
-# optf <- optPenalty.fused(
-#   Ylist = Ys,
-#   Tlist = Ts,
-#   lambda = as.matrix(cbind(
-#     c("ridge1", "fusion"),
-#     c("fusion", "ridge2")
-#   )),
-#   cv.method = "kCV",
-#   k = 10,
-#   verbose = FALSE
-# )
-```
-
-```{r sparsify, echo = FALSE}
-# Create a list of the two-class data Y
-Ys <- list(C1 = C1, C2 = C2)
-Ps <- optP.fused$Plist
-# Get the sparsified high precision matrices, correcting FDR at .001
-P0s <- sparsify.fused(Ps,
-  threshold = "localFDR",
-  FDRcut = 0.999,
-  verbose = FALSE
-)
-```
-
-```{r GGMs per class and diff, message=FALSE, echo = FALSE}
-# Merge the sparse high precision matrices
-TST <- Union(P0s$C1$sparseParCor, P0s$C2$sparseParCor)
-PCclass1 <- TST$M1subset
-PCclass2 <- TST$M2subset
-
-# Create a color map per metabolite class
-Colors <- rownames(PCclass2)
-Colors[grep("Amine", rownames(PCclass2))] <- "lightblue"
-Colors[grep("Org.Acid", rownames(PCclass2))] <- "orange"
-Colors[grep("Lip", rownames(PCclass2))] <- "yellow"
-Colors[grep("Ox.Stress", rownames(PCclass2))] <- "purple"
-
-
-set.seed(111213)
-opar <- par(mfrow = c(1, 3))
-# Plot the sparsified ridge matrix of AD Class 2
-Coords <- Ugraph(PCclass2,
-  type = "fancy", lay = "layout_with_fr",
-  Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
-  main = "AD Class 2"
-)
-# Plot he sparsified ridge matrix of AD Class 1
-Ugraph(PCclass1,
-  type = "fancy", lay = NULL, coords = Coords,
-  Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
-  main = "AD Class 1"
-)
-
-# Plot the differential network
-DiffGraph(PCclass1, PCclass2,
-  lay = NULL, coords = Coords,
-  Vcolor = Colors, Vsize = 7, Vcex = 0.3,
-  main = "Differential Network"
-)
-par(opar)
-```
-
-```{r centrality}
-PC0list <- list(PCclass1 = PCclass1, PCclass2 = PCclass2)
-# Get the network statistics
-NetStats <- GGMnetworkStats.fused(PC0list)
-
-# Get the centrality degree scores for each class
-DegreesAD1 <- data.frame(rownames(NetStats), NetStats$PCclass1.degree)
-DegreesAD2 <- data.frame(rownames(NetStats), NetStats$PCclass2.degree)
-
-# Order and show the centrality degree scores
-DegreesAD1o <- DegreesAD1[order(DegreesAD1[, 2], decreasing = TRUE), ]
-DegreesAD2o <- DegreesAD2[order(DegreesAD2[, 2], decreasing = TRUE), ]
-head(DegreesAD1o, 7)
-head(DegreesAD2o, 7)
-```
-
-```{r communities}
-# Get the communities per class
-set.seed(141516)
-opar <- par(mfrow = c(1, 2))
-CommC1 <- Communities(PCclass1,
-  Vcolor = Colors,
-  Vsize = 7, Vcex = 0.3, main = "Modules AD Class 1"
-)
-
-CommC2 <- Communities(PCclass2,
-  Vcolor = Colors,
-  Vsize = 7, Vcex = 0.3, main = "Modules AD Class 2"
-)
-par(opar)
-```
-
-```{r degree density plot }
-# Plot the densities of centrality degree scores
-plot(density(DegreesAD1[, 2]),
-  col = "blue", xlim = c(-1, 8), xlab = "Degree", main = ""
-)
-lines(density(DegreesAD2[, 2]),
-  col = "red"
-)
-legenda <- c("AD class 1", "AD class 2")
-legend(5, 0.5,
-  legend = legenda, 
-  lwd = rep(1, 2), lty = rep(1, 2), col = c("blue", "red"), cex = 0.7
-)
-```
-
-```{r wilcoxon rank sum }
-# Perform a Wilcoxon signed rank test to test if the centrality degree scores are different between the classes
-wilcox.test(DegreesAD1[, 2],
-  DegreesAD2[, 2],
-  paired = TRUE, alternative = "less"
-)
-```
