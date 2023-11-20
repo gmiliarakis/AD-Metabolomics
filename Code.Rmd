@@ -30,7 +30,7 @@ require(e1071)
 require(FMradio)
 require(pROC)
 require(rags2ridges)
-require(rpart)
+require(xgboost)
 require(ranger)
 require(ggthemes)
 require(DMwR2)
@@ -40,7 +40,7 @@ require(DMwR2)
 
 ```{r data loading, echo=FALSE}
 # Invoke data
-load("ADdata.Rdata")
+load("data.Rda")
 ```
 
 ## Differential expression of metabolites per ApoE genotype
@@ -49,159 +49,184 @@ load("ADdata.Rdata")
 
 ```{r Y}
 # Transpose, standardize and store the metabolite data in Y
+load('data.Rda')
 Y <- as.matrix(ADmets)
 ```
+### Wilcoxon rank-sum test
+Triglycerides and diglycerides seem to survive FDR control.
+```{r wilcoxon E4yes vs E4no}
+# Store all observations of Class 1 in C1
+C1 <- ADmets[geno$APOEb == "E4NO",1:230]
+# Store all observations of Class 2 in C2
+C2 <- ADmets[geno$APOEb == "E4YES", 1:230]
 
-```{r df}
-# Store the ApoE genotype in APOE as a factor
-APOE <- as.factor(geno$APOEb)
-sex <- as.factor(geno$sex)
-df <- cbind.data.frame(Y, APOE, sex)
-```
-
-### Analysis of Variance (ANOVA)
-
-```{r aov}
-# Store the ANOVA model summaries in summaries
-summaries <- purrr::map(df[, 1:230], ~ summary(aov(.x ~ df$APOE)))
-```
-
-#### Correction for Multiple Testing
-
-```{r FDR adjust}
-## Extract and adjust p-values for FDR control
-# Create a list to store the p-values
-p_values <- list(1:230)
-# Extract the p-values of the F-tests from the aov summaries list and store them in p_values
-for (i in 1:230) {
-  p_values[[i]] <- summaries[[i]][[1]][["Pr(>F)"]][[1]]
+# Create a function to perform the Wilcoxon rank-sum (Mann-Whitney U) test on two vectors
+MannWhitneyU <- function(x, y) {
+  wilcoxon <- wilcox.test(x, y, paired = FALSE, alternative = "less")
+  return(wilcoxon$p.value)
 }
+
+# Use purrr::map2 to apply the function to corresponding columns
+wilcoxons <- purrr::map2(C1[,1:230], C2[,1:230], ~ MannWhitneyU(.x,.y))
+
 # Coerce p_values to dataframe and transpose it
-p_values <- t(data.frame(p_values))
-# Set as row names the metabolites
-p_values <- data.frame(p_values, row.names = colnames(Y))
+p_values <- t(data.frame(wilcoxons))
 # Calculate the FDR-adjusted p-values
-p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
+p_adj <- p.adjust(wilcoxons, method = "fdr")
+
+results <- data.frame(p_values, p_adj)
+# Filter out the non-significant (a=0.05) FDR-adjusted p-values
+dplyr::filter(results, p_adj < 0.05)
+```
+Carriers of one copy of E4 vs two copies tend to have less histamine, fumaric acid, uracil, triglyceride TG.48.0, phosphatidylcholine PC.36.4, with p < 0.05, however these don't survive FDRcut at 0.95 (p_adj = 0.97)'
+
+```{r E4x1 vs E4x2}
+geno$g <- geno$APOE
+geno$g[geno$g == "E3E4"] <- geno$g[geno$g == "E2E4"] <- "E4x1"
+geno$g[geno$g == "E4E4"] <- 'E4x2'
+# Store all observations of Class 1 in C1
+C1 <- ADmets[geno$g == "E4x1",1:230]
+# Store all observations of Class 2 in C2
+C2 <- ADmets[geno$g == 'E4x2', 1:230]
+
+# Use purrr::map2 to apply the function to corresponding columns
+wilcoxons <- purrr::map2(C1[, 1:230], C2[, 1:230], ~ MannWhitneyU(.x, .y))
+
+# Coerce p_values to dataframe and transpose it
+p_values <- t(data.frame(wilcoxons))
+# Calculate the FDR-adjusted p-values
+p_adj <- p.adjust(wilcoxons, method = "fdr")
+
+results <- data.frame(p_values, p_adj)
+# Filter out the non-significant (a=0.05) FDR-adjusted p-values
+dplyr::filter(results, p_adj < 0.05)
+
 ```
 
+```{r E4no vs E4x1}
+geno$g <- geno$APOE
+geno$g[geno$g == "E3E4"] <- geno$g[geno$g == "E2E4"] <- "E4x1"
+geno$g[geno$APOEb == "E4NO"] <- 'E4x0'
+# Store all observations of Class 1 in C1
+C1 <- ADmets[geno$g == "E4x1",1:230]
+# Store all observations of Class 2 in C2
+C2 <- ADmets[geno$g == 'E4x0', 1:230]
 
-```{r}
+# Use purrr::map2 to apply the function to corresponding columns
+wilcoxons <- purrr::map2(C1[, 1:230], C2[, 1:230], ~ MannWhitneyU(.x, .y))
+
+# Coerce p_values to dataframe and transpose it
+p_values <- t(data.frame(wilcoxons))
+# Calculate the FDR-adjusted p-values
+p_adj <- p.adjust(wilcoxons, method = "fdr")
+
+results <- data.frame(p_values, p_adj)
 # Filter out the non-significant (a=0.05) FDR-adjusted p-values
-dplyr::filter(p_values, p_adj < 0.05)
+dplyr::filter(results, p_adj < 0.05)
 ```
 
 ## Classification of metabolites on ApoE class
-```{r fit function def}
+
+```{r}
 ## Function fit
 fit <- function(title,
                 X,
                 y,
-                split = 0.8,
                 model,
-                times,
-                ctrl = trainControl(
-                  method = "cv", number = 10,
-                  classProbs = TRUE, summaryFunction = twoClassSummary,
-                  sampling = "smote"
-                ),
+                ctrl = NULL,
                 grid = NULL,
-                seed = 123,
-                metrics = matrix(nrow = 11, ncol = times), ...) {
-  # Merge X and y into df
-  df <- cbind.data.frame(X, y)
-  ys <- yhats <- c()
-  # Perform 10-fold CV repeated 100 times
-  for (i in 1:times) {
-    set.seed(seed + i) # Set a different seed for each iteration
-    # Create a matrix with the training indices
-    split_index <- createDataPartition(df$y, p = split, list = FALSE)
-    # Create the training set
-    train <- df[split_index, ]
-    # Create the test set
-    test <- df[-split_index, ]
-    # Store the test y in labels
-    labels <- test$y
-    ys <- c(ys, labels)
-    # Train the model
-    mdl <- caret::train(train[, 1:ncol(train)], train$y,
-      method = model,
-      tuneGrid = grid,
-      trControl = ctrl,
-      metric = 'ROC',...
-    )
-    # Create a confusion matrix and get performance metrics from caret
-    cm <- caret::confusionMatrix(labels, predict(mdl, test), positive = "X1")
-    # # Store the model performance metrics in the cumulative data frame
-    metrics[, i] <- cm$byClass
-    # Predictions
-    yhat <- predict(mdl, test, type = 'prob')
-    yhats <- c(yhats, yhat)
-  }
-  roc <- roc(ys,
-    yhats,
-    levels = c(0, 1),
-    # arguments for ci
-    ci = TRUE, boot.n = 1000, ci.alpha = 0.95
+                seed = 123, ...) {
+                set.seed(seed)
+    # Merge X and y into df
+    df <- merge.data.frame(X, y)
+
+  # Train the model
+  mdl <- caret::train(df[, 1:ncol(X)], df$y,
+    method = model,
+    tuneGrid = grid,
+    trControl = ctrl,
+    metric = 'ROC',...
   )
-  metrics <- data.frame(c(rowMeans(metrics, na.rm = TRUE), roc$auc),
-    row.names = c(names(cm$byClass), "AUC")
-  )
+
+  # Create a confusion matrix and get performance metrics from caret
+  metrics <- confusionMatrix(mdl$pred$obs, mdl$pred$pred, positive = "E4YES")$byClass
+
+  # Predictions
+  ys <- as.numeric(mdl$pred$obs) -1
+  yhats <- mdl$pred$E4YES
+  roc <- roc(ys, yhats, levels = c(0, 1), ci = TRUE, boot.n = 1000, ci.alpha = 0.95)
+  metrics[12] <-  roc$auc
+  row.names(metrics)[12] = 'AUC'
   names(metrics) <- title
   out <- list("metrics" = metrics, "roc" = roc, "model" = mdl)
   return(out)
 }
+
 ```
+
 
 ### Original data
 
 ```{r fit_original}
-k <- 2
-levels(y) <- make.names(y)
-require(penalised)
-## Logistic Regression
-lr <- fit(
-  title = "Logistic Regression",
-  X = X,
-  y = y,
-  model = "penalised",
+k <- 1
+y <- apoe
+require(glmnet)
+X <- scale(df[1:230])
+#  Logistic Regression
+lr <- train(
+  x = X,
+  y = apoe,
+  model = "xgbLinear",
+  metric = 'ROC',
+  trControl = ctrl,
+  tuneGrid= param,
   times = k
-)
-
+) 
+ 
 ## Decision Tree
+param <-  data.frame(nrounds=c(10), max_depth = c(2),eta =c(0.3),gamma=c(0), colsample_bytree=c(0.5),min_child_weight=c(1),subsample=c(1))
 tree <- fit(
   title = "Decision Tree",
   X = X,
   y = y,
-  model = "rpart2",
-  grid=expand.grid(maxdepth = 2:10),
+  model = "xgbTree",
+  grid = param,
   times = k
 )
-levels(y) <- make.names(y)
+ctrl <- trainControl(
+                  method = "boot", 
+                  number = 100,
+                  classProbs = TRUE, 
+                  summaryFunction = twoClassSummary, 
+                  savePredictions = TRUE
+                )
+xgbtree <- train(ADmets, apoe, method = "xgbTree", metric = "ROC", trControl = ctrl, tuneGrid = param, verbose = FALSE)
+
+linear <- train(X, apoe, method='xgbLinear', metric = 'ROC', trControl = ctrl, tuneLength=2, verbose = FALSE)
+
 ## Random Forest
-rf <- fit(
-  title = "Random Forest",
-  X = X,
-  y = y,
+rf <- train(
+x = ADmets,
+  y = apoe,
   model = "ranger",
-  ctrl = trainControl(
-                  method = "cv", number = 10,
-                  classProbs = TRUE, summaryFunction = twoClassSummary,
-                  sampling = "smote"
-                ),
-                grid = expand.grid(mtry = 10, splitrule = 'gini', min.node.size=10),
-  times = k,
+  trControl = ctrl,
+  metric = 'ROC',
+                 tuneGrid = expand.grid(mtry = 5),
   num.trees = 50
 )
+ys <- as.numeric(mdl$pred$obs) -1
+yhats <- mdl$pred$E4YES
 
 metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
-rocs <- list(tree$roc, rf$roc)
+rocs <- list(lr$roc, tree$roc, rf$roc)
 
 # Generate labels
-labels <- paste0(names(metrics), " AUC = ", paste(round(metrics[12, ], 2)))
+labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
 # plot on a single plot with AUC in labels
+# httpgd::hgd()
 ggroc(rocs) +
   theme_clean() +
-  scale_color_tableau()
+  scale_color_tableau(labels=labels)
 ```
 
 ### Projection to Latent Factors
@@ -232,7 +257,7 @@ project <- function(X, m, seed) {
 
 ```{r fit_thomson, warning=FALSE}
 #Set k for repeats
-k <- 100
+k <- 10
 ## Logistic Regression
 lrf <- fit(
   title = "Logistic Regression",
@@ -249,7 +274,7 @@ treef <- fit(
   X = thomson,
   y = apoe,
   model = "rpart2",
-  grid = expand.grid(maxdepth = 10),
+  grid = expand.grid(maxdepth = 3),
   times = k
 )
 
