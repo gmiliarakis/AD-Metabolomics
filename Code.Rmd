@@ -150,12 +150,16 @@ fit <- function(title,
   )
 
   # Create a confusion matrix and get performance metrics from caret
-  metrics <- confusionMatrix(mdl$pred$obs, mdl$pred$pred, positive = "E4YES")$byClass
+  cm <- confusionMatrix(mdl$pred$obs, mdl$pred$pred, positive = "E4YES")
 
+  # 
+  ys <- as.numeric(mdl$pred$obs) - 1
   # Predictions
-  ys <- as.numeric(mdl$pred$obs) -1
   yhats <- mdl$pred$E4YES
   roc <- roc(ys, yhats, levels = c(0, 1), ci = TRUE, boot.n = 1000, ci.alpha = 0.95)
+
+  # Metrics
+  metrics <- cm$byClass
   metrics[12] <-  roc$auc
   row.names(metrics)[12] = 'AUC'
   names(metrics) <- title
@@ -195,22 +199,22 @@ tree <- fit(
 )
 levels(y) <- make.names(y)
 ## Random Forest
-rf <- fit(
-  title = "Random Forest",
-  X = X,
-  y = APOE,
+rf <- train(
+  x = ADmets,
+  y = geno$APOEb,
   model = "ranger",
-  ctrl = trainControl(
+  trControl = trainControl(
                   method = "cv", number = 10,
                   classProbs = TRUE, summaryFunction = twoClassSummary,
-                  sampling = "smote"
+                  sampling = "smote", savePredictions = TRUE
                 ),
-                grid = expand.grid(mtry = 10, splitrule = 'gini', min.node.size=10),
-  times = k,
-  num.trees = 100
+                tuneGrid = expand.grid(mtry = 10),
+  num.trees = 10
 )
-ys <- as.numeric(mdl$pred$obs) -1
-yhats <- mdl$pred$E4YES
+obs <- rf$pred$obs
+  preds <- rf$pred$pred
+  cm <- confusionMatrix(obs, preds, positive = "E4YES")
+  metrics <- cm$byClass
 
 metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
 rocs <- list(tree$roc, rf$roc)

@@ -34,6 +34,7 @@ require(xgboost)
 require(ranger)
 require(ggthemes)
 require(DMwR2)
+require(globaltest)
 ```
 
 ## Data loading
@@ -49,14 +50,14 @@ load("ADdata.Rdata")
 
 ```{r Y}
 # Transpose, standardize and store the metabolite data in Y
-load('data.Rda')
+load("data.Rda")
 Y <- as.matrix(ADmets)
 ```
 ### Wilcoxon rank-sum test
 Triglycerides and diglycerides seem to survive FDR control.
 ```{r wilcoxon E4yes vs E4no}
 # Store all observations of Class 1 in C1
-C1 <- ADmets[geno$APOEb == "E4NO",1:230]
+C1 <- ADmets[geno$APOEb == "E4NO", 1:230]
 # Store all observations of Class 2 in C2
 C2 <- ADmets[geno$APOEb == "E4YES", 1:230]
 
@@ -67,7 +68,7 @@ MannWhitneyU <- function(x, y) {
 }
 
 # Use purrr::map2 to apply the function to corresponding columns
-wilcoxons <- purrr::map2(C1[,1:230], C2[,1:230], ~ MannWhitneyU(.x,.y))
+wilcoxons <- purrr::map2(C1[, 1:230], C2[, 1:230], ~ MannWhitneyU(.x, .y))
 
 # Coerce p_values to dataframe and transpose it
 p_values <- t(data.frame(wilcoxons))
@@ -83,11 +84,11 @@ Carriers of one copy of E4 vs two copies tend to have less histamine, fumaric ac
 ```{r E4x1 vs E4x2}
 geno$g <- geno$APOE
 geno$g[geno$g == "E3E4"] <- geno$g[geno$g == "E2E4"] <- "E4x1"
-geno$g[geno$g == "E4E4"] <- 'E4x2'
+geno$g[geno$g == "E4E4"] <- "E4x2"
 # Store all observations of Class 1 in C1
-C1 <- ADmets[geno$g == "E4x1",1:230]
+C1 <- ADmets[geno$g == "E4x1", 1:230]
 # Store all observations of Class 2 in C2
-C2 <- ADmets[geno$g == 'E4x2', 1:230]
+C2 <- ADmets[geno$g == "E4x2", 1:230]
 
 # Use purrr::map2 to apply the function to corresponding columns
 wilcoxons <- purrr::map2(C1[, 1:230], C2[, 1:230], ~ MannWhitneyU(.x, .y))
@@ -100,17 +101,16 @@ p_adj <- p.adjust(wilcoxons, method = "fdr")
 results <- data.frame(p_values, p_adj)
 # Filter out the non-significant (a=0.05) FDR-adjusted p-values
 dplyr::filter(results, p_adj < 0.05)
-
 ```
 Testing no E4 vs one E4, no metabolites differ significantly
 ```{r E4no vs E4x1}
 geno$g <- geno$APOE
 geno$g[geno$g == "E3E4"] <- geno$g[geno$g == "E2E4"] <- "E4x1"
-geno$g[geno$APOEb == "E4NO"] <- 'E4x0'
+geno$g[geno$APOEb == "E4NO"] <- "E4x0"
 # Store all observations of Class 1 in C1
-C1 <- ADmets[geno$g == "E4x1",1:230]
+C1 <- ADmets[geno$g == "E4x1", 1:230]
 # Store all observations of Class 2 in C2
-C2 <- ADmets[geno$g == 'E4x0', 1:230]
+C2 <- ADmets[geno$g == "E4x0", 1:230]
 
 # Use purrr::map2 to apply the function to corresponding columns
 wilcoxons <- purrr::map2(C1[, 1:230], C2[, 1:230], ~ MannWhitneyU(.x, .y))
@@ -127,15 +127,12 @@ dplyr::filter(results, p_adj < 0.05)
 
 ### Global test
 ```{r}
-load("data/EsetMbolCSFPR2.Rdata")
-load("alldata.Rdata")
-library(globaltest)
-mets <- ESetMbolCSFPR2@assayData$exprs
-y <- as.numeric(y) -1
-mets <- t(mets)
-gt <- globaltest::gt(APOE ~ .-sex-Diagnosis, data = df, model = "multinomial")
+# Binary outcome
+gt.b <- globaltest::gt(E4 ~ 1, E4 ~ . - APOE - Diagnosis, data = df)
 
-
+# Multinomial outcome
+df$APOE <- as.factor(df$APOE)
+gt.m <- globaltest::gt(APOE ~ 1, APOE ~ . - E4, data = df)
 ```
 ## Classification of metabolites on ApoE class
 
@@ -148,73 +145,80 @@ fit <- function(title,
                 ctrl = NULL,
                 grid = NULL,
                 seed = 123, ...) {
-                set.seed(seed)
-    # Merge X and y into df
-    df <- merge.data.frame(X, y)
+  set.seed(seed)
+  # Merge X and y into df
+  df <- merge.data.frame(X, y)
 
   # Train the model
   mdl <- caret::train(df[, 1:ncol(X)], df$y,
     method = model,
     tuneGrid = grid,
     trControl = ctrl,
-    metric = 'ROC',...
+    metric = "ROC", ...
   )
 
   # Create a confusion matrix and get performance metrics from caret
-  metrics <- confusionMatrix(mdl$pred$obs, mdl$pred$pred, positive = "E4YES")$byClass
-
+  obs <- mdl$pred$obs
+  preds <- mdl$pred$pred
+  cm <- confusionMatrix(obs, preds,
+    dnn = c("X0", "X1"), # nolint
+    positive = "X1",
+    prevalence = 0.96031746031746,
+    mode = 'everything')
+  metrics <- cm$byClass
   # Predictions
-  ys <- as.numeric(mdl$pred$obs) -1
-  yhats <- mdl$pred$E4YES
-  roc <- roc(ys, yhats, levels = c(0, 1), ci = TRUE, boot.n = 1000, ci.alpha = 0.95)
-  metrics[12] <-  roc$auc
-  row.names(metrics)[12] = 'AUC'
+  ys <- as.numeric(mdl$pred$obs) - 1
+  yhats <- mdl$pred$X1
+  roc <- roc(ys, yhats,
+    levels = c(0, 1),
+    ci = TRUE, boot.n = 1000, ci.alpha = 0.95)
+  metrics[nrow(metrics) +1] <- roc$auc
+  # row.names(metrics)[nrow(metrics)] <- "AUC"
   names(metrics) <- title
   out <- list("metrics" = metrics, "roc" = roc, "model" = mdl)
   return(out)
 }
-
 ```
 
 ### Original data
 
 ```{r fit_original}
+load("data.Rdata")
 ctrl <- trainControl(
-                  method = "repeatedcv",
-                  number = 10,
-                  repeats = 10,
-                  classProbs = TRUE,
-                  summaryFunction = twoClassSummary,
-                  savePredictions = TRUE
-                )
+  method = "repeatedcv",
+  number = 10,
+  repeats = 1,
+  classProbs = TRUE,
+  summaryFunction = twoClassSummary,
+  savePredictions = TRUE)
 
 #  Logistic Regression
-lr <- fit(title = 'Logistic Regression',
+lr <- fit(
+  title = "Logistic Regression",
   X = scale(ADmets),
   y = apoe,
   model = "glm",
-  ctrl = ctrl
-) 
- 
+  ctrl = ctrl)
 ## Decision Tree
 tree <- fit(
   title = "Decision Tree",
-  X = X,
+  X = df[, 1:232],
   y = y,
   model = "rpart2",
-    ctrl = ctrl,
-  tuneGrid = expand.grid(maxdepth=c(2,3,4))
+  ctrl = ctrl,
+  grid = expand.grid(maxdepth = c(2))
 )
 
-param <-  data.frame(nrounds=c(10), max_depth = c(2),eta =c(0.3),gamma=c(0), colsample_bytree=c(0.5),min_child_weight=c(1),subsample=c(1))
+
+param <- data.frame(nrounds = c(10), max_depth = c(2), eta = c(0.3), gamma = c(0), colsample_bytree = c(0.5), min_child_weight = c(1), subsample = c(1))
 
 ## Random Forest
 rf <- fit(
-X = ADmets,
-  y = apoe,
+  X = df[,1:230],
+  y = y,
   model = "xgbTree",
-  trControl = ctrl,
-  tuneGrid = expand.grid(mtry = 5),
+  ctrl = ctrl,
+  tuneLength =2,
   num.trees = 50
 )
 
@@ -227,7 +231,7 @@ labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
 # httpgd::hgd()
 ggroc(rocs) +
   theme_clean() +
-  scale_color_tableau(labels=labels)
+  scale_color_tableau(labels = labels)
 ```
 
 ### Projection to Latent Factors
@@ -237,19 +241,19 @@ project <- function(X, m, seed) {
   set.seed(seed)
   X <- scale(as.matrix(X))
   cov <- cor(X)
-  
+
   # Find redundant features
   filter <- RF(cov)
-  
+
   # Filter out redundant features
   filtered <- subSet(X, filter)
-  
+
   # Regularized correlation matrix estimation
   M <- regcor(filtered)
-  
+
   # Get the regularized correlation matrix of the filtered dataset
   R <- M$optCor
-  
+
   mlfa <- mlFA(R, m = m)
   thomson <- facScore(filtered, mlfa$Loadings, mlfa$Uniqueness)
   return(thomson)
@@ -257,7 +261,7 @@ project <- function(X, m, seed) {
 ```
 
 ```{r fit_thomson, warning=FALSE}
-#Set k for repeats
+# Set k for repeats
 k <- 10
 ## Logistic Regression
 lrf <- fit(
@@ -286,11 +290,11 @@ rff <- fit(
   y = apoe,
   model = "ranger",
   ctrl = trainControl(
-                  method = "cv", number = 10,
-                  classProbs = TRUE, summaryFunction = twoClassSummary,
-                  sampling = "smote"
-                ),
-                grid = NULL,
+    method = "cv", number = 10,
+    classProbs = TRUE, summaryFunction = twoClassSummary,
+    sampling = "smote"
+  ),
+  grid = NULL,
   tuneLength = 2,
   times = 10,
   num.trees = 50
@@ -302,6 +306,6 @@ rocsf <- list(lrf$roc, treef$roc, rff$roc)
 # plot on a single plot with AUC in labels
 ggroc(rocsf) +
   theme_clean() +
-  scale_color_tableau(labels= labels)
+  scale_color_tableau(labels = labels)
 ```
 
