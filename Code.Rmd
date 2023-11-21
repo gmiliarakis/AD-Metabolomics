@@ -159,7 +159,9 @@ fit <- function(title,
   roc <- roc(ys, yhats, levels = c(0, 1), ci = TRUE, boot.n = 1000, ci.alpha = 0.95)
 
   # Metrics
-  metrics <- cm$byClass
+   metrics <- data.frame(c(cm$byClass, roc$auc),
+    row.names = c(names(cm$byClass), "AUC")
+  )
   metrics[12] <-  roc$auc
   row.names(metrics)[12] = 'AUC'
   names(metrics) <- title
@@ -194,28 +196,30 @@ tree <- fit(
   X = X,
   y = y,
   model = "rpart2",
-  grid=expand.grid(maxdepth = 2:10),
+  grid = expand.grid(maxdepth = 2:10),
   times = k
 )
+
 levels(y) <- make.names(y)
 ## Random Forest
-rf <- train(
-  x = ADmets,
-  y = geno$APOEb,
-  model = "ranger",
+require(mlogit)
+mlogit <- train(
+  x = X,
+  y = y,
+  model = "mlogit",
   trControl = trainControl(
                   method = "cv", number = 10,
-                  classProbs = TRUE, summaryFunction = twoClassSummary,
-                  sampling = "smote", savePredictions = TRUE
+                  classProbs = TRUE, summaryFunction = multiClassSummary, savePredictions = TRUE, sampling = 'smote'
                 ),
-                tuneGrid = expand.grid(mtry = 10),
-  num.trees = 10
+                preProcess = c("center", "scale")
 )
 obs <- rf$pred$obs
-  preds <- rf$pred$pred
-  cm <- confusionMatrix(obs, preds, positive = "E4YES")
-  metrics <- cm$byClass
+preds <- rf$pred$pred
+cm <- confusionMatrix(obs, preds)
 
+obs <- as.numeric(obs)
+yhats <- as.numeric(preds)
+roc <- multiclass.roc(obs,yhats)
 metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
 rocs <- list(tree$roc, rf$roc)
 

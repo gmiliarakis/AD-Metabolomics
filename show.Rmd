@@ -44,7 +44,7 @@ require(globaltest)
 load("ADdata.Rdata")
 ```
 
-## Differential expression of metabolites per ApoE genotype
+## RQi: Differential expression of metabolites per ApoE genotype
 
 ### Data Preparation
 
@@ -134,10 +134,9 @@ gt.b <- globaltest::gt(E4 ~ 1, E4 ~ . - APOE - Diagnosis, data = df)
 df$APOE <- as.factor(df$APOE)
 gt.m <- globaltest::gt(APOE ~ 1, APOE ~ . - E4, data = df)
 ```
-## Classification of metabolites on ApoE class
-
-```{r}
-## Function fit
+## RQii - Classification of metabolites on ApoE class
+### Function fit
+```{r fit_def}
 fit <- function(title,
                 X,
                 y,
@@ -154,86 +153,198 @@ fit <- function(title,
     method = model,
     tuneGrid = grid,
     trControl = ctrl,
-    metric = "ROC", ...
+    metric = "ROC",
+    preProcess = c("center", "scale"),
+    ...
   )
-
   # Create a confusion matrix and get performance metrics from caret
   obs <- mdl$pred$obs
   preds <- mdl$pred$pred
   cm <- confusionMatrix(obs, preds,
     dnn = c("X0", "X1"), # nolint
-    positive = "X1",
-    prevalence = 0.96031746031746,
-    mode = 'everything')
-  metrics <- cm$byClass
+    positive = "X1")
   # Predictions
-  ys <- as.numeric(mdl$pred$obs) - 1
+  ys <- as.numeric(obs) -1
   yhats <- mdl$pred$X1
   roc <- roc(ys, yhats,
     levels = c(0, 1),
     ci = TRUE, boot.n = 1000, ci.alpha = 0.95)
-  metrics[nrow(metrics) +1] <- roc$auc
-  # row.names(metrics)[nrow(metrics)] <- "AUC"
+  metrics <- data.frame(c(cm$byClass, roc$auc),
+    row.names = c(names(cm$byClass), "AUC")
+  )
   names(metrics) <- title
   out <- list("metrics" = metrics, "roc" = roc, "model" = mdl)
   return(out)
 }
 ```
-
-### Original data
-
-```{r fit_original}
+### Using 230 metabolites in AD
+#### Binary classification of outcome 0 vs at least 1 E4 allele
+```{r binary_preparation}
 load("data.Rdata")
+X <- df[df$Diagnosis == "Probable AD", 1:230]
+y <- df[df$Diagnosis == "Probable AD", "E4"]
+y <- as.factor(y)
+levels(y) <- make.names(levels(y))
+
+# Define the model training parameters, repeated 10-fold cross-valuidation
 ctrl <- trainControl(
   method = "repeatedcv",
-  number = 10,
-  repeats = 1,
+  number = 1,
+  repeats = 10,
   classProbs = TRUE,
   summaryFunction = twoClassSummary,
-  savePredictions = TRUE)
+  savePredictions = TRUE,
+  sampling = 'smote',
+)
+```
 
-#  Logistic Regression
+##### Logistic Regression
+```{r}
 lr <- fit(
   title = "Logistic Regression",
-  X = scale(ADmets),
-  y = apoe,
-  model = "glm",
-  ctrl = ctrl)
-## Decision Tree
+  X = X,
+  y = y,
+  model = "glmnet",
+  ctrl = ctrl,
+grid = expand.grid(alpha = c(0,1), lambda = c(0.001,100,100)))
+```
+
+##### Decision Tree
+```{r fit_original}
 tree <- fit(
   title = "Decision Tree",
-  X = df[, 1:232],
+  X = X,
   y = y,
   model = "rpart2",
   ctrl = ctrl,
   grid = expand.grid(maxdepth = c(2))
 )
-
-
+```
+##### XGBoost Forest
+```{r}
 param <- data.frame(nrounds = c(10), max_depth = c(2), eta = c(0.3), gamma = c(0), colsample_bytree = c(0.5), min_child_weight = c(1), subsample = c(1))
-
-## Random Forest
-rf <- fit(
-  X = df[,1:230],
+rf <- fit(title = "XGBoost",
+  X = X,
   y = y,
   model = "xgbTree",
   ctrl = ctrl,
-  tuneLength =2,
-  num.trees = 50
+  grid = param
 )
+```
 
+```{r}
+mlogit <- train(
+  x = X,
+  y = y,
+  model = "mlogit",
+  trControl = trainControl(
+                  method = "cv", number = 10,
+                  classProbs = TRUE, summaryFunction = multiClassSummary, savePredictions = TRUE, sampling = 'smote'
+                ),
+                preProcess = c("center", "scale")
+)
+obs <- rf$pred$obs
+preds <- rf$pred$pred
+cm <- confusionMatrix(obs, preds)
+
+obs <- as.numeric(obs)
+yhats <- as.numeric(preds)
+roc <- multiclass.roc(obs,yhats)
+```
+
+```{r}
+#Get a performance metrics table
 metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
+metrics
+#Plot ROC curves
 rocs <- list(lr$roc, tree$roc, rf$roc)
-
 # Generate labels
 labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
-# plot on a single plot with AUC in labels
 # httpgd::hgd()
 ggroc(rocs) +
   theme_clean() +
   scale_color_tableau(labels = labels)
 ```
+#### Multiclass Classification of number of ApoE E4 alleles based on metabolites
+```{r multifit}
+multifit <- function(
+                X,
+                y,
+                model,
+                ctrl = NULL,
+                grid = NULL,
+                seed = 123, ...) {
+  set.seed(seed)
+  # Merge X and y into df
+  df <- merge.data.frame(X, y)
 
+  # Train the model
+  mdl <- caret::train(df[, 1:ncol(X)], df$y,
+    method = model,
+    tuneGrid = grid,
+    trControl = ctrl,
+    metric = "accuracy",
+    ...
+  )
+  # Create a confusion matrix and get performance metrics from caret
+  obs <- mdl$pred$obs
+  preds <- mdl$pred$pred
+  cm <- confusionMatrix(obs, preds)
+  # Predictions
+  ys <- as.numeric(obs) -1
+  yhats <- as.numeric(preds) -1
+  roc <- multiclass.roc(ys, yhats,
+    levels = c(0, 1),
+    ci = TRUE, boot.n = 1000, ci.alpha = 0.95)
+  out <- list("cm" = cm, "roc" = roc, "model" = mdl)
+  return(out)
+}
+```
+
+```{r multi_preparation}
+ctrl$summaryFunction = multiClassSummary
+X <- df[df$Diagnosis == "Probable AD", 1:230]
+y <- df[df$Diagnosis == "Probable AD", "APOE"]
+y <- as.factor(y)
+levels(y) <- make.names(levels(y))
+```
+##### Multinomial Logistic Regression
+```{r mlogit}
+library(nnet)
+mlr <- multifit(
+  X = X,
+  y = y,
+  model = "multinom",
+  ctrl = ctrl,
+  trace = FALSE,
+  tuneLength = 1
+)
+mlr$cm
+```
+
+##### Decision Tree
+```{r multi_tree}
+mtree <- multifit(
+  X = X,
+  y = y,
+  model = "rpart2",
+  ctrl = ctrl,
+  grid = expand.grid(maxdepth = c(4))
+)
+```
+##### XGBoost Forest
+```{r multi_xgb}
+mrf <- multifit(
+  title = "XGBoost",
+  X = X,
+  y = y,
+  model = "xgbTree",
+  ctrl = ctrl,
+  grid = param
+)
+cm
+roc
+```
 ### Projection to Latent Factors
 
 ```{r get_thomson, eval =FALSE, include=FALSE}
@@ -259,53 +370,54 @@ project <- function(X, m, seed) {
   return(thomson)
 }
 ```
-
-```{r fit_thomson, warning=FALSE}
-# Set k for repeats
-k <- 10
-## Logistic Regression
-lrf <- fit(
+```{r}
+load("thomson.Rdata")
+X <- thomson
+```
+##### Logistic Regression
+```{r}
+lr <- fit(
   title = "Logistic Regression",
-  X = thomson,
-  y = apoe,
+  X = X,
+  y = y,
   model = "glm",
-  times = k,
-  grid = NULL
+  ctrl = ctrl,
 )
+```
 
-## Decision Tree
-treef <- fit(
+##### Decision Tree
+```{r fit_original}
+tree <- fit(
   title = "Decision Tree",
-  X = thomson,
-  y = apoe,
+  X = X,
+  y = y,
   model = "rpart2",
-  grid = expand.grid(maxdepth = 3),
-  times = k
+  ctrl = ctrl,
+  grid = expand.grid(maxdepth = c(2))
 )
-
-## Ensemble Classifiers
-rff <- fit(
-  title = "Random Forest",
-  X = thomson,
-  y = apoe,
-  model = "ranger",
-  ctrl = trainControl(
-    method = "cv", number = 10,
-    classProbs = TRUE, summaryFunction = twoClassSummary,
-    sampling = "smote"
-  ),
-  grid = NULL,
-  tuneLength = 2,
-  times = 10,
-  num.trees = 50
+```
+##### XGBoost Forest
+```{r}
+param <- data.frame(nrounds = c(10), max_depth = c(2), eta = c(0.3), gamma = c(0), colsample_bytree = 1, min_child_weight = c(1), subsample = c(1))
+rf <- fit(title = "XGBoost",
+  X = X,
+  y = y,
+  model = "xgbTree",
+  ctrl = ctrl,
+  grid = param
 )
+```
+```{r}
 
-metricsf <- cbind(lrf$metrics, treef$metrics, rff$metrics)
-rocsf <- list(lrf$roc, treef$roc, rff$roc)
-
-# plot on a single plot with AUC in labels
-ggroc(rocsf) +
+#Get a performance metrics table
+metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
+metrics
+#Plot ROC curves
+rocs <- list(lr$roc, tree$roc, rf$roc)
+# Generate labels
+labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
+# httpgd::hgd()
+ggroc(rocs) +
   theme_clean() +
   scale_color_tableau(labels = labels)
 ```
-
