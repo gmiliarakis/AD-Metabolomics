@@ -31,31 +31,44 @@ require(FMradio)
 require(pROC)
 require(rags2ridges)
 require(xgboost)
-require(ranger)
 require(ggthemes)
 require(DMwR2)
 require(globaltest)
+require(heatmaply)
 ```
 
-## Data loading
+## Data Exploration
+The (interactive) correlation heatmap reveals very high correlation among TG compounds.
+```{r heatmap}
+load("./data.Rdata")
+X <- df[df$Diagnosis == "Probable AD", 1:230]
+C <- round(cor(X), 2)
 
-```{r data loading, echo=FALSE}
-# Invoke data
-load("ADdata.Rdata")
+heatmaply_cor(C, color = viridis, plot_method = "plotly", dendrogram = F, reorderfun = sort.default(d,w), main = "Correlation Heatmap", file = "heatmap.html", colorbar_thickness = 15, colorbar_len = 0.5)
 ```
 
 ## RQi: Differential expression of metabolites per ApoE genotype
 
-### Data Preparation
+### Global test
+Performing a Global Test on the serum metabolites of AD patients, correcting for sex (Ho: E4 status has no effect on metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.046) between E4 carriers and non-carriers. Testing if the counts of E4 alleles have an effect on metabolite levels showed no significant nuance.
+```{r gt}
+load("data.Rdata")
+gdf <- subset(df, Diagnosis == "Probable AD")
+gdf$sex <- as.numeric(gdf$sex) -1
+# Binary outcome
+gt.b <- globaltest::gt(E4 ~ 1, E4 ~ . - APOE - Diagnosis, data = gdf)
+gt.b
 
-```{r Y}
-# Transpose, standardize and store the metabolite data in Y
-load("data.Rda")
-Y <- as.matrix(ADmets)
+# Multinomial outcome
+gdf$APOE <- as.factor(gdf$APOE)
+gt.m <- globaltest::gt(APOE ~ 1, APOE ~ . - E4 -Diagnosis, data = gdf)
+gt.m
 ```
+
 ### Wilcoxon rank-sum test
 Triglycerides and diglycerides seem to survive FDR control.
 ```{r wilcoxon E4yes vs E4no}
+load("ADdata.Rdata")
 # Store all observations of Class 1 in C1
 C1 <- ADmets[geno$APOEb == "E4NO", 1:230]
 # Store all observations of Class 2 in C2
@@ -79,7 +92,8 @@ results <- data.frame(p_values, p_adj)
 # Filter out the non-significant (a=0.05) FDR-adjusted p-values
 dplyr::filter(results, p_adj < 0.05)
 ```
-Carriers of one copy of E4 vs two copies tend to have less histamine, fumaric acid, uracil, triglyceride TG.48.0, phosphatidylcholine PC.36.4, with p < 0.05, however these don't survive FDRcut at 0.95 (p_adj = 0.97)'
+
+Carriers of one copy of E4 vs two copies tend to have less histamine, fumaric acid, uracil, triglyceride TG.48.0, phosphatidylcholine PC.36.4, with p \< 0.05, however these don't survive FDRcut at 0.95 (p_adj = 0.97)'
 
 ```{r E4x1 vs E4x2}
 geno$g <- geno$APOE
@@ -102,7 +116,9 @@ results <- data.frame(p_values, p_adj)
 # Filter out the non-significant (a=0.05) FDR-adjusted p-values
 dplyr::filter(results, p_adj < 0.05)
 ```
+
 Testing no E4 vs one E4, no metabolites differ significantly
+
 ```{r E4no vs E4x1}
 geno$g <- geno$APOE
 geno$g[geno$g == "E3E4"] <- geno$g[geno$g == "E2E4"] <- "E4x1"
@@ -123,16 +139,6 @@ p_adj <- p.adjust(wilcoxons, method = "fdr")
 results <- data.frame(p_values, p_adj)
 # Filter out the non-significant (a=0.05) FDR-adjusted p-values
 dplyr::filter(results, p_adj < 0.05)
-```
-
-### Global test
-```{r}
-# Binary outcome
-gt.b <- globaltest::gt(E4 ~ 1, E4 ~ . - APOE - Diagnosis, data = df)
-
-# Multinomial outcome
-df$APOE <- as.factor(df$APOE)
-gt.m <- globaltest::gt(APOE ~ 1, APOE ~ . - E4, data = df)
 ```
 ## RQii - Classification of metabolites on ApoE class
 ### Function fit
@@ -177,10 +183,13 @@ fit <- function(title,
   return(out)
 }
 ```
+
 ### Using 230 metabolites in AD
+
 #### Binary classification of outcome 0 vs at least 1 E4 allele
+
 ```{r binary_preparation}
-load("data.Rdata")
+load("./data.Rdata")
 X <- df[df$Diagnosis == "Probable AD", 1:230]
 y <- df[df$Diagnosis == "Probable AD", "E4"]
 y <- as.factor(y)
@@ -189,8 +198,8 @@ levels(y) <- make.names(levels(y))
 # Define the model training parameters, repeated 10-fold cross-valuidation
 ctrl <- trainControl(
   method = "repeatedcv",
-  number = 1,
-  repeats = 10,
+  number = 10,
+  repeats = 1,
   classProbs = TRUE,
   summaryFunction = twoClassSummary,
   savePredictions = TRUE,
@@ -199,6 +208,7 @@ ctrl <- trainControl(
 ```
 
 ##### Logistic Regression
+
 ```{r}
 lr <- fit(
   title = "Logistic Regression",
@@ -206,11 +216,12 @@ lr <- fit(
   y = y,
   model = "glmnet",
   ctrl = ctrl,
-grid = expand.grid(alpha = c(0,1), lambda = c(0.001,100,100)))
+  grid = expand.grid(alpha = c(0,1), lambda = c(0.001,100,100)))
 ```
 
 ##### Decision Tree
-```{r fit_original}
+
+```{r }
 tree <- fit(
   title = "Decision Tree",
   X = X,
@@ -219,8 +230,11 @@ tree <- fit(
   ctrl = ctrl,
   grid = expand.grid(maxdepth = c(2))
 )
+tree$metrics
 ```
+
 ##### XGBoost Forest
+
 ```{r}
 param <- data.frame(nrounds = c(10), max_depth = c(2), eta = c(0.3), gamma = c(0), colsample_bytree = c(0.5), min_child_weight = c(1), subsample = c(1))
 rf <- fit(title = "XGBoost",
@@ -230,26 +244,7 @@ rf <- fit(title = "XGBoost",
   ctrl = ctrl,
   grid = param
 )
-```
-
-```{r}
-mlogit <- train(
-  x = X,
-  y = y,
-  model = "mlogit",
-  trControl = trainControl(
-                  method = "cv", number = 10,
-                  classProbs = TRUE, summaryFunction = multiClassSummary, savePredictions = TRUE, sampling = 'smote'
-                ),
-                preProcess = c("center", "scale")
-)
-obs <- rf$pred$obs
-preds <- rf$pred$pred
-cm <- confusionMatrix(obs, preds)
-
-obs <- as.numeric(obs)
-yhats <- as.numeric(preds)
-roc <- multiclass.roc(obs,yhats)
+rf$metrics
 ```
 
 ```{r}
@@ -265,7 +260,9 @@ ggroc(rocs) +
   theme_clean() +
   scale_color_tableau(labels = labels)
 ```
+
 #### Multiclass Classification of number of ApoE E4 alleles based on metabolites
+
 ```{r multifit}
 multifit <- function(
                 X,
@@ -293,9 +290,7 @@ multifit <- function(
   # Predictions
   ys <- as.numeric(obs) -1
   yhats <- as.numeric(preds) -1
-  roc <- multiclass.roc(ys, yhats,
-    levels = c(0, 1),
-    ci = TRUE, boot.n = 1000, ci.alpha = 0.95)
+  roc <- multiclass.roc(ys, yhats)
   out <- list("cm" = cm, "roc" = roc, "model" = mdl)
   return(out)
 }
@@ -308,7 +303,9 @@ y <- df[df$Diagnosis == "Probable AD", "APOE"]
 y <- as.factor(y)
 levels(y) <- make.names(levels(y))
 ```
+
 ##### Multinomial Logistic Regression
+
 ```{r mlogit}
 library(nnet)
 mlr <- multifit(
@@ -323,28 +320,46 @@ mlr$cm
 ```
 
 ##### Decision Tree
-```{r multi_tree}
+
+```{r }
 mtree <- multifit(
   X = X,
   y = y,
   model = "rpart2",
   ctrl = ctrl,
-  grid = expand.grid(maxdepth = c(4))
+  tuneLength = 3
 )
+mtree$cm
 ```
+
 ##### XGBoost Forest
+
 ```{r multi_xgb}
 mrf <- multifit(
-  title = "XGBoost",
   X = X,
   y = y,
   model = "xgbTree",
   ctrl = ctrl,
   grid = param
 )
-cm
-roc
+mrf$cm
 ```
+
+```{r}
+#Get a performance metrics table
+multimetrics <- cbind(mlr$cm$byClass[3,], mtree$cm$byClass[3,], mrf$cm$byClass[3,])
+multimetrics
+#Plot ROC curves
+mrocs <- list(mlr$roc, mtree$roc, mrf$roc)
+# Generate labels
+labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
+# httpgd::hgd()
+ggroc(mrocs) +
+  theme_clean() +
+  scale_color_tableau(labels = labels)
+```
+
+
 ### Projection to Latent Factors
 
 ```{r get_thomson, eval =FALSE, include=FALSE}
@@ -370,14 +385,17 @@ project <- function(X, m, seed) {
   return(thomson)
 }
 ```
+
 ```{r}
 load("thomson.Rdata")
 X <- thomson
 ```
+#### Binary classification of outcome 0 vs at least 1 E4 allele
 ##### Logistic Regression
+
 ```{r}
-lr <- fit(
-  title = "Logistic Regression",
+ctrl$summaryFunction <- twoClassSummary
+lrf <- fit(
   X = X,
   y = y,
   model = "glm",
@@ -386,8 +404,9 @@ lr <- fit(
 ```
 
 ##### Decision Tree
-```{r fit_original}
-tree <- fit(
+
+```{r }
+treef <- fit(
   title = "Decision Tree",
   X = X,
   y = y,
@@ -396,10 +415,12 @@ tree <- fit(
   grid = expand.grid(maxdepth = c(2))
 )
 ```
+
 ##### XGBoost Forest
+
 ```{r}
 param <- data.frame(nrounds = c(10), max_depth = c(2), eta = c(0.3), gamma = c(0), colsample_bytree = 1, min_child_weight = c(1), subsample = c(1))
-rf <- fit(title = "XGBoost",
+rff <- fit(title = "XGBoost",
   X = X,
   y = y,
   model = "xgbTree",
@@ -407,17 +428,73 @@ rf <- fit(title = "XGBoost",
   grid = param
 )
 ```
-```{r}
 
+```{r}
 #Get a performance metrics table
-metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
-metrics
+metricsf <- cbind(lrf$metrics, treef$metrics, rff$metrics)
+metricsf
 #Plot ROC curves
-rocs <- list(lr$roc, tree$roc, rf$roc)
+rocsf <- list(lrf$roc, treef$roc, rff$roc)
 # Generate labels
 labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
 # httpgd::hgd()
-ggroc(rocs) +
+ggroc(rocsf) +
   theme_clean() +
   scale_color_tableau(labels = labels)
 ```
+
+##### Multinomial Logistic Regression
+
+```{r }
+ctrl$summaryFunction <- multiClassSummary
+mlrf <- multifit(
+  X = X,
+  y = y,
+  model = "multinom",
+  ctrl = ctrl,
+  trace = FALSE,
+  tuneLength = 3
+)
+mlrf$cm
+```
+
+##### Decision Tree
+
+```{r multi_tree}
+mtreef <- multifit(
+  X = X,
+  y = y,
+  model = "rpart2",
+  ctrl = ctrl,
+  tuneLength = 3
+)
+mtreef$cm
+```
+
+##### XGBoost Forest
+
+```{r }
+mrff <- multifit(
+  X = X,
+  y = y,
+  model = "xgbTree",
+  ctrl = ctrl,
+  grid = param
+)
+mrff$cm
+```
+
+```{r}
+#Get a performance metrics table
+multimetricsf <- cbind(mlrf$cm$byClass[3,], mtreef$cm$byClass[3,], mrff$cm$byClass[3,])
+multimetricsf
+#Plot ROC curves
+mrocsf <- list(mlrf$roc, mtreef$roc, mrff$roc)
+# Generate labels
+labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
+# httpgd::hgd()
+ggroc(mrocsf) +
+  theme_clean() +
+  scale_color_tableau(labels = labels)
+```
+
