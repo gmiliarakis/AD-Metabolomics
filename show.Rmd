@@ -4,13 +4,12 @@ output:
   html_document: 
     toc: yes
     toc_depth: 4
-    theme: darkly
-    fig_width: 6
+    theme: flatly
   pdf_document:
     toc: yes
   html_notebook: 
     toc: yes
-    theme: darkly
+    theme: flatly
     toc_depth: 5
     highlight: pygments
 editor_options:
@@ -19,12 +18,13 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  comment = "", fig.width = 6, fig.height = 6, warning = FALSE
+  comment = "", warning = FALSE
 )
 ```
 
 ```{r packages, include=FALSE}
 require(caret)
+require(glmnet)
 require(dplyr)
 require(e1071)
 require(FMradio)
@@ -35,10 +35,14 @@ require(ggthemes)
 require(DMwR2)
 require(globaltest)
 require(heatmaply)
+require(nnet)
+require(MLmetrics)
 ```
 
 ## Data Exploration
+
 The (interactive) correlation heatmap reveals very high correlation among TG compounds.
+
 ```{r heatmap}
 load("./data.Rdata")
 X <- df[df$Diagnosis == "Probable AD", 1:230]
@@ -50,7 +54,9 @@ heatmaply_cor(C, color = viridis, plot_method = "plotly", dendrogram = F, reorde
 ## RQi: Differential expression of metabolites per ApoE genotype
 
 ### Global test
+
 Performing a Global Test on the serum metabolites of AD patients, correcting for sex (Ho: E4 status has no effect on metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.046) between E4 carriers and non-carriers. Testing if the counts of E4 alleles have an effect on metabolite levels showed no significant nuance.
+
 ```{r gt}
 load("data.Rdata")
 gdf <- subset(df, Diagnosis == "Probable AD")
@@ -66,7 +72,9 @@ gt.m
 ```
 
 ### Wilcoxon rank-sum test
+
 Triglycerides and diglycerides seem to survive FDR control.
+
 ```{r wilcoxon E4yes vs E4no}
 load("ADdata.Rdata")
 # Store all observations of Class 1 in C1
@@ -117,7 +125,7 @@ results <- data.frame(p_values, p_adj)
 dplyr::filter(results, p_adj < 0.05)
 ```
 
-Testing no E4 vs one E4, no metabolites differ significantly
+Testing no E4 vs one E4, no metabolites differ significantly.
 
 ```{r E4no vs E4x1}
 geno$g <- geno$APOE
@@ -140,8 +148,11 @@ results <- data.frame(p_values, p_adj)
 # Filter out the non-significant (a=0.05) FDR-adjusted p-values
 dplyr::filter(results, p_adj < 0.05)
 ```
+
 ## RQii - Classification of metabolites on ApoE class
+The models fitted for the binary and the multinomial classification of metabolites didn't seem to be able to discriminate well between the presence or absence of the E4 allele, nor the number of copies in AD.
 ### Function fit
+
 ```{r fit_def}
 fit <- function(title,
                 X,
@@ -199,7 +210,7 @@ levels(y) <- make.names(levels(y))
 ctrl <- trainControl(
   method = "repeatedcv",
   number = 10,
-  repeats = 1,
+  repeats = 50,
   classProbs = TRUE,
   summaryFunction = twoClassSummary,
   savePredictions = TRUE,
@@ -216,7 +227,7 @@ lr <- fit(
   y = y,
   model = "glmnet",
   ctrl = ctrl,
-  grid = expand.grid(alpha = c(0,1), lambda = c(0.001,100,100)))
+  grid = expand.grid(alpha = c(0), lambda = c(100)))
 ```
 
 ##### Decision Tree
@@ -261,7 +272,7 @@ ggroc(rocs) +
   scale_color_tableau(labels = labels)
 ```
 
-#### Multiclass Classification of number of ApoE E4 alleles based on metabolites
+#### Multinomial Classification of number of ApoE E4 alleles based on metabolites
 
 ```{r multifit}
 multifit <- function(
@@ -280,7 +291,7 @@ multifit <- function(
     method = model,
     tuneGrid = grid,
     trControl = ctrl,
-    metric = "accuracy",
+    metric = "logLoss",
     ...
   )
   # Create a confusion matrix and get performance metrics from caret
@@ -297,17 +308,25 @@ multifit <- function(
 ```
 
 ```{r multi_preparation}
-ctrl$summaryFunction = multiClassSummary
 X <- df[df$Diagnosis == "Probable AD", 1:230]
 y <- df[df$Diagnosis == "Probable AD", "APOE"]
 y <- as.factor(y)
 levels(y) <- make.names(levels(y))
+
+ctrl <- trainControl(
+  method = "repeatedcv",
+  number = 10,
+  repeats = 50,
+  classProbs = TRUE,
+  summaryFunction = multiClassSummary,
+  savePredictions = TRUE,
+  sampling = "up"
+)
 ```
 
 ##### Multinomial Logistic Regression
 
 ```{r mlogit}
-library(nnet)
 mlr <- multifit(
   X = X,
   y = y,
@@ -327,7 +346,7 @@ mtree <- multifit(
   y = y,
   model = "rpart2",
   ctrl = ctrl,
-  tuneLength = 3
+  grid = expand.grid(maxdepth=c(2))
 )
 mtree$cm
 ```
@@ -353,12 +372,7 @@ multimetrics
 mrocs <- list(mlr$roc, mtree$roc, mrf$roc)
 # Generate labels
 labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
-# httpgd::hgd()
-ggroc(mrocs) +
-  theme_clean() +
-  scale_color_tableau(labels = labels)
 ```
-
 
 ### Projection to Latent Factors
 
@@ -389,13 +403,18 @@ project <- function(X, m, seed) {
 ```{r}
 load("thomson.Rdata")
 X <- thomson
+y <- df[df$Diagnosis == "Probable AD", "E4"]
+y <- as.factor(y)
+levels(y) <- make.names(levels(y))
 ```
+
 #### Binary classification of outcome 0 vs at least 1 E4 allele
+
 ##### Logistic Regression
 
 ```{r}
 ctrl$summaryFunction <- twoClassSummary
-lrf <- fit(
+lrf <- fit(title = "Logistic Regression",
   X = X,
   y = y,
   model = "glm",
@@ -429,6 +448,8 @@ rff <- fit(title = "XGBoost",
 )
 ```
 
+##### Model Comparison
+
 ```{r}
 #Get a performance metrics table
 metricsf <- cbind(lrf$metrics, treef$metrics, rff$metrics)
@@ -436,24 +457,39 @@ metricsf
 #Plot ROC curves
 rocsf <- list(lrf$roc, treef$roc, rff$roc)
 # Generate labels
-labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
+labelsf <- paste0(names(metricsf), ", AUC = ", paste(round(metricsf[12, ], 2)))
 # httpgd::hgd()
 ggroc(rocsf) +
   theme_clean() +
   scale_color_tableau(labels = labels)
 ```
 
+#### Multinomial Classification of number of ApoE E4 alleles based on latent factors
+
 ##### Multinomial Logistic Regression
 
 ```{r }
-ctrl$summaryFunction <- multiClassSummary
+y <- df[df$Diagnosis == "Probable AD", "APOE"]
+y <- as.factor(y)
+levels(y) <- make.names(levels(y))
+
+ctrl <- trainControl(
+  method = "repeatedcv",
+  number = 10,
+  repeats = 10,
+  classProbs = TRUE,
+  summaryFunction = multiClassSummary,
+  savePredictions = TRUE,
+  sampling = "up"
+)
+
 mlrf <- multifit(
   X = X,
   y = y,
   model = "multinom",
   ctrl = ctrl,
   trace = FALSE,
-  tuneLength = 3
+  tuneLength = 1
 )
 mlrf$cm
 ```
@@ -466,7 +502,7 @@ mtreef <- multifit(
   y = y,
   model = "rpart2",
   ctrl = ctrl,
-  tuneLength = 3
+  grid = mtree$model$bestTune
 )
 mtreef$cm
 ```
@@ -485,16 +521,8 @@ mrff$cm
 ```
 
 ```{r}
-#Get a performance metrics table
-multimetricsf <- cbind(mlrf$cm$byClass[3,], mtreef$cm$byClass[3,], mrff$cm$byClass[3,])
+# Get a performance metrics table
+multimetricsf <- cbind(mlrf$cm$byClass[3, ], mtreef$cm$byClass[3, ], mrff$cm$byClass[3, ])
+names(multimetricsf) <- names(metrics)
 multimetricsf
-#Plot ROC curves
-mrocsf <- list(mlrf$roc, mtreef$roc, mrff$roc)
-# Generate labels
-labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
-# httpgd::hgd()
-ggroc(mrocsf) +
-  theme_clean() +
-  scale_color_tableau(labels = labels)
 ```
-
