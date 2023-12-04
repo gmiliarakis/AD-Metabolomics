@@ -4,13 +4,12 @@ output:
   html_document: 
     toc: yes
     toc_depth: 4
-    theme: darkly
-    fig_width: 6
+    theme: flatly
   pdf_document:
     toc: yes
   html_notebook: 
     toc: yes
-    theme: darkly
+    theme: flatly
     toc_depth: 5
     highlight: pygments
 editor_options:
@@ -19,292 +18,297 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  comment = "", fig.width = 6, fig.height = 6, warning = FALSE
+  comment = "", warning = FALSE
 )
 ```
 
 ```{r packages, include=FALSE}
 require(caret)
+require(glmnet)
 require(dplyr)
 require(e1071)
 require(FMradio)
 require(pROC)
 require(rags2ridges)
 require(xgboost)
-require(ranger)
 require(ggthemes)
 require(DMwR2)
+require(globaltest)
+require(heatmaply)
+require(nnet)
 ```
 
-## Data loading
+## Data Exploration
 
-```{r data loading, echo=FALSE}
-# Invoke data
-load("data.Rda")
-load("ADdata.Rdata")
+The (interactive) correlation heatmap reveals very high correlation among TG compounds.
+
+```{r heatmap}
+load("./data.Rdata")
+X <- df[df$Diagnosis == "Probable AD", 1:230]
+C <- round(cor(X), 2)
+
+heatmaply_cor(C, color = viridis, plot_method = "plotly", dendrogram = F, reorderfun = sort.default(d,w), main = "Correlation Heatmap", file = "heatmap.html", colorbar_thickness = 15, colorbar_len = 0.5)
 ```
 
-## Differential expression of metabolites per ApoE genotype
+## RQi: Differential expression of metabolites per ApoE genotype
 
-### Data Preparation
+### Global test
 
-```{r Y}
-# Transpose, standardize and store the metabolite data in Y
-load('data.Rda')
-Y <- as.matrix(ADmets)
-```
-### Wilcoxon rank-sum test
-Triglycerides and diglycerides seem to survive FDR control.
-```{r wilcoxon E4yes vs E4no}
-# Store all observations of Class 1 in C1
-C1 <- ADmets[geno$APOEb == "E4NO",1:230]
-# Store all observations of Class 2 in C2
-C2 <- ADmets[geno$APOEb == "E4YES", 1:230]
+Performing a Global Test on the serum metabolites of AD patients, correcting for sex (Ho: E4 status has no effect on metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.046) between E4 carriers and non-carriers. Testing if the counts of E4 alleles have an effect on metabolite levels showed no significant nuance.
 
-# Create a function to perform the Wilcoxon rank-sum (Mann-Whitney U) test on two vectors
-MannWhitneyU <- function(x, y) {
-  wilcoxon <- wilcox.test(x, y, paired = FALSE, alternative = "less")
-  return(wilcoxon$p.value)
-}
+```{r gt}
+load("data.Rdata")
+AD <- subset(df, Diagnosis == "Probable AD")
+AD$sex <- as.numeric(AD$sex) -1
+# Binary outcome
+gt.b <- globaltest::gt(E4 ~ 1, E4 ~ . -APOE -Diagnosis, data = AD)
+gt.b
 
-# Use purrr::map2 to apply the function to corresponding columns
-wilcoxons <- purrr::map2(C1[,1:230], C2[,1:230], ~ MannWhitneyU(.x,.y))
+# Multinomial outcome
 
-# Coerce p_values to dataframe and transpose it
-p_values <- t(data.frame(wilcoxons))
-# Calculate the FDR-adjusted p-values
-p_adj <- p.adjust(wilcoxons, method = "fdr")
+full$Diagnosis <- as.numeric(full$Diagnosis) - 1
+full$target[full$Diagnosis == 1 & full$E4 == 1] <- "AD with at least 1 ApoE4"
+full$target[full$Diagnosis == 1 & full$E4 == 0] <- "AD without ApoE4"
+full$target[full$Diagnosis == 0 & full$E4 == 1] <- "SCD with at least 1 ApoE4"
+full$target[full$Diagnosis == 0 & full$E4 == 0] <- "SCD without ApoE4"
+df$target <-  full$target
+df$target <- as.factor(df$target)
 
-results <- data.frame(p_values, p_adj)
-# Filter out the non-significant (a=0.05) FDR-adjusted p-values
-dplyr::filter(results, p_adj < 0.05)
-```
-Carriers of one copy of E4 vs two copies tend to have less histamine, fumaric acid, uracil, triglyceride TG.48.0, phosphatidylcholine PC.36.4, with p < 0.05, however these don't survive FDRcut at 0.95 (p_adj = 0.97)'
-
-```{r E4x1 vs E4x2}
-geno$g <- geno$APOE
-geno$g[geno$g == "E3E4"] <- geno$g[geno$g == "E2E4"] <- "E4x1"
-geno$g[geno$g == "E4E4"] <- 'E4x2'
-# Store all observations of Class 1 in C1
-C1 <- ADmets[geno$g == "E4x1",1:230]
-# Store all observations of Class 2 in C2
-C2 <- ADmets[geno$g == 'E4x2', 1:230]
-
-# Use purrr::map2 to apply the function to corresponding columns
-wilcoxons <- purrr::map2(C1[, 1:230], C2[, 1:230], ~ MannWhitneyU(.x, .y))
-
-# Coerce p_values to dataframe and transpose it
-p_values <- t(data.frame(wilcoxons))
-# Calculate the FDR-adjusted p-values
-p_adj <- p.adjust(wilcoxons, method = "fdr")
-
-results <- data.frame(p_values, p_adj)
-# Filter out the non-significant (a=0.05) FDR-adjusted p-values
-dplyr::filter(results, p_adj < 0.05)
-
+AD$APOE <- as.factor(AD$APOE)
+gt.m <- globaltest::gt(target ~ 1, target ~ . -APOE -E4 -Diagnosis - sex, data = df)
+gt.m
+gtmc <- covariates(gt.m)
+plotly::ggplotly(gtmc, tooltip = "text", dynamicTicks = TRUE)
 ```
 
-```{r E4no vs E4x1}
-geno$g <- geno$APOE
-geno$g[geno$g == "E3E4"] <- geno$g[geno$g == "E2E4"] <- "E4x1"
-geno$g[geno$APOEb == "E4NO"] <- 'E4x0'
-# Store all observations of Class 1 in C1
-C1 <- ADmets[geno$g == "E4x1",1:230]
-# Store all observations of Class 2 in C2
-C2 <- ADmets[geno$g == 'E4x0', 1:230]
-
-# Use purrr::map2 to apply the function to corresponding columns
-wilcoxons <- purrr::map2(C1[, 1:230], C2[, 1:230], ~ MannWhitneyU(.x, .y))
-
-# Coerce p_values to dataframe and transpose it
-p_values <- t(data.frame(wilcoxons))
-# Calculate the FDR-adjusted p-values
-p_adj <- p.adjust(wilcoxons, method = "fdr")
-
-results <- data.frame(p_values, p_adj)
-# Filter out the non-significant (a=0.05) FDR-adjusted p-values
-dplyr::filter(results, p_adj < 0.05)
-```
-
-## Classification of metabolites on ApoE class
 
 ```{r}
-## Function fit
-fit <- function(title,
+anova <- function(Y, x, ...) {
+  ### Analysis of Variance (ANOVA)
+  df <- cbind(Y, x, ...)
+  ncol <- ncol(Y)
+  covariates <- names(...)
+  summaries <- purrr::map(df[, 1:ncol], ~ {
+    frm <- as.formula(paste0(".x ~", paste(covariates, collapse = "+")))
+    rm <- lm(frm, data = df)
+    ffm <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
+    fm <- lm(ffm, data = df)
+    anova(rm, fm)
+  })
+  ## Correction for Multiple Testing
+  # Create a list to store the p-values
+  p_values <- list(1:ncol)
+  # Extract the p-values of the F-tests from the aov summaries list and store them in p_values
+  for (i in 1:ncol) {
+    p_values[[i]] <- summaries[[i]][["Pr(>F)"]][[2]]
+  }
+  # Coerce p_values to dataframe and transpose it
+  p_values <- t(data.frame(p_values))
+
+  # Set as row names the metabolites
+  p_values <- data.frame(p_values, row.names = colnames(Y))
+
+  # Calculate the FDR-adjusted p-values
+  p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
+  # Filter out the non-significant (a=0.05) FDR-adjusted p-values
+  return(dplyr::filter(p_values, p_values < 0.05))
+}
+```
+
+```{r}
+Y <- df[, 1:230]
+clinical$V_MMSE <- NULL
+gentest(Y, target, clinical)
+```
+
+## RQii - Classification of metabolites on ApoE class
+### Multinomial Classification of number of ApoE E4 alleles based on metabolites
+
+```{r multifit}
+multifit <- function(
                 X,
                 y,
                 model,
                 ctrl = NULL,
                 grid = NULL,
                 seed = 123, ...) {
-                set.seed(seed)
-    # Merge X and y into df
-    df <- merge.data.frame(X, y)
+  set.seed(seed)
+  # Merge X and y into df
+  df <- merge.data.frame(X, y)
 
   # Train the model
   mdl <- caret::train(df[, 1:ncol(X)], df$y,
     method = model,
     tuneGrid = grid,
     trControl = ctrl,
-    metric = 'ROC',...
+    metric = "logLoss",
+    ...
   )
-
   # Create a confusion matrix and get performance metrics from caret
-  cm <- confusionMatrix(mdl$pred$obs, mdl$pred$pred, positive = "E4YES")
-
-  # 
-  ys <- as.numeric(mdl$pred$obs) - 1
+  obs <- mdl$pred$obs
+  preds <- mdl$pred$pred
+  cm <- confusionMatrix(obs, preds)
   # Predictions
-  yhats <- mdl$pred$E4YES
-  roc <- roc(ys, yhats, levels = c(0, 1), ci = TRUE, boot.n = 1000, ci.alpha = 0.95)
-
-  # Metrics
-   metrics <- data.frame(c(cm$byClass, roc$auc),
-    row.names = c(names(cm$byClass), "AUC")
-  )
-  metrics[12] <-  roc$auc
-  row.names(metrics)[12] = 'AUC'
-  names(metrics) <- title
-  out <- list("metrics" = metrics, "roc" = roc, "model" = mdl)
+  ys <- as.numeric(obs) -1
+  yhats <- as.numeric(preds) -1
+  roc <- multiclass.roc(ys, yhats)
+  out <- list("cm" = cm, "roc" = roc, "model" = mdl)
   return(out)
 }
-
 ```
-
-
-### Original data
-
-```{r fit_original}
-k <- 1
+#### Using 230 metabolites in AD
+```{r multi_preparation}
+X <- df[df$Diagnosis == "Probable AD", 1:230]
+y <- df[df$Diagnosis == "Probable AD", "APOE"]
 y <- as.factor(y)
 levels(y) <- make.names(levels(y))
-require(C50)
-#  Logistic Regression
-lr <- fit(
-  title = "Logistic Regression",
+
+ctrl <- trainControl(
+  method = "repeatedcv",
+  number = 10,
+  repeats = 50,
+  classProbs = TRUE,
+  summaryFunction = multiClassSummary,
+  savePredictions = TRUE,
+  sampling = "up"
+)
+```
+
+##### Multinomial Logistic Regression
+
+```{r mlogit}
+mlr <- multifit(
   X = X,
   y = y,
-  model = "C5.0",
-  grid = expand.grid(winnow = c(TRUE,FALSE), trials=c(1,5,10,15,20), model="tree" ),
-  times = k
-) 
- 
-## Decision Tree
-param <-  data.frame(nrounds=c(10), max_depth = c(2),eta =c(0.3),gamma=c(0), colsample_bytree=c(0.5),min_child_weight=c(1),subsample=c(1))
-tree <- fit(
-  title = "Decision Tree",
+  model = "multinom",
+  ctrl = ctrl,
+  trace = FALSE,
+  tuneLength = 1
+)
+mlr$cm
+```
+
+##### Decision Tree
+
+```{r }
+mtree <- multifit(
   X = X,
   y = y,
   model = "rpart2",
-  grid = expand.grid(maxdepth = 2:10),
-  times = k
+  ctrl = ctrl,
+  grid = expand.grid(maxdepth=c(2))
 )
-
-levels(y) <- make.names(y)
-## Random Forest
-require(mlogit)
-mlogit <- train(
-  x = X,
-  y = y,
-  model = "mlogit",
-  trControl = trainControl(
-                  method = "cv", number = 10,
-                  classProbs = TRUE, summaryFunction = multiClassSummary, savePredictions = TRUE, sampling = 'smote'
-                ),
-                preProcess = c("center", "scale")
-)
-obs <- rf$pred$obs
-preds <- rf$pred$pred
-cm <- confusionMatrix(obs, preds)
-
-obs <- as.numeric(obs)
-yhats <- as.numeric(preds)
-roc <- multiclass.roc(obs,yhats)
-metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
-rocs <- list(tree$roc, rf$roc)
-
-# Generate labels
-labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
-# plot on a single plot with AUC in labels
-# httpgd::hgd()
-ggroc(rocs) +
-  theme_clean() +
-  scale_color_tableau()
+mtree$cm
 ```
 
-### Projection to Latent Factors
+##### XGBoost Forest
+
+```{r multi_xgb}
+mrf <- multifit(
+  X = X,
+  y = y,
+  model = "xgbTree",
+  ctrl = ctrl,
+  grid = param
+)
+mrf$cm
+```
+
+```{r}
+#Get a performance metrics table
+multimetrics <- cbind(mlr$cm$byClass[3,], mtree$cm$byClass[3,], mrf$cm$byClass[3,])
+multimetrics
+#Plot ROC curves
+mrocs <- list(mlr$roc, mtree$roc, mrf$roc)
+# Generate labels
+labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
+```
+
+#### Projection to Latent Factors
 
 ```{r get_thomson, eval =FALSE, include=FALSE}
 project <- function(X, m, seed) {
   set.seed(seed)
   X <- scale(as.matrix(X))
   cov <- cor(X)
-  
+
   # Find redundant features
   filter <- RF(cov)
-  
+
   # Filter out redundant features
   filtered <- subSet(X, filter)
-  
+
   # Regularized correlation matrix estimation
   M <- regcor(filtered)
-  
+
   # Get the regularized correlation matrix of the filtered dataset
   R <- M$optCor
-  
+
   mlfa <- mlFA(R, m = m)
   thomson <- facScore(filtered, mlfa$Loadings, mlfa$Uniqueness)
   return(thomson)
 }
 ```
 
-```{r fit_thomson, warning=FALSE}
-#Set k for repeats
-k <- 10
-## Logistic Regression
-lrf <- fit(
-  title = "Logistic Regression",
-  X = thomson,
-  y = apoe,
-  model = "glm",
-  times = k,
-  grid = NULL
+```{r}
+
+```
+##### Multinomial Logistic Regression
+
+```{r }
+
+ctrl <- trainControl(
+  method = "repeatedcv",
+  number = 10,
+  repeats = 10,
+  classProbs = TRUE,
+  summaryFunction = multiClassSummary,
+  savePredictions = TRUE,
+  sampling = "up"
 )
 
-## Decision Tree
-treef <- fit(
-  title = "Decision Tree",
-  X = thomson,
-  y = apoe,
+mlrf <- multifit(
+  X = X,
+  y = y,
+  model = "multinom",
+  ctrl = ctrl,
+  trace = FALSE,
+  tuneLength = 1
+)
+mlrf$cm
+```
+
+##### Decision Tree
+
+```{r multi_tree}
+mtreef <- multifit(
+  X = X,
+  y = y,
   model = "rpart2",
-  grid = expand.grid(maxdepth = 3),
-  times = k
+  ctrl = ctrl,
+  grid = mtree$model$bestTune
 )
+mtreef$cm
+```
 
-## Ensemble Classifiers
-rff <- fit(
-  title = "Random Forest",
-  X = thomson,
-  y = apoe,
-  model = "ranger",
-  ctrl = trainControl(
-                  method = "cv", number = 10,
-                  classProbs = TRUE, summaryFunction = twoClassSummary,
-                  sampling = "smote"
-                ),
-                grid = NULL,
-  tuneLength = 2,
-  times = 10,
-  num.trees = 50
+##### XGBoost Forest
+
+```{r }
+mrff <- multifit(
+  X = X,
+  y = y,
+  model = "xgbTree",
+  ctrl = ctrl,
+  grid = param
 )
+mrff$cm
+```
 
-metricsf <- cbind(lrf$metrics, treef$metrics, rff$metrics)
-rocsf <- list(lrf$roc, treef$roc, rff$roc)
-
-# plot on a single plot with AUC in labels
-ggroc(rocsf) +
-  theme_clean() +
-  scale_color_tableau(labels= labels)
+```{r}
+# Get a performance metrics table
+multimetricsf <- cbind(mlrf$cm$byClass[3, ], mtreef$cm$byClass[3, ], mrff$cm$byClass[3, ])
+names(multimetricsf) <- names(metrics)
+multimetricsf
 ```
 
 ## Network Analysis

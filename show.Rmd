@@ -36,7 +36,6 @@ require(DMwR2)
 require(globaltest)
 require(heatmaply)
 require(nnet)
-require(MLmetrics)
 ```
 
 ## Data Exploration
@@ -59,220 +58,71 @@ Performing a Global Test on the serum metabolites of AD patients, correcting for
 
 ```{r gt}
 load("data.Rdata")
-gdf <- subset(df, Diagnosis == "Probable AD")
-gdf$sex <- as.numeric(gdf$sex) -1
+AD <- subset(df, Diagnosis == "Probable AD")
+AD$sex <- as.numeric(AD$sex) -1
 # Binary outcome
-gt.b <- globaltest::gt(E4 ~ 1, E4 ~ . - APOE - Diagnosis, data = gdf)
+gt.b <- globaltest::gt(E4 ~ 1, E4 ~ . -APOE -Diagnosis, data = AD)
 gt.b
 
 # Multinomial outcome
-gdf$APOE <- as.factor(gdf$APOE)
-gt.m <- globaltest::gt(APOE ~ 1, APOE ~ . - E4 -Diagnosis, data = gdf)
+
+full$Diagnosis <- as.numeric(full$Diagnosis) - 1
+full$target[full$Diagnosis == 1 & full$E4 == 1] <- "AD with at least 1 ApoE4"
+full$target[full$Diagnosis == 1 & full$E4 == 0] <- "AD without ApoE4"
+full$target[full$Diagnosis == 0 & full$E4 == 1] <- "SCD with at least 1 ApoE4"
+full$target[full$Diagnosis == 0 & full$E4 == 0] <- "SCD without ApoE4"
+df$target <-  full$target
+df$target <- as.factor(df$target)
+
+AD$APOE <- as.factor(AD$APOE)
+gt.m <- globaltest::gt(target ~ 1, target ~ . -APOE -E4 -Diagnosis - sex, data = df)
 gt.m
+gtmc <- covariates(gt.m)
+plotly::ggplotly(gtmc, tooltip = "text", dynamicTicks = TRUE)
 ```
 
-### Wilcoxon rank-sum test
 
-Triglycerides and diglycerides seem to survive FDR control.
+```{r}
+anova <- function(Y, x, ...) {
+  ### Analysis of Variance (ANOVA)
+  df <- cbind(Y, x, ...)
+  ncol <- ncol(Y)
+  covariates <- names(...)
+  summaries <- purrr::map(df[, 1:ncol], ~ {
+    frm <- as.formula(paste0(".x ~", paste(covariates, collapse = "+")))
+    rm <- lm(frm, data = df)
+    ffm <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
+    fm <- lm(ffm, data = df)
+    anova(rm, fm)
+  })
+  ## Correction for Multiple Testing
+  # Create a list to store the p-values
+  p_values <- list(1:ncol)
+  # Extract the p-values of the F-tests from the aov summaries list and store them in p_values
+  for (i in 1:ncol) {
+    p_values[[i]] <- summaries[[i]][["Pr(>F)"]][[2]]
+  }
+  # Coerce p_values to dataframe and transpose it
+  p_values <- t(data.frame(p_values))
 
-```{r wilcoxon E4yes vs E4no}
-load("ADdata.Rdata")
-# Store all observations of Class 1 in C1
-C1 <- ADmets[geno$APOEb == "E4NO", 1:230]
-# Store all observations of Class 2 in C2
-C2 <- ADmets[geno$APOEb == "E4YES", 1:230]
+  # Set as row names the metabolites
+  p_values <- data.frame(p_values, row.names = colnames(Y))
 
-# Create a function to perform the Wilcoxon rank-sum (Mann-Whitney U) test on two vectors
-MannWhitneyU <- function(x, y) {
-  wilcoxon <- wilcox.test(x, y, paired = FALSE, alternative = "less")
-  return(wilcoxon$p.value)
+  # Calculate the FDR-adjusted p-values
+  p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
+  # Filter out the non-significant (a=0.05) FDR-adjusted p-values
+  return(dplyr::filter(p_values, p_values < 0.05))
 }
-
-# Use purrr::map2 to apply the function to corresponding columns
-wilcoxons <- purrr::map2(C1[, 1:230], C2[, 1:230], ~ MannWhitneyU(.x, .y))
-
-# Coerce p_values to dataframe and transpose it
-p_values <- t(data.frame(wilcoxons))
-# Calculate the FDR-adjusted p-values
-p_adj <- p.adjust(wilcoxons, method = "fdr")
-
-results <- data.frame(p_values, p_adj)
-# Filter out the non-significant (a=0.05) FDR-adjusted p-values
-dplyr::filter(results, p_adj < 0.05)
 ```
 
-Carriers of one copy of E4 vs two copies tend to have less histamine, fumaric acid, uracil, triglyceride TG.48.0, phosphatidylcholine PC.36.4, with p \< 0.05, however these don't survive FDRcut at 0.95 (p_adj = 0.97)'
-
-```{r E4x1 vs E4x2}
-geno$g <- geno$APOE
-geno$g[geno$g == "E3E4"] <- geno$g[geno$g == "E2E4"] <- "E4x1"
-geno$g[geno$g == "E4E4"] <- "E4x2"
-# Store all observations of Class 1 in C1
-C1 <- ADmets[geno$g == "E4x1", 1:230]
-# Store all observations of Class 2 in C2
-C2 <- ADmets[geno$g == "E4x2", 1:230]
-
-# Use purrr::map2 to apply the function to corresponding columns
-wilcoxons <- purrr::map2(C1[, 1:230], C2[, 1:230], ~ MannWhitneyU(.x, .y))
-
-# Coerce p_values to dataframe and transpose it
-p_values <- t(data.frame(wilcoxons))
-# Calculate the FDR-adjusted p-values
-p_adj <- p.adjust(wilcoxons, method = "fdr")
-
-results <- data.frame(p_values, p_adj)
-# Filter out the non-significant (a=0.05) FDR-adjusted p-values
-dplyr::filter(results, p_adj < 0.05)
-```
-
-Testing no E4 vs one E4, no metabolites differ significantly.
-
-```{r E4no vs E4x1}
-geno$g <- geno$APOE
-geno$g[geno$g == "E3E4"] <- geno$g[geno$g == "E2E4"] <- "E4x1"
-geno$g[geno$APOEb == "E4NO"] <- "E4x0"
-# Store all observations of Class 1 in C1
-C1 <- ADmets[geno$g == "E4x1", 1:230]
-# Store all observations of Class 2 in C2
-C2 <- ADmets[geno$g == "E4x0", 1:230]
-
-# Use purrr::map2 to apply the function to corresponding columns
-wilcoxons <- purrr::map2(C1[, 1:230], C2[, 1:230], ~ MannWhitneyU(.x, .y))
-
-# Coerce p_values to dataframe and transpose it
-p_values <- t(data.frame(wilcoxons))
-# Calculate the FDR-adjusted p-values
-p_adj <- p.adjust(wilcoxons, method = "fdr")
-
-results <- data.frame(p_values, p_adj)
-# Filter out the non-significant (a=0.05) FDR-adjusted p-values
-dplyr::filter(results, p_adj < 0.05)
+```{r}
+Y <- df[, 1:230]
+clinical$V_MMSE <- NULL
+gentest(Y, target, clinical)
 ```
 
 ## RQii - Classification of metabolites on ApoE class
-The models fitted for the binary and the multinomial classification of metabolites didn't seem to be able to discriminate well between the presence or absence of the E4 allele, nor the number of copies in AD.
-### Function fit
-
-```{r fit_def}
-fit <- function(title,
-                X,
-                y,
-                model,
-                ctrl = NULL,
-                grid = NULL,
-                seed = 123, ...) {
-  set.seed(seed)
-  # Merge X and y into df
-  df <- merge.data.frame(X, y)
-
-  # Train the model
-  mdl <- caret::train(df[, 1:ncol(X)], df$y,
-    method = model,
-    tuneGrid = grid,
-    trControl = ctrl,
-    metric = "ROC",
-    preProcess = c("center", "scale"),
-    ...
-  )
-  # Create a confusion matrix and get performance metrics from caret
-  obs <- mdl$pred$obs
-  preds <- mdl$pred$pred
-  cm <- confusionMatrix(obs, preds,
-    dnn = c("X0", "X1"), # nolint
-    positive = "X1")
-  # Predictions
-  ys <- as.numeric(obs) -1
-  yhats <- mdl$pred$X1
-  roc <- roc(ys, yhats,
-    levels = c(0, 1),
-    ci = TRUE, boot.n = 1000, ci.alpha = 0.95)
-  metrics <- data.frame(c(cm$byClass, roc$auc),
-    row.names = c(names(cm$byClass), "AUC")
-  )
-  names(metrics) <- title
-  out <- list("metrics" = metrics, "roc" = roc, "model" = mdl)
-  return(out)
-}
-```
-
-### Using 230 metabolites in AD
-
-#### Binary classification of outcome 0 vs at least 1 E4 allele
-
-```{r binary_preparation}
-load("./data.Rdata")
-X <- df[df$Diagnosis == "Probable AD", 1:230]
-y <- df[df$Diagnosis == "Probable AD", "E4"]
-y <- as.factor(y)
-levels(y) <- make.names(levels(y))
-
-# Define the model training parameters, repeated 10-fold cross-valuidation
-ctrl <- trainControl(
-  method = "repeatedcv",
-  number = 10,
-  repeats = 50,
-  classProbs = TRUE,
-  summaryFunction = twoClassSummary,
-  savePredictions = TRUE,
-  sampling = 'smote',
-)
-```
-
-##### Logistic Regression
-
-```{r}
-lr <- fit(
-  title = "Logistic Regression",
-  X = X,
-  y = y,
-  model = "glmnet",
-  ctrl = ctrl,
-  grid = expand.grid(alpha = c(0), lambda = c(100)))
-```
-
-##### Decision Tree
-
-```{r }
-tree <- fit(
-  title = "Decision Tree",
-  X = X,
-  y = y,
-  model = "rpart2",
-  ctrl = ctrl,
-  grid = expand.grid(maxdepth = c(2))
-)
-tree$metrics
-```
-
-##### XGBoost Forest
-
-```{r}
-param <- data.frame(nrounds = c(10), max_depth = c(2), eta = c(0.3), gamma = c(0), colsample_bytree = c(0.5), min_child_weight = c(1), subsample = c(1))
-rf <- fit(title = "XGBoost",
-  X = X,
-  y = y,
-  model = "xgbTree",
-  ctrl = ctrl,
-  grid = param
-)
-rf$metrics
-```
-
-```{r}
-#Get a performance metrics table
-metrics <- cbind(lr$metrics, tree$metrics, rf$metrics)
-metrics
-#Plot ROC curves
-rocs <- list(lr$roc, tree$roc, rf$roc)
-# Generate labels
-labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
-# httpgd::hgd()
-ggroc(rocs) +
-  theme_clean() +
-  scale_color_tableau(labels = labels)
-```
-
-#### Multinomial Classification of number of ApoE E4 alleles based on metabolites
+### Multinomial Classification of number of ApoE E4 alleles based on metabolites
 
 ```{r multifit}
 multifit <- function(
@@ -306,7 +156,7 @@ multifit <- function(
   return(out)
 }
 ```
-
+#### Using 230 metabolites in AD
 ```{r multi_preparation}
 X <- df[df$Diagnosis == "Probable AD", 1:230]
 y <- df[df$Diagnosis == "Probable AD", "APOE"]
@@ -374,7 +224,7 @@ mrocs <- list(mlr$roc, mtree$roc, mrf$roc)
 labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
 ```
 
-### Projection to Latent Factors
+#### Projection to Latent Factors
 
 ```{r get_thomson, eval =FALSE, include=FALSE}
 project <- function(X, m, seed) {
@@ -401,77 +251,11 @@ project <- function(X, m, seed) {
 ```
 
 ```{r}
-load("thomson.Rdata")
-X <- thomson
-y <- df[df$Diagnosis == "Probable AD", "E4"]
-y <- as.factor(y)
-levels(y) <- make.names(levels(y))
+
 ```
-
-#### Binary classification of outcome 0 vs at least 1 E4 allele
-
-##### Logistic Regression
-
-```{r}
-ctrl$summaryFunction <- twoClassSummary
-lrf <- fit(title = "Logistic Regression",
-  X = X,
-  y = y,
-  model = "glm",
-  ctrl = ctrl,
-)
-```
-
-##### Decision Tree
-
-```{r }
-treef <- fit(
-  title = "Decision Tree",
-  X = X,
-  y = y,
-  model = "rpart2",
-  ctrl = ctrl,
-  grid = expand.grid(maxdepth = c(2))
-)
-```
-
-##### XGBoost Forest
-
-```{r}
-param <- data.frame(nrounds = c(10), max_depth = c(2), eta = c(0.3), gamma = c(0), colsample_bytree = 1, min_child_weight = c(1), subsample = c(1))
-rff <- fit(title = "XGBoost",
-  X = X,
-  y = y,
-  model = "xgbTree",
-  ctrl = ctrl,
-  grid = param
-)
-```
-
-##### Model Comparison
-
-```{r}
-#Get a performance metrics table
-metricsf <- cbind(lrf$metrics, treef$metrics, rff$metrics)
-metricsf
-#Plot ROC curves
-rocsf <- list(lrf$roc, treef$roc, rff$roc)
-# Generate labels
-labelsf <- paste0(names(metricsf), ", AUC = ", paste(round(metricsf[12, ], 2)))
-# httpgd::hgd()
-ggroc(rocsf) +
-  theme_clean() +
-  scale_color_tableau(labels = labels)
-```
-
-#### Multinomial Classification of number of ApoE E4 alleles based on latent factors
-
 ##### Multinomial Logistic Regression
 
 ```{r }
-y <- df[df$Diagnosis == "Probable AD", "APOE"]
-y <- as.factor(y)
-levels(y) <- make.names(levels(y))
 
 ctrl <- trainControl(
   method = "repeatedcv",

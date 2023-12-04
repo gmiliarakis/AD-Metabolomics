@@ -2,7 +2,6 @@ library(dplyr)
 load("data/data.Rdata")
 load("data/clinical.Rdata")
 library(mice)
-library(ARTool)
 library(robustbase)
 imp <- mice(clinical, method = "norm", seed = 123)
 clinical <- complete(imp)
@@ -39,7 +38,14 @@ gentest <- function(Y, x, ...) {
 }
 
 Y <- df[, 1:230]
-df$Diagnosis <- as.numeric(df$Diagnosis)
+df$Diagnosis <- as.numeric(df$Diagnosis) - 1
+R> df$target[df$Diagnosis == 1 & df$E4 == 1] <- "ADE4"
+
+R> df$target[df$Diagnosis == 1 & df$E4 == 0] <- "ADNO"
+
+R> df$target[df$Diagnosis == 0 & df$E4 == 1] <- "SCDE4"
+
+R> df$target[df$Diagnosis == 0 & df$E4 == 0] <- "SCDNO"
 x <- as.factor(df$APOE)
 e4 <- as.factor(df$E4)
 
