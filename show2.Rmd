@@ -1,10 +1,76 @@
-```{r}
+---
+title: "Analysis"
+output:
+  html_document: 
+    toc: yes
+    toc_depth: 4
+    theme: flatly
+  pdf_document:
+    toc: yes
+  html_notebook: 
+    toc: yes
+    theme: flatly
+    toc_depth: 5
+    highlight: pygments
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE}
 library(dplyr)
+require(caret)
+require(dplyr)
+require(e1071)
+require(FMradio)
+require(pROC)
+require(rags2ridges)
+require(xgboost)
+require(ggthemes)
+require(DMwR2)
+require(globaltest)
+require(GlobalAncova)
+require(nnet)
 load("data/data.Rdata")
 load("data/clinical.Rdata")
 ```
+## RQi: Differential expression of metabolites per ApoE genotype
+
+### Global test
+
+Performing a Global Test on the serum metabolites of AD patients, correcting for sex (Ho: E4 status has no effect on metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.046) between E4 carriers and non-carriers. Testing for ApoE4 dose effects have an effect on metabolite levels showed no significant nuance.
+
 ```{r}
-gentest <- function(Y, x, ...) {
+AD <- subset(df, Diagnosis == "Probable AD")
+AD$sex <- as.numeric(AD$sex) -1
+# Testing for effects
+gt.b <- globaltest::gt(E4 ~ 1, E4 ~ . -E4dose -Diagnosis -target, data = AD)
+gt.b
+globaltest::covariates(gt.b)
+```
+
+```{r gt}
+# Multinomial outcome
+AD$E4dose <- as.factor(AD$E4dose)
+gt.m <- globaltest::gt(E4dose ~ 1, E4dose ~ .-E4 -Diagnosis -target, data = AD)
+gt.m
+globaltest::covariates(gt.m)
+```
+### Hierarchical global ANCOVA testing on generalised linear models
+```{r}
+# get a hierarchy for variables
+dend <- as.dendrogram(hclust(dist(t(df[,1:230]))))
+# hierarchical test for ApoE4 presence and AD
+set.seed(555)
+hierGA <- gGlobalAncova.hierarchical(df[,1:230], H = dend, formula.full = ~target +sex, model.dat = df, alpha = 0.05, perm = 100)
+results(hierGA)
+# get names of significant clusters
+sigEndnodes(hierGA)
+Plot.hierarchy(hierGA, dend)
+```
+### Nested Linear Models
+Metabolite-level models to test for ApoE4 dose effects.
+```{r}
+mtest <- function(Y, x, ...) {
   ### Analysis of Variance (ANOVA)
   df <- cbind(Y, x, ...)
   ncol <- ncol(Y)
@@ -38,16 +104,200 @@ gentest <- function(Y, x, ...) {
 
 ```{r}
 Y <- df[, 1:230]
-df$Diagnosis <- as.numeric(df$Diagnosis)
-x <- as.factor(df$APOE)
 clinical$V_MMSE <- NULL
-gentest(Y, x, clinical)
+target <- df$target
+mtest(Y=Y,x= target, clinical)
+```
+
+## RQii - Classification of metabolites on ApoE class
+
+```{r multifit}
+multifit <- function(
+                X,
+                y,
+                model,
+                ctrl = NULL,
+                grid = NULL,
+                seed = 123, ...) {
+  set.seed(seed)
+  # Merge X and y into df
+  df <- merge.data.frame(X, y)
+
+  # Train the model
+  mdl <- caret::train(df[, 1:ncol(X)], df$y,
+    method = model,
+    tuneGrid = grid,
+    trControl = ctrl,
+    metric = "logLoss",
+    ...
+  )
+  # Create a confusion matrix and get performance metrics from caret
+  obs <- mdl$pred$obs
+  preds <- mdl$pred$pred
+  cm <- confusionMatrix(reference = obs, data = preds, mode = "everything")
+  # Predictions
+  ys <- as.numeric(obs) -1
+  yhats <- as.numeric(preds) -1
+  roc <- multiclass.roc(response = ys, predictor = yhats)
+  out <- list("cm" = cm, "roc" = roc, "model" = mdl)
+  return(out)
+}
+```
+### Using 230 metabolites
+```{r multi_preparation}
+X <- df[,1:230]
+y <- df$target
+levels(y) <- make.names(levels(y))
+clnr <- as.data.frame(purrr::map(clinical[, 1:ncol(clinical)], ~ as.numeric(.x)))
+clnr <- as.data.frame(clnr)
+X <- cbind(df[, 1:230], clnr)
+ctrl <- trainControl(
+  method = "repeatedcv",
+  number = 10,
+  repeats = 1,
+  classProbs = TRUE,
+  summaryFunction = multiClassSummary,
+  savePredictions = TRUE,
+  sampling = "smote"
+)
+```
+
+#### Penalised Multinomial Logistic Regression
+
+```{r mlogit}
+mlr <- multifit(
+  X = clnr,
+  y = y,
+  model = "multinom",
+  ctrl = ctrl,
+  trace = FALSE,
+  grid = expand.grid(decay=0.1)
+)
+mlr$cm
+```
+
+##### Decision Tree
+
+```{r }
+require(C50)
+
+tree <- multifit(
+  X = clnr,
+  y = y,
+  model = "rpart2",
+  ctrl = ctrl,
+  grid = NULL,
+  tuneLength = 2
+)
+tree$cm
+```
+
+##### Random Forest
+
+```{r multi_xgb}
+rf <- multifit(
+  X = clnr,
+  y = y,
+  model = "xgbTree",
+  ctrl = ctrl,
+  tuneLength = 1
+)
+rf$cm
 ```
 
 ```{r}
-Y <- subset(df, Diagnosis == 1)[,1:230]
-x <- as.factor(subset(df, Diagnosis == 1)$APOE)
-covariates = subset(clinical, df$Diagnosis == 1)
+#Get a performance metrics table
+metrics <- cbind(mlr$cm$byClass[3,], tree$cm$byClass[3,], rf$cm$byClass[3,])
+metrics
+#Plot ROC curves
+rocs <- list(mlr$roc, tree$roc, rf$roc)
+# Generate labels
+labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
+```
 
-gentest(Y, x, covariates)
+#### Projection to Latent Factors
+
+```{r get_thomson, eval =FALSE, include=FALSE}
+project <- function(X, m, seed) {
+  set.seed(seed)
+  X <- scale(as.matrix(df[,1:230]))
+  cov <- cor(X)
+
+  # Find redundant features
+  filter <- RF(cov)
+
+  # Filter out redundant features
+  filtered <- subSet(X, filter)
+
+  # Regularized correlation matrix estimation
+  M <- regcor(filtered)
+
+  # Get the regularized correlation matrix of the filtered dataset
+  R <- M$optCor
+
+  mlfa <- mlFA(R, m = 6)
+  thomson <- facScore(filtered, mlfa$Loadings, mlfa$Uniqueness)
+  return(thomson)
+}
+```
+
+```{r}
+
+```
+##### Multinomial Logistic Regression
+
+```{r }
+
+ctrl <- trainControl(
+  method = "repeatedcv",
+  number = 10,
+  repeats = 1,
+  classProbs = TRUE,
+  summaryFunction = multiClassSummary,
+  savePredictions = TRUE,
+  sampling = "up"
+)
+X <- cbind(clnr, thomson)
+mlrf <- multifit(
+  X = X,
+  y = y,
+  model = "multinom",
+  ctrl = ctrl,
+  trace = FALSE,
+  grid = expand.grid(decay = 0.01778279)
+)
+mlrf$cm
+```
+
+##### Decision Tree
+
+```{r multi_tree}
+mtreef <- multifit(
+  X = X,
+  y = y,
+  model = "rpart2",
+  ctrl = ctrl,
+  grid = mtree$model$bestTune
+)
+mtreef$cm
+```
+
+##### XGBoost Forest
+
+```{r }
+mrff <- multifit(
+  X = X,
+  y = y,
+  model = "xgbTree",
+  ctrl = ctrl,
+  tuneLength = 1
+)
+mrff$cm
+```
+
+```{r}
+# Get a performance metrics table
+multimetricsf <- cbind(mlrf$cm$byClass[3, ], mtreef$cm$byClass[3, ], mrff$cm$byClass[3, ])
+names(multimetricsf) <- names(metrics)
+multimetricsf
 ```

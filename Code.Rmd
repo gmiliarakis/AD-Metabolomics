@@ -24,7 +24,6 @@ knitr::opts_chunk$set(
 
 ```{r packages, include=FALSE}
 require(caret)
-require(glmnet)
 require(dplyr)
 require(e1071)
 require(FMradio)
@@ -34,6 +33,7 @@ require(xgboost)
 require(ggthemes)
 require(DMwR2)
 require(globaltest)
+require(GlobalAncova)
 require(heatmaply)
 require(nnet)
 ```
@@ -65,7 +65,6 @@ gt.b <- globaltest::gt(E4 ~ 1, E4 ~ . -APOE -Diagnosis, data = AD)
 gt.b
 
 # Multinomial outcome
-
 full$Diagnosis <- as.numeric(full$Diagnosis) - 1
 full$target[full$Diagnosis == 1 & full$E4 == 1] <- "AD with at least 1 ApoE4"
 full$target[full$Diagnosis == 1 & full$E4 == 0] <- "AD without ApoE4"
@@ -75,10 +74,27 @@ df$target <-  full$target
 df$target <- as.factor(df$target)
 
 AD$APOE <- as.factor(AD$APOE)
-gt.m <- globaltest::gt(target ~ 1, target ~ . -APOE -E4 -Diagnosis - sex, data = df)
+gt.m <- globaltest::gt(target ~ 1, target ~ . , data = df)
+httpgd::hgd()
+
 gt.m
-gtmc <- covariates(gt.m)
-plotly::ggplotly(gtmc, tooltip = "text", dynamicTicks = TRUE)
+covariates(gt.m)
+```
+
+```{r}
+df$Diagnosis <- df$sex <- df$APOE <- df$E4 <- NULL
+df[,232:245] <- NULL
+gGA <- gGlobalAncova(df[,1:230], formula.full = ~target, formula.red = ~1, model.dat = df, perm =1000
+)
+gGA
+# get a hierarchy for variables
+dend <- as.dendrogram(hclust(dist(t(df[,1:230]))))
+# hierarchical test
+set.seed(555)
+res <- gGlobalAncova.hierarchical(df[,1:230], H = dend, formula.full = ~target, model.dat = df, alpha = 0.05, perm = 100)
+results(res)
+# get names of significant clusters
+sigEndnodes(res)
 ```
 
 
@@ -147,30 +163,32 @@ multifit <- function(
   # Create a confusion matrix and get performance metrics from caret
   obs <- mdl$pred$obs
   preds <- mdl$pred$pred
-  cm <- confusionMatrix(obs, preds)
+  cm <- confusionMatrix(reference = obs, data = preds, mode = "everything")
   # Predictions
   ys <- as.numeric(obs) -1
   yhats <- as.numeric(preds) -1
-  roc <- multiclass.roc(ys, yhats)
+  roc <- multiclass.roc(response = ys, predictor = yhats)
   out <- list("cm" = cm, "roc" = roc, "model" = mdl)
   return(out)
 }
 ```
 #### Using 230 metabolites in AD
 ```{r multi_preparation}
-X <- df[df$Diagnosis == "Probable AD", 1:230]
-y <- df[df$Diagnosis == "Probable AD", "APOE"]
-y <- as.factor(y)
+X <- df[,1:230]
+y <- df$target
 levels(y) <- make.names(levels(y))
-
+clnr <- as.data.frame(purrr::map(clinical[, 1:ncol(clinical)], ~ as.numeric(.x)))
+clnr <- as.data.frame(clnr)
+X <- cbind(df[, 1:230], clnr)
+require(ROSE)
 ctrl <- trainControl(
   method = "repeatedcv",
   number = 10,
-  repeats = 50,
+  repeats = 1,
   classProbs = TRUE,
   summaryFunction = multiClassSummary,
   savePredictions = TRUE,
-  sampling = "up"
+  sampling = "smote"
 )
 ```
 
@@ -178,48 +196,62 @@ ctrl <- trainControl(
 
 ```{r mlogit}
 mlr <- multifit(
+  X = clnr,
+  y = y,
+  model = "multinom",
+  ctrl = ctrl,
+  trace = FALSE,
+  grid = expand.grid(decay=0.1)
+)
+mlr$cm
+mlrm <- multifit(
   X = X,
   y = y,
   model = "multinom",
   ctrl = ctrl,
   trace = FALSE,
-  tuneLength = 1
+  grid = expand.grid(decay=0.1),
+preProcess =  c("center","scale")
 )
-mlr$cm
+mlrm$cm
+table(df$target)
 ```
 
 ##### Decision Tree
 
 ```{r }
-mtree <- multifit(
-  X = X,
+require(C50)
+
+tree <- multifit(
+  X = clnr,
   y = y,
-  model = "rpart2",
+  model = "C5.0Tree",
   ctrl = ctrl,
-  grid = expand.grid(maxdepth=c(2))
+  grid = NULL,
+  tuneLength = 2
 )
-mtree$cm
+tree$cm
 ```
 
-##### XGBoost Forest
+##### Random Forest
 
 ```{r multi_xgb}
-mrf <- multifit(
-  X = X,
+rf <- multifit(
+  X = clnr,
   y = y,
-  model = "xgbTree",
+  model = "rf",
   ctrl = ctrl,
-  grid = param
+  tuneLength = 5
 )
-mrf$cm
+rf$cm
 ```
 
 ```{r}
 #Get a performance metrics table
-multimetrics <- cbind(mlr$cm$byClass[3,], mtree$cm$byClass[3,], mrf$cm$byClass[3,])
-multimetrics
+metrics <- cbind(mlr$cm$byClass[3,], tree$cm$byClass[3,], rf$cm$byClass[3,])
+metrics
 #Plot ROC curves
-mrocs <- list(mlr$roc, mtree$roc, mrf$roc)
+rocs <- list(mlr$roc, tree$roc, rf$roc)
 # Generate labels
 labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
 ```
@@ -229,7 +261,7 @@ labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
 ```{r get_thomson, eval =FALSE, include=FALSE}
 project <- function(X, m, seed) {
   set.seed(seed)
-  X <- scale(as.matrix(X))
+  X <- scale(as.matrix(df[,1:230]))
   cov <- cor(X)
 
   # Find redundant features
@@ -244,7 +276,7 @@ project <- function(X, m, seed) {
   # Get the regularized correlation matrix of the filtered dataset
   R <- M$optCor
 
-  mlfa <- mlFA(R, m = m)
+  mlfa <- mlFA(R, m = 6)
   thomson <- facScore(filtered, mlfa$Loadings, mlfa$Uniqueness)
   return(thomson)
 }
@@ -260,20 +292,20 @@ project <- function(X, m, seed) {
 ctrl <- trainControl(
   method = "repeatedcv",
   number = 10,
-  repeats = 10,
+  repeats = 1,
   classProbs = TRUE,
   summaryFunction = multiClassSummary,
   savePredictions = TRUE,
   sampling = "up"
 )
-
+X <- cbind(clnr, thomson)
 mlrf <- multifit(
   X = X,
   y = y,
   model = "multinom",
   ctrl = ctrl,
   trace = FALSE,
-  tuneLength = 1
+  grid = expand.grid(decay = 0.01778279)
 )
 mlrf$cm
 ```
@@ -294,12 +326,16 @@ mtreef$cm
 ##### XGBoost Forest
 
 ```{r }
+require(gbm)
 mrff <- multifit(
   X = X,
   y = y,
-  model = "xgbTree",
+  model = "gbm",
   ctrl = ctrl,
-  grid = param
+  grid = expand.grid(interaction.depth = 1,
+                        n.trees = 50,
+                        shrinkage = 0.01,
+                        n.minobsinnode = 5)
 )
 mrff$cm
 ```

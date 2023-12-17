@@ -34,7 +34,7 @@ gentest <- function(Y, x, ...) {
   # Calculate the FDR-adjusted p-values
   p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
   # Filter out the non-significant (a=0.05) FDR-adjusted p-values
-  return(dplyr::filter(p_values, p_adj < 0.05))
+  return(dplyr::filter(p_values, p_values < 0.05))
 }
 
 Y <- df[, 1:230]
@@ -46,10 +46,10 @@ R> df$target[df$Diagnosis == 1 & df$E4 == 0] <- "ADNO"
 R> df$target[df$Diagnosis == 0 & df$E4 == 1] <- "SCDE4"
 
 R> df$target[df$Diagnosis == 0 & df$E4 == 0] <- "SCDNO"
-x <- as.factor(df$APOE)
+x <- as.factor(df$E4dose)
 e4 <- as.factor(df$E4)
 
-gentest(Y, e4, clinical)
+gentest(Y, x, clinical)
 
 Y <- subset(df, Diagnosis == "Probable AD")[,1:230]
 x <- as.factor(subset(df, Diagnosis == "Probable AD")$APOE)
@@ -91,7 +91,7 @@ anovarob <- function(Y, x, ...) {
   # Calculate the FDR-adjusted p-values
   p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
   # Filter out the non-significant (a=0.05) FDR-adjusted p-values
-  return(dplyr::filter(p_values, p_adj < 0.05))
+  return(dplyr::filter(p_values, p_values < 0.05))
 }
-
+x <- as.factor(df$target)
 anovarob(Y, x, clinical)
