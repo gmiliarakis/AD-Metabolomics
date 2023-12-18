@@ -40,22 +40,16 @@ multifit <- function(
                 model,
                 ctrl = NULL,
                 grid = NULL,
-                seed = 123, ...) {
+                seed = 87654, ...) {
   set.seed(seed)
   # Merge X and y into df
   df <- merge.data.frame(X, y)
-
-  # # calculate what fraction of the total each class has
-  # fraction <- table(y)/length(y)
-  # # assign 1 - that value to a "weights" vector
-  # weights <- 1 - fraction[as.character(y)]
   # Train the model
   mdl <- caret::train(df[, 1:ncol(X)], df$y,
     method = model,
     tuneGrid = grid,
     trControl = ctrl,
-    metric = "Mean_Balanced_Accuracy",
-    # weights = weights,
+    metric = "logLoss",
     ...
   )
   # Create a confusion matrix and get performance metrics from caret
@@ -82,13 +76,14 @@ levels(y) <- make.names(levels(y))
 
 ctrl <- trainControl(
   method = "repeatedcv",
-  number = 10,
-  repeats = 1,
+  number = 3,
+  repeats = 3,
   savePredictions = "final",
+  classProbs = T,
   summaryFunction = multiClassSummary,
   selectionFunction = best,
   search = "random",
-  sampling = "up"
+  sampling = "smote"
 )
 ```
 
@@ -109,7 +104,7 @@ mlr$cm
 
 #### Decision Tree
 
-```{r }
+```{r tree}
 tree <- multifit(
   X = X,
   y = y,
@@ -123,7 +118,7 @@ tree$cm
 
 #### Random Forest
 
-```{r multi_xgb}
+```{r xgb}
 rf <- multifit(
   X = X,
   y = y,
@@ -137,7 +132,7 @@ rf$cm
 
 ### Projection to Latent Factors
 
-```{r get_thomson, eval =FALSE, include=FALSE}
+```{r get_thomson}
 project <- function(X, m, seed) {
   set.seed(seed)
   X <- scale(as.matrix(df[,1:230]))
@@ -165,7 +160,6 @@ project <- function(X, m, seed) {
 X <- project(X, 6, seed = 1234)
 ```
 #### Multinomial Logistic Regression
-
 ```{r }
 # X <- cbind(clnr, thomson)
 mlrf <- multifit(

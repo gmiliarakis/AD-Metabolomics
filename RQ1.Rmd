@@ -1,5 +1,5 @@
 ---
-title: "Analysis"
+title: "RQi: Differential expression of metabolites per ApoE genotype"
 output:
   html_document: 
     toc: yes
@@ -15,7 +15,6 @@ output:
 editor_options:
   chunk_output_type: inline
 ---
-
 ```{r, include = FALSE}
 library(dplyr)
 require(globaltest)
@@ -23,13 +22,13 @@ require(GlobalAncova)
 load("data/data.Rdata")
 load("data/clinical.Rdata")
 ```
-## RQi: Differential expression of metabolites per ApoE genotype
 
-### Global test
+## Global test in AD group
 
 Performing a Global Test on the serum metabolites of AD patients, correcting for sex (Ho: E4 status has no effect on metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.046) between E4 carriers and non-carriers. Testing for ApoE4 dose effects have an effect on metabolite levels showed no significant nuance.
 
-```{r}
+```{r, fig.height=8}
+df[,1:230] <- scale(df[,1:230])
 AD <- subset(df, Diagnosis == "Probable AD")
 AD$sex <- as.numeric(AD$sex) -1
 # Testing for effects
@@ -38,14 +37,15 @@ gt.b
 globaltest::covariates(gt.b)
 ```
 
-```{r gt}
+```{r gt, fig.height=8}
 # Multinomial outcome
 AD$E4dose <- as.factor(AD$E4dose)
 gt.m <- globaltest::gt(E4dose ~ 1, E4dose ~ .-E4 -Diagnosis -target, data = AD)
 gt.m
-# globaltest::covariates(gt.m)
+globaltest::covariates(gt.m)
 ```
-### Hierarchical global ANCOVA testing on generalised linear models
+
+## Hierarchical global ANCOVA testing on generalised linear models, AD and SCD
 ```{r}
 # get a hierarchy for variables
 dend <- as.dendrogram(hclust(dist(t(df[,1:230]))))
@@ -56,27 +56,27 @@ results(hierGA)
 # get names of significant clusters
 sigEndnodes(hierGA)
 ```
-### Nested Linear Models
+## Nested Linear Models
 Metabolite-level models to test for ApoE4 dose effects.
 ```{r}
-mtest <- function(Y, x, ...) {
+nested <- function(Y, x, ...) {
   ### Analysis of Variance (ANOVA)
-  df <- cbind(Y, x, ...)
+  df <- cbind(Y, as.factor(x), ...)
   ncol <- ncol(Y)
   covariates <- names(...)
-  summaries <- purrr::map(df[, 1:ncol], ~ {
+  F_tests <- purrr::map(df[, 1:ncol], ~ {
     frm <- as.formula(paste0(".x ~", paste(covariates, collapse = "+")))
     rm <- lm(frm, data = df)
     ffm <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
     fm <- lm(ffm, data = df)
     anova(rm, fm)
   })
-  ## Correction for Multiple Testing
+  # Correction for Multiple Testing
   # Create a list to store the p-values
   p_values <- list(1:ncol)
-  # Extract the p-values of the F-tests from the aov summaries list and store them in p_values
+  # Extract the p-values of the F-tests from the anova summaries list and store them in p_values
   for (i in 1:ncol) {
-    p_values[[i]] <- summaries[[i]][["Pr(>F)"]][[2]]
+    p_values[[i]] <- F_tests[[i]][["Pr(>F)"]][[2]]
   }
   # Coerce p_values to dataframe and transpose it
   p_values <- t(data.frame(p_values))
@@ -88,10 +88,17 @@ mtest <- function(Y, x, ...) {
   p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
   # Filter out the non-significant (a=0.05) FDR-adjusted p-values
   sig <- dplyr::filter(p_values, p_values < 0.05)
-  return(sig[order(sig$p_adj),])
+
+  t_tests <- purrr::map(df[, rownames(sig)], ~ {
+    f <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
+    mdl <- lm(f, data = df)
+    summary(mdl)$coefficients[1:length(table(x)), ]
+  })
+  out <- list("Sig. F tests"=sig[order(sig$p_adj),], "Coefficients" = t_tests)
+  return(out)
 }
 ```
-Testing in SCD and AD
+### Testing in both SCD and AD
 ```{r}
 #Testing in all samples
 Y <- df[, 1:230]
@@ -99,22 +106,35 @@ clinical$V_MMSE <- NULL
 target <- df$target
 
 ##Testing for effects of presence of ApoE4 in combination with AD diagnosis
-mtest(Y=Y,x= target, clinical)
+nested(Y=Y,x= target, clinical)
 
 
-##Testing for effects of ApoE4 dose
+## Testing for effects of ApoE4 dose
+df$E4dose <- as.numeric(df$E4dose) -1
+df$E4dose[df$E4dose == 0] <- "No ApoE4"
+df$E4dose[df$E4dose == 1] <- "1 ApoE4"
+df$E4dose[df$E4dose == 2] <- "2 ApoE4"
 E4dose <- df$E4dose
-mtest(Y, E4dose, clinical)
+nested(Y, E4dose, clinical)
 ```
 
-Testing for ApoE4 dose effects in AD group only
+### Testing for ApoE4 dose effects in AD group only
 ```{r}
-#Testing in all samples
 ADY <- AD[, 1:230]
-clinical$V_MMSE <- NULL
 ADE4dose <- AD$E4dose
 ADclinical <- clinical[df$Diagnosis == "Probable AD",]
 
 ##Testing for effects of ApoE4 dose
-mtest(ADY, ADE4dose, ADclinical)
+nested(ADY, ADE4dose, ADclinical)
+```
+
+###Testing for ApoE4 dose effects in SCD group only
+```{r}
+SCD <- df[df$Diagnosis == "Subjectieve klachten",]
+SCDY <- SCD[, 1:230]
+SCDE4dose <- SCD$E4dose
+SCDclinical <- clinical[df$Diagnosis == "Subjectieve klachten",]
+
+## Testing for effects of ApoE4 dose
+nested(SCDY, SCDE4dose, SCDclinical)
 ```
