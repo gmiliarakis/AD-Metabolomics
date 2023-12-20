@@ -1,0 +1,201 @@
+{
+    "r.rpath.windows": "/usr/local/bin/R",
+    "r.rpath.mac": "/usr/local/bin/R",
+    "r.rpath.linux": "/usr/local/bin/R",
+    "r.libPaths": [
+        "/home/jovyan/workspace/Thesis/renv/library"
+    ],
+    "r.rterm.linux": "/opt/saturncloud/envs/saturn/bin/radian",
+    "r.rterm.mac": "/opt/saturncloud/envs/saturn/bin/radian",
+    "r.rterm.windows": "/opt/saturncloud/envs/saturn/bin/radian",
+
+    "editor.formatOnType": true,
+    "notebook.output.scrolling": true,
+    "security.workspace.trust.untrustedFiles": "open",
+    "[rmd]": {
+        "editor.defaultFormatter": "REditorSupport.r"
+    },
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "editor.fontFamily": "jetbrains-mono",
+    "editor.autoClosingBrackets": "beforeWhitespace",
+    "editor.autoClosingComments": "always",
+    "editor.autoClosingDelete": "always",
+    "editor.autoClosingOvertype": "always",
+    "editor.autoClosingQuotes": "beforeWhitespace",
+    "r.bracketedPaste": true,
+    // "r.rterm.mac": "/Users/gm/anaconda3/bin/radian",
+    "explorer.confirmDragAndDrop": false,
+    "editor.semanticTokenColorCustomizations": {
+    "[Ariake Sun]": {
+        "enabled": true
+    }
+    },
+    "files.associations": {
+        "*.Rmd": "rmd"
+    },
+    "git.confirmSync": false,
+    "explorer.confirmDelete": false,
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "lualatexmk",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-lualatex",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "xelatexmk",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-xelatex",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "latexmk_rconly",
+            "command": "latexmk",
+            "args": [
+                "%DOC%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
+                "%DOCFILE%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "rnw2tex",
+            "command": "Rscript",
+            "args": [
+                "-e",
+                "knitr::opts_knit$set(concordance = TRUE); knitr::knit('%DOCFILE_EXT%')"
+            ],
+            "env": {}
+        },
+        {
+            "name": "jnw2tex",
+            "command": "julia",
+            "args": [
+                "-e",
+                "using Weave; weave(\"%DOC_EXT%\", doctype=\"tex\")"
+            ],
+            "env": {}
+        },
+        {
+            "name": "jnw2texminted",
+            "command": "julia",
+            "args": [
+                "-e",
+                "using Weave; weave(\"%DOC_EXT%\", doctype=\"texminted\")"
+            ],
+            "env": {}
+        },
+        {
+            "name": "pnw2tex",
+            "command": "pweave",
+            "args": [
+                "-f",
+                "tex",
+                "%DOC_EXT%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "pnw2texminted",
+            "command": "pweave",
+            "args": [
+                "-f",
+                "texminted",
+                "%DOC_EXT%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "tectonic",
+            "command": "tectonic",
+            "args": [
+                "--synctex",
+                "--keep-logs",
+                "%DOC%.tex"
+            ],
+            "env": {}
+        }
+    ],
+    "editor.wordWrap": "on",
+    // "workbench.editorAssociations": {
+        "*.pdf": "latex-workshop-pdf-hook",
+        "*.Rdata": "default"
+    ,
+    "workbench.colorTheme": "GitHub Dark Default",
+    "workbench.settings.openDefaultKeybindings": true,
+    "r.dependencyChecks": true,
+    "r.linting.doubleQuotes": false,
+    "r.linting.enable": true,
+    "launch": {
+
+        "configurations": [],
+        "compounds": []
+    },
+    "github.copilot.enable": {
+        "markdown": "true"
+    },
+    "github.copilot.editor.enableAutoCompletions": false,
+    "r.useRenvLibPath": true,
+    "r.rmarkdown.chunkBackgroundColor": "",
+    "editor.tokenColorCustomizations": {
+
+
+    "[Ariake Sun]": {
+        "variables": "#32386c",
+        "functions": "#61349c"
+    },
+    "[Ariake Dark 2.0]": {
+        "comments": "#a49cc760"
+    }
+    },
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false
+    },
+    "python.defaultInterpreterPath": "/Users/gm/anaconda3/bin/python",
+    "terminal.integrated.inheritEnv": true
+}
