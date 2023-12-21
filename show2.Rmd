@@ -83,6 +83,10 @@ clin_dummy$V_MMSE = NULL
 
 Xclin = cbind.data.frame(X, clin_dummy)
 
+clin_dummy$V_MMSE = NULL
+full = merge(X, clin_dummy, by= 0)
+rownames(full) = full$Row.names
+full$Row.names = NULL
 ctrl <- trainControl(
   method = "repeatedcv",
   number = 5,
@@ -117,7 +121,6 @@ mlr <- multifit(
   tuneLength = 10,
   trace = F
 )
-mlr$cm
 ```
 
 #### Decision Tree
