@@ -1,0 +1,7 @@
+options(radian.prompt = "\033[0;34mR>\033[0m ")
+
+options(radian.color_scheme = "xcode")
+options(radian.shell_prompt = "\033[0;31m#!>\033[0m ")
+options(radian.browse_prompt = "\033[0;33mBrowse[{}]>\033[0m ")
+# either  `"emacs"` (default) or `"vi"`.
+options(radian.editing_mode = "emacs")

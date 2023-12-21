@@ -28,6 +28,7 @@ require(rpart)
 require(ggthemes)
 require(DMwR2)
 require(nnet)
+require(fastDummies)
 load("data/data.Rdata")
 load("data/clinical.Rdata")
 ```
@@ -43,7 +44,7 @@ multifit <- function(
                 seed = 87654, ...) {
   set.seed(seed)
   # Merge X and y into df
-  df <- merge.data.frame(X, y)
+  df <- cbind.data.frame(X, y)
   # Train the model
   mdl <- caret::train(df[, 1:ncol(X)], df$y,
     method = model,
@@ -67,17 +68,20 @@ multifit <- function(
 
 ### Using 230 metabolites
 ```{r multi_preparation}
-X <- df[,1:230]
+X <- scale(df[, 1:230])
 y <- df$target
 levels(y) <- make.names(levels(y))
-# clnr <- as.data.frame(purrr::map(clinical[, 1:ncol(clinical)], ~ as.numeric(.x)))
-# clnr <- as.data.frame(clnr)
-# X <- cbind(df[, 1:230], clnr)
+clin_dummy <- dummy_columns(clinical, remove_first_dummy = T, remove_selected_columns = T)
+rownames(clin_dummy) = rownames(clinical)
 
+clin_dummy$V_MMSE = NULL
+full = merge(X, clin_dummy, by= 0)
+rownames(full) = full$Row.names
+full$Row.names = NULL
 ctrl <- trainControl(
   method = "repeatedcv",
-  number = 3,
-  repeats = 3,
+  number = 5,
+  repeats = 1,
   savePredictions = "final",
   classProbs = T,
   summaryFunction = multiClassSummary,
@@ -90,16 +94,25 @@ ctrl <- trainControl(
 #### Penalised Multinomial Logistic Regression
 
 ```{r mlogit}
-mlr <- multifit(
-  X = X,
+bgonly <- multifit(
+  X = clin_dummy,
   y = y,
   model = "multinom",
   ctrl = ctrl,
-  grid = expand.grid(decay=0.01),
-  preProcess = c("center", "scale", "corr"),
+  tuneLength = 5,
+  preProcess = c("corr"),
   trace = F
 )
-mlr$cm
+
+bgplusmets <- multifit(
+  X = clin_dummy,
+  y = y,
+  model = "multinom",
+  ctrl = ctrl,
+  tuneLength = 5,
+  preProcess = c("corr"),
+  trace = F
+)
 ```
 
 #### Decision Tree

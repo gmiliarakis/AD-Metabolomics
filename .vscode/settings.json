@@ -17,7 +17,7 @@
     },
     "git.autofetch": true,
     "git.enableSmartCommit": true,
-    "editor.fontFamily": "jetbrains-mono",
+    "editor.fontFamily": "Fira Code",
     "editor.autoClosingBrackets": "beforeWhitespace",
     "editor.autoClosingComments": "always",
     "editor.autoClosingDelete": "always",
@@ -197,5 +197,6 @@
         "diffEditor.ignoreTrimWhitespace": false
     },
     "python.defaultInterpreterPath": "/Users/gm/anaconda3/bin/python",
-    "terminal.integrated.inheritEnv": true
+    "terminal.integrated.inheritEnv": true,
+    "editor.fontLigatures": true
 }
