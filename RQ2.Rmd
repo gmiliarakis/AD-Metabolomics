@@ -1,5 +1,5 @@
 ---
-title: "Analysis"
+title: "RQii - Classification of metabolites on ApoE class"
 output:
   html_document: 
     toc: yes
@@ -22,18 +22,16 @@ require(dplyr)
 require(e1071)
 require(FMradio)
 require(pROC)
-require(rags2ridges)
 require(xgboost)
 require(rpart)
-require(ggthemes)
 require(DMwR2)
 require(nnet)
-require(fastDummies)
-load("data/data.Rdata")
-load("data/clinical.Rdata")
 ```
-## RQii - Classification of metabolites on ApoE class
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  comment = NA, warning = FALSE
+)
+```
 ```{r multifit}
 multifit <- function(
                 X,
@@ -66,31 +64,19 @@ multifit <- function(
 }
 ```
 
-### Using 230 metabolites
+### Preparation
 ```{r multi_preparation}
+load("data/data.Rdata")
 X <- scale(df[, 1:230])
 y <- df$target
-levels(y) <- make.names(levels(y))
-
-clinical$L_PTAU = as.numeric(clinical$L_PTAU)
-require(mice)
-imp <- mice(clinical, method = "norm", seed = 123)
-clinical <- complete(imp)
-
-clin_dummy <- dummy_cols(clinical, remove_first_dummy = T, remove_selected_columns = T)
-rownames(clin_dummy) = rownames(clinical)
-clin_dummy$V_MMSE = NULL
 
 Xclin = cbind.data.frame(X, clin_dummy)
 
-clin_dummy$V_MMSE = NULL
-full = merge(X, clin_dummy, by= 0)
-rownames(full) = full$Row.names
-full$Row.names = NULL
+
 ctrl <- trainControl(
   method = "repeatedcv",
-  number = 5,
-  repeats = 10,
+  number = 10,
+  repeats = 15,
   savePredictions = "final",
   classProbs = T,
   summaryFunction = multiClassSummary,
@@ -100,55 +86,35 @@ ctrl <- trainControl(
 )
 ```
 
-#### Penalised Multinomial Logistic Regression
+### Fitting a benchmark model: clinical characteristics only
 
 ```{r mlogit}
-clin_only <- multifit(
+basic <- multifit(
   X = clin_dummy,
   y = y,
   model = "multinom",
   ctrl = ctrl,
-  tuneLength = 10,
+  grid = expand.grid(decay = 0),
   trace = F
 )
-clin_only$cm
+basic$cm
+basic$roc
+ggroc(basic$roc$rocs)
+```
+### Regularized Multinomial Regression adding 230 metabolites
 
+```{r}
 mlr <- multifit(
   X = Xclin,
   y = y,
   model = "multinom",
   ctrl = ctrl,
-  tuneLength = 10,
+  grid = expand.grid(decay = 10),
   trace = F
 )
-```
-
-#### Decision Tree
-
-```{r tree}
-tree <- multifit(
-  X = X,
-  y = y,
-  model = "rpart2",
-  ctrl = ctrl,
-  grid = expand.grid(maxdepth = 2),
-  preProcess = c("center", "scale", "corr")
-)
-tree$cm
-```
-
-#### Random Forest
-
-```{r xgb}
-rf <- multifit(
-  X = X,
-  y = y,
-  model = "xgbTree",
-  ctrl = ctrl,
-  tuneLength = 1,
-  preProcess = c("center", "scale", "corr")
-)
-rf$cm
+mlr$cm
+mlr$roc
+ggroc(mlr$roc$rocs)
 ```
 
 ### Projection to Latent Factors
@@ -178,11 +144,11 @@ project <- function(X, m, seed) {
 ```
 
 ```{r}
-X <- project(X, 6, seed = 1234)
+thomson <- project(X, 6, seed = 1234)
+X <- cbind(clin_dummy, thomson)
 ```
-#### Multinomial Logistic Regression
+#### Multinomial Logistic Regression adding 6 factors
 ```{r }
-# X <- cbind(clnr, thomson)
 mlrf <- multifit(
   X = X,
   y = y,
@@ -192,31 +158,50 @@ mlrf <- multifit(
   grid = expand.grid(decay = 0)
 )
 mlrf$cm
-plot.roc(mlrf$roc)
+mlrf$roc
+ggroc(mlrf$roc$rocs)
 ```
 
 #### Decision Tree
 
 ```{r multi_tree}
-mtreef <- multifit(
+tree <- multifit(
   X = X,
   y = y,
   model = "rpart2",
   ctrl = ctrl,
-  grid = tree$model$bestTune
+  grid = expand.grid(maxdepth=3)
 )
-mtreef$cm
+tree$cm
+tree$roc
+ggroc(tree$roc$rocs)
 ```
 
 #### XGBoost Forest
 
 ```{r }
-mrff <- multifit(
+xgb <- multifit(
   X = X,
   y = y,
   model = "xgbTree",
   ctrl = ctrl,
-  tuneLength = 1
+  grid = xgb.grid
 )
-mrff$cm
+xgb$cm
+xgb$roc
+ggroc(xgb$roc$rocs)
+```
+## Model Comparison
+Based on the AUC as global performance metric, the best performing model is the full multinomial regression model (MLR1) with the background clinical characteristics (Ab42, tau, p-tau levels, MMSE score, age at diagnosis, sex, BMI, smoking status, alchohol consumption, hypertension (plus medication), hypercholesterolemia (plus medication), medication for diabetes melitus, depression and clotting disorders) plus the 230 serum metabolites (AUC = 0.8364). MLR1 performs slightly better than the benchmark model (MLR0) fitting only the clinical characteristics (AUC = 0.831). The Xtreme Gradient Booster (XGB) performs slightly worse than MLR1 with the clinical characteristics plus the 6-factor projection of the metabolites. MLR2, with the clinical characteristics and the 6 factors also performs better than the MLR0 (AUC = 0.82).
+
+Concluion:
+1. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models.
+
+2. Fitting 6 ML-estimated factors obtained by the FMradio package (cummulatively explaining 30% of variace) yields increased classification performance, serving as a valuable dimension reduction technique for high-dimensional data.
+
+3. Looking at the ROC curves, the models were able to discriminate better among certain classes, compared to others.
+
+```{r}
+aucs <- c(MLR0 = basic$roc$auc, MLR1 = mlr$roc$auc, MLR2 = mlrf$roc$auc, TREE = tree$roc$auc, XGB = xgb$roc$auc)
+knitr::kable(t(aucs))
 ```
