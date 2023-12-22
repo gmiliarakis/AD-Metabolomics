@@ -194,17 +194,19 @@ xgb$roc
 ggroc(xgb$roc$rocs)
 ```
 
-### Model Comparison
-
-```{r}
-aucs <- c("MLR clinical (benchmark)" = basic$roc$auc, "MLR clinical+ metabolites" = mlr$roc$auc, "MLR clinical+6 factors" = mlrf$roc$auc, "Decision Tree clinical+6 factors" = tree$roc$auc, "XGB Forest clinical+6 factors" = xgb$roc$auc)
-knitr::kable(aucs, col.names = "AUC", align = "ll")
-```
-
+## Model Comparison
 Observations:
 
 
 1. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models.  
 
 
-2. Fitting 6 ML-estimated factors obtained by the FMradio package (cummulatively explaining 30% of variace) yields
+2. Fitting 6 ML-estimated factors obtained by the FMradio package (cummulatively explaining 30% of variace) yields increased classification performance, serving as a valuable dimension reduction technique for high-dimensional data.
+
+
+3. Looking at the confusion matrix and individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD+E4, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/SCD-E4 and SCD+E4/SCD-E4).
+
+```{r}
+aucs <- c(MLR0 = basic$roc$auc, MLR1 = mlr$roc$auc, MLR2 = mlrf$roc$auc, TREE = tree$roc$auc, XGB = xgb$roc$auc)
+knitr::kable(t(aucs))
+```
