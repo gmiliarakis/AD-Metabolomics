@@ -15,11 +15,6 @@ output:
 editor_options:
   chunk_output_type: inline
 ---
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  comment = NA, warning = FALSE
-)
-```
 ```{r, include = FALSE}
 library(dplyr)
 require(globaltest)
@@ -112,7 +107,7 @@ clinical$V_MMSE <- NULL
 target <- df$target
 
 ##Testing for effects of presence of ApoE4 in combination with AD diagnosis
-knitr::kable(nested(Y=Y,x= target, clinical))
+nested(Y=Y,x= target, clinical)
 
 
 ## Testing for effects of ApoE4 dose
@@ -121,7 +116,7 @@ df$E4dose[df$E4dose == 0] <- "No ApoE4"
 df$E4dose[df$E4dose == 1] <- "1 ApoE4"
 df$E4dose[df$E4dose == 2] <- "2 ApoE4"
 E4dose <- df$E4dose
-knitr::kable(nested(Y, E4dose, clinical))
+nested(Y, E4dose, clinical)
 ```
 
 ### Testing for ApoE4 dose effects in AD group only
@@ -131,7 +126,7 @@ ADE4dose <- AD$E4dose
 ADclinical <- clinical[df$Diagnosis == "Probable AD",]
 
 ##Testing for effects of ApoE4 dose
-knitr::kable(nested(ADY, ADE4dose, ADclinical))
+nested(ADY, ADE4dose, ADclinical)
 ```
 
 ###Testing for ApoE4 dose effects in SCD group only
@@ -142,5 +137,5 @@ SCDE4dose <- SCD$E4dose
 SCDclinical <- clinical[df$Diagnosis == "Subjectieve klachten",]
 
 ## Testing for effects of ApoE4 dose
-knitr::kable(nested(SCDY, SCDE4dose, SCDclinical))
+nested(SCDY, SCDE4dose, SCDclinical)
 ```
