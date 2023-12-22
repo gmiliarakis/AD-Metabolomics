@@ -58,7 +58,7 @@ multifit <- function(
   # Predictions
   ys <- as.numeric(obs) -1
   yhats <- as.numeric(preds) -1
-  roc <- multiclass.roc(response = ys, predictor = yhats)
+  roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T)
   out <- list("cm" = cm, "roc" = roc, "model" = mdl)
   return(out)
 }
@@ -101,6 +101,7 @@ basic$cm
 basic$roc
 ggroc(basic$roc$rocs)
 ```
+
 ### Regularized Multinomial Regression adding 230 metabolites
 
 ```{r}
@@ -147,6 +148,7 @@ project <- function(X, m, seed) {
 thomson <- project(X, 6, seed = 1234)
 X <- cbind(clin_dummy, thomson)
 ```
+
 #### Multinomial Logistic Regression adding 6 factors
 ```{r }
 mlrf <- multifit(
@@ -192,16 +194,18 @@ xgb$roc
 ggroc(xgb$roc$rocs)
 ```
 ## Model Comparison
-Based on the AUC as global performance metric, the best performing model is the full multinomial regression model (MLR1) with the background clinical characteristics (Ab42, tau, p-tau levels, MMSE score, age at diagnosis, sex, BMI, smoking status, alchohol consumption, hypertension (plus medication), hypercholesterolemia (plus medication), medication for diabetes melitus, depression and clotting disorders) plus the 230 serum metabolites (AUC = 0.8364). MLR1 performs slightly better than the benchmark model (MLR0) fitting only the clinical characteristics (AUC = 0.831). The Xtreme Gradient Booster (XGB) performs slightly worse than MLR1 with the clinical characteristics plus the 6-factor projection of the metabolites. MLR2, with the clinical characteristics and the 6 factors also performs better than the MLR0 (AUC = 0.82).
+Observations:
 
-Concluion:
-1. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models.
+
+1. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models.  
+
 
 2. Fitting 6 ML-estimated factors obtained by the FMradio package (cummulatively explaining 30% of variace) yields increased classification performance, serving as a valuable dimension reduction technique for high-dimensional data.
 
-3. Looking at the ROC curves, the models were able to discriminate better among certain classes, compared to others.
+
+3. Looking at the confusion matrix and individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD+E4, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/SCD-E4 and SCD+E4/SCD-E4).
 
 ```{r}
 aucs <- c(MLR0 = basic$roc$auc, MLR1 = mlr$roc$auc, MLR2 = mlrf$roc$auc, TREE = tree$roc$auc, XGB = xgb$roc$auc)
-knitr::kable(t(aucs))
+knitr::kable(aucs, col.names = "AUC", align = "ll")
 ```
