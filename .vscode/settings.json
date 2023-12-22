@@ -1,13 +1,9 @@
 {
-    "r.rpath.windows": "/usr/local/bin/R",
-    "r.rpath.mac": "/usr/local/bin/R",
-    "r.rpath.linux": "/usr/local/bin/R",
+    "r.rpath.linux": "/usr/lib/R/bin/R",
     "r.libPaths": [
         "/home/jovyan/workspace/Thesis/renv/library"
     ],
     "r.rterm.linux": "/opt/saturncloud/envs/saturn/bin/radian",
-    "r.rterm.mac": "/opt/saturncloud/envs/saturn/bin/radian",
-    "r.rterm.windows": "/opt/saturncloud/envs/saturn/bin/radian",
 
     "editor.formatOnType": true,
     "notebook.output.scrolling": true,
@@ -198,5 +194,10 @@
     },
     "python.defaultInterpreterPath": "/Users/gm/anaconda3/bin/python",
     "terminal.integrated.inheritEnv": true,
-    "editor.fontLigatures": true
+    "editor.fontLigatures": true,
+    "r.plot.useHttpgd": true,
+    "r.rpath.mac": "/usr/lib/R/bin/R",
+    "r.rpath.windows": "/usr/lib/R/bin/R",
+    "r.rterm.mac": "/opt/saturncloud/envs/saturn/bin/radian",
+    "r.rterm.windows": "/opt/saturncloud/envs/saturn/bin/radian"
 }
