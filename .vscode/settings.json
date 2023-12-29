@@ -1,9 +1,9 @@
 {
-    "r.rpath.linux": "/usr/lib/R/bin/R",
+    "r.rpath.linux": "",
     "r.libPaths": [
         "/home/jovyan/workspace/Thesis/renv/library"
     ],
-    "r.rterm.linux": "/opt/saturncloud/envs/saturn/bin/radian",
+    "r.rterm.linux": "",
 
     "editor.formatOnType": true,
     "notebook.output.scrolling": true,
@@ -19,7 +19,7 @@
     "editor.autoClosingDelete": "always",
     "editor.autoClosingOvertype": "always",
     "editor.autoClosingQuotes": "beforeWhitespace",
-    "r.bracketedPaste": true,
+    "r.bracketedPaste": false,
     // "r.rterm.mac": "/Users/gm/anaconda3/bin/radian",
     "explorer.confirmDragAndDrop": false,
     "editor.semanticTokenColorCustomizations": {
@@ -196,8 +196,8 @@
     "terminal.integrated.inheritEnv": true,
     "editor.fontLigatures": true,
     "r.plot.useHttpgd": true,
-    "r.rpath.mac": "/usr/lib/R/bin/R",
-    "r.rpath.windows": "/usr/lib/R/bin/R",
-    "r.rterm.mac": "/opt/saturncloud/envs/saturn/bin/radian",
-    "r.rterm.windows": "/opt/saturncloud/envs/saturn/bin/radian"
+    "r.rpath.mac": "",
+    "r.rpath.windows": "",
+    "r.rterm.mac": "/Library/Frameworks/Python.framework/Versions/3.12/bin/radian",
+    "r.rterm.windows": ""
 }
