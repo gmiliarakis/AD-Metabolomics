@@ -290,7 +290,7 @@ The epidemiological impact of ApoE alleles also differs among populations. In Ko
 Notably, sex (60\% females) and ApoE4 allelic composition (50\% has at least one $\varepsilon_4$ allele) are the strongest genetic risk factors for SAD \cite{, Arnold2020SexMetabolome}. In this regard, it is shown that the ApoE4 genotype has a larger impact on females, as they present greater impairment of mitochondrial energy production, compared to males \cite{Arnold2020SexMetabolome, Yassine2020APOEDisease}.
 
 \subsubsection{Evolution of ApoE over time}
-Interestingly, humans are the only ApoE polymorphic species\cite{Yassine2020APOEDisease}. All other animal species have one ApoE variant, which resembles the human $\varepsilon_3$ allele \cite{Hunsberger2019TheInterventions}. ApoE $\varepsilon_4$ is the oldest human allele, followed by $\varepsilon_3$ and $\varepsilon_2$ \cite{Yassine2020APOEDisease}. In highly infectious environments, with food scarcity and shorter lifespans, $\varepsilon_4$ may be adaptive, reducing mortality \cite{Trumble2017ApolipoproteinBurden}. However, as humans transitioned into modern, less infectious environments, with food abundance and longer life expectancy, $\varepsilon_4$ started to burden the arteries and brain, increasing the risk of diseases related to ageing \cite{Yassine2020APOEDisease}. $\varepsilon_3$ emerged from $\varepsilon_4$ and reflects the shift from a plant-based diet to a meat-based one, where ‘meat-adaptive’ genes were and still are vital to control higher lipid levels \cite{Finch1999TheIsoforms}. 
+Interestingly, humans are the only ApoE polymorphic species\cite{Yassine2020APOEDisease}. All other animal species have one ApoE variant, which resembles the human $\varepsilon_3$ allele \cite{Hunsberger2019TheInterventions}. ApoE $\varepsilon_4$ is the oldest human allele, followed by $\varepsilon_3$ and $\varepsilon_2$ \cite{Yassine2020APOEDisease}. In highly infectious environments, with food scarcity and shorter lifespans, $\varepsilon_4$ may be adaptive, reducing mortality \cite{Trumble2017ApolipoproteinBurden}. However, as humans transitioned into modern, less infectious environments, with food abundance and longer life expectancy, $\varepsilon_4$ started to burden the arteries and brain, increasing the risk of diseases related to ageing \cite{Yassine2020APOEDisease}. $\varepsilon_3$ emerged from $\varepsilon_4$ and reflects the shift from a plant-based diet to a meat-based one, where genes adaptive to high meat consumption were and still are vital to regulate increased cholesterol levels \cite{Finch1999TheIsoforms}. 
 
 \newpage
 \subsection{Apo-lipoprotein E}\label{ApoEprot}
@@ -333,7 +333,7 @@ Transcriptomic and lipidomic analyses in humanized ApoE mice associated ApoE4 wi
 Perturbed serum metabolites associated with AD are amines, aminoacids \cite{deLeeuw2017Blood-basedDisease, Green2023InvestigatingDisease}, cholesteryl esters \cite{Proitsi2017AssociationAnalysis}, sphingolipids \cite{Varma2018BrainStudy,Sun2022AssociationDisease,Green2023InvestigatingDisease,Oeckl2019GlialImpairment,Barupal2019SetsPathophysiology}, fatty acids \cite{Fernandez-Calle2022APOEDiseases,deLeeuw2017Blood-basedDisease}, glycerophospholipids \cite{Varma2018BrainStudy, Jia2022ATypes,Huo2020BrainAnalysis, Weng2019TheImpairment}, phosphatidylcholines \cite{Simpson2016BloodAging} and lipid peroxidation compounds \cite{Fernandez-Calle2022APOEDiseases}. These molecules are usually identified via high-throughput metabolomic pipelines (coupled with Mass Spectrometry (MS) detectors) that trace all compounds in a sample and result in high-dimensional data \cite{Oka2023MultiomicsCohort}. The latter often require advanced statistical methods e.g. projection to latent structures \cite{Weng2019TheImpairment, Peeters2019StableData} or graphical models \cite{Peeters2022Rags2ridges:Matrices} in order to extract putatively meaningful information. 
 With such techniques, de Leeuw et al. discovered distinct serum metabolic signatures among AD patients-controls and those carrying at least one ApoE $\varepsilon_4$ allele \cite{deLeeuw2017Blood-basedDisease}, as they appear in Fig. \ref{fig2}. The different metabolic profiles, however, among ApoE4 non-carriers remain obscure. The present data science approach shows ApoE4-mediated differentially expressed metabolites, potentially unveiling distinct pathways of metabolic deregulation in AD.
 
-\begin{figure}[b!]
+\begin{figure}
 \vspace*{-1cm}
   \includegraphics[width=\textwidth]{figures/network.jpeg}
     \caption{Mutual (left-hand panel) and distinct(right-hand panel) metabolic network topologies between ApoE $\varepsilon4$ carriers and non-carriers in AD, as published by de Leeuw et al.. Red edges represent links that are present exclusively in ApoeE $\varepsilon4$ carriers with AD. Green edges represent connections found in the SCD group. Solid edges represent positive partial correlations, while dashed edges represent negative partial correlations. Abbreviations: SCD, subjective cognitive decline }
@@ -350,7 +350,7 @@ ApoE $\varepsilon_4$ carriers --particularly females-- experience metabolic dist
     \item How discriminatory are serum metabolites among ApoE genotypes?
     \item How do the network topologies of metabolites differ among ApoE genotypes?
 \end{enumerate}
-
+\clearpage
 \section{Data}
 The data were collected from 127 AD patients and 120 SCD ($n$ = 247) individuals in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depression medication, mean arterial pressure (MAP) and body mass index (BMI). The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data set is high-dimensional, in the sense that it contains more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
 \newpage
@@ -358,13 +358,16 @@ The data were collected from 127 AD patients and 120 SCD ($n$ = 247) individuals
 \subsection{Data management}
 The FAIR principles for data management and stewardship in science were published by  ~\citeauthor{Wilkinson2016TheStewardship} in 2016 \cite{Wilkinson2016TheStewardship}. FAIR stands for Findable, Accessible, Interactive, and Reusable data; the intention is to create and use data that are well-documented and reproducible. These principles were considered at every step of the study and implemented when applicable. All analysis was performed in R (version 4.3.1), and the current report was written in \LaTeX (Tex Live version 2023). All files are stored in a private Github repository with git as \acrfull{vcs}.
 
+\subsection{Data exploration and Visualisation}
+An interactive correlation heatmap was created to visualise the Pearson correlation coefficients using the package \textsf{heatmaply}. 
+
 \subsection{Feature engineering}
 The ApoE allele and genotype frequencies in the population are reflected in the AD and SCD data, as shown in Table \ref{Table:ApoEgenfreq}. That is, the most abundant allele is $\varepsilon$3, followed by $\varepsilon4$ and $\varepsilon2$. The most common genotype was $\varepsilon3\varepsilon3$, followed by $\varepsilon3\varepsilon4$ and $\varepsilon4\varepsilon4$.
 
 \begin{table}[h!]
-\begin{tabular}{cccccc} \hline
-$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \hline
-2    & 18   & 7    & 106  & 85   & 29   \\ 
+\begin{tabular}{cccccc} \toprule
+$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
+2    & 18   & 7    & 106  & 85   & 29   \\ \bottomrule
 \end{tabular}
 \caption{Individual ApoE genotype counts among SCD and AD patients.} \label{Table:ApoEgenfreq}
 \end{table}
@@ -374,17 +377,17 @@ The genotypes are not equally represented in the data and hence, don't enable an
 An obvious and "low-res" approach would be to bin the samples into two groups: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ dose effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The frequencies of $\varepsilon4$ doses are shown in Table \ref{Table:E4binAD}.
 
 \begin{table}[h!]
-\begin{tabular}{cccccc} \hline
-$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \hline
-0    & 3    & 2    & 37   & 59   & 26  
+\begin{tabular}{cccccc} \toprule
+$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
+0    & 3    & 2    & 37   & 59   & 26 \\ \bottomrule
 \end{tabular}
 \caption{Individual ApoE genotype counts among AD patients.} \label{Table:ApoEfreqAD}
 \end{table}
 
 \begin{table}[h!]
-\begin{tabular}{ccc} \hline
-No $\varepsilon4$  & 1 $\varepsilon4$  & 2 $\varepsilon4$  \\ \hline
-40    & 61   & 26 
+\begin{tabular}{ccc} \toprule
+No $\varepsilon4$  & 1x$\varepsilon4$& 2x$\varepsilon4$\\ \midrule
+40    & 61   & 26 \\ \bottomrule
 \end{tabular}
 \caption{ApoE $\varepsilon4$ dose frequencies among AD patients.} \label{Table:E4binAD}
 \end{table}
@@ -393,9 +396,10 @@ No $\varepsilon4$  & 1 $\varepsilon4$  & 2 $\varepsilon4$  \\ \hline
 In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis, a four-level feature ("ApoE4AD") was created, as shown in Table \ref{Table:target}.
 
 \begin{table}[h!]
-\begin{tabular}{cccc} \hline
-AD with at least 1 ApoE4 & AD without ApoE4 & SCD with at least 1 ApoE4 & SCD without ApoE4 \\ \hline
-34                   & 86             & 87                    & 40  
+\begin{tabular}{rcc} \toprule
+& $\geq$1 $\varepsilon4$ & no $\varepsilon4$\\ \midrule
+AD \vline  & 34& 86\\
+ SCD \vline & 87& 40\\ \bottomrule 
 \end{tabular}
 \caption{Feature combining ApoE4 status and AD diagnosis.} \label{Table:target}
 \end{table}
@@ -431,9 +435,9 @@ When $p > n$, the coefficient estimation method has low bias and high variance, 
 
 A method to treat multi-collinearity and high dimensionality is a 2-stage Maximum Likelihood(ML) factor analysis (FA), such as the one the package \textsf{FMradio} \cite{Peeters2019StableData} performs. In the 1st stage, a L1-regularised ML estimation is used to filter out redundant features from the data matrix. In the second stage, ML FA projects the aforementioned matrix to an orthogonal space where the features are replaced by -fewer- factors that explain their covariance. One can then use the produced factor scores as predictors in MNL.
 
-Decision Trees (DT) are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data into branches and leaves(nodes) \cite{Song2015DecisionPrediction}. The \texttt{rpart2()} function of \textsf{rpart} was used.
+Decision Trees (DT) are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data into branches and leaves(nodes) \cite{Song2015DecisionPrediction}. The \texttt{rpart2()} \cite{rpart} function of \textsf{rpart} was used.
 
-Random Forests (RF) are ensemble learning methods, that bag several DTs and average their decisions with a majority vote. Despite RFs tend to outperform DTs, they often operate as a \textit{black box} and are poorly interpretable. The state-of-the-art ensemble learner \texttt{xgbTree} of the package \textsf{xgboost} was used.
+Random Forests (RF) are ensemble learning methods, that bag several DTs and average their decisions with a majority vote. Despite RFs tend to outperform DTs, they often operate as a \textit{black box} and are poorly interpretable. The state-of-the-art ensemble learner \texttt{xgbTree} of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used.
 
 The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated 10-fold Cross-Validation (CV). The best model's performance was then holistically assessed using repeated 10-fold CV-obtained AUC (Area Under the ROC curve) using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}.
 
@@ -468,6 +472,25 @@ Network analysis presents a unique approach to visualise high-dimensional and au
 
 \clearpage
 \section{Results}
+
+\subsection{Data Exploration and Visualisation}
+
+\subsection{RQi - Differential expression of plasma metabolites per ApoE4 dose among AD and SCD}
+\subsubsection{Global Test}
+
+\subsubsection{Hierarchical Global ANCOVA on Generalised Linear  Models}
+
+\subsubsection{ANOVA on Nested Linear Models}
+
+\subsection{RQii - Classification of metabolites on ApoE4 presence}
+
+\subsubsection{Benchmark model: clinical factors only}
+
+\subsubsection{Fitting the full metabolomic panel, correcting for clinical factors}
+
+\subsubsection{Fitting the metabolomic ML-estimated 6-factor Latent Projection}
+
+\subsection{RQiii - Network analysis of metabolites}
 
 \clearpage
 \section{Discussion}
