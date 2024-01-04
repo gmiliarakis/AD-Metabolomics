@@ -19,7 +19,7 @@
     "editor.autoClosingDelete": "always",
     "editor.autoClosingOvertype": "always",
     "editor.autoClosingQuotes": "beforeWhitespace",
-    "r.bracketedPaste": false,
+    "r.bracketedPaste": true,
     // "r.rterm.mac": "/Users/gm/anaconda3/bin/radian",
     "explorer.confirmDragAndDrop": false,
     "editor.semanticTokenColorCustomizations": {

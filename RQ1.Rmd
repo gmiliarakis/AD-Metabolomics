@@ -16,11 +16,11 @@ editor_options:
   chunk_output_type: inline
 ---
 ```{r, include = FALSE}
-library(dplyr)
 require(globaltest)
 require(GlobalAncova)
 load("data/data.Rdata")
 load("data/clinical.Rdata")
+clinical$V_MMSE <- NULL
 ```
 
 ## Global test in AD group
@@ -90,13 +90,13 @@ nested <- function(Y, x, ...) {
   # Filter out the non-significant (a=0.05) FDR-adjusted p-values
   sig <- dplyr::filter(p_values, p_values < 0.05)
 
-  t_tests <- purrr::map(df[, rownames(sig)], ~ {
-    f <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
-    mdl <- lm(f, data = df)
-    summary(mdl)$coefficients[1:length(table(x)), ]
-  })
-  out <- list("Sig. F tests"=sig[order(sig$p_adj),], "Coefficients" = t_tests)
-  return(out)
+  # t_tests <- purrr::map(df[, rownames(sig)], ~ {
+  #   f <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
+  #   mdl <- lm(f, data = df)
+  #   summary(mdl)$coefficients[1:length(table(x)), ]
+  # })
+  # out <- list("Sig. F tests"=sig[order(sig$p_adj),], "Coefficients" = t_tests)
+  return(sig)
 }
 ```
 ### Testing in both SCD and AD
@@ -106,16 +106,16 @@ Y <- df[, 1:230]
 clinical$V_MMSE <- NULL
 target <- df$target
 
-##Testing for effects of presence of ApoE4 in combination with AD diagnosis
+## Testing for effects of presence of ApoE4 in combination with AD diagnosis
 nested(Y=Y,x= target, clinical)
 
 
 ## Testing for effects of ApoE4 dose
-df$E4dose <- as.numeric(df$E4dose) -1
+df$E4dose <- as.numeric(df$E4dose)
 df$E4dose[df$E4dose == 0] <- "No ApoE4"
 df$E4dose[df$E4dose == 1] <- "1 ApoE4"
 df$E4dose[df$E4dose == 2] <- "2 ApoE4"
-E4dose <- df$E4dose
+E4dose <- df$E4dose <- as.factor(df$E4dose)
 nested(Y, E4dose, clinical)
 ```
 

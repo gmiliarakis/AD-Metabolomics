@@ -23,19 +23,20 @@ knitr::opts_chunk$set(
 ```
 
 ```{r packages, include=FALSE}
+require(heatmaply)
+require(globaltest)
+require(GlobalAncova)
+require(purrr)
 require(caret)
 require(dplyr)
 require(e1071)
 require(FMradio)
 require(pROC)
-require(rags2ridges)
 require(xgboost)
-require(ggthemes)
+require(rpart)
 require(DMwR2)
-require(globaltest)
-require(GlobalAncova)
-require(heatmaply)
 require(nnet)
+require(rags2ridges)
 ```
 
 ## Data Exploration
@@ -43,8 +44,8 @@ require(nnet)
 The (interactive) correlation heatmap reveals very high correlation among TG compounds.
 
 ```{r heatmap}
-load("./data.Rdata")
-X <- df[df$Diagnosis == "Probable AD", 1:230]
+load("data/data.Rdata")
+tabX <- df[df$Diagnosis == "Probable AD", 1:230]
 C <- round(cor(X), 2)
 
 heatmaply_cor(C, color = viridis, plot_method = "plotly", dendrogram = F, reorderfun = sort.default(d,w), main = "Correlation Heatmap", file = "heatmap.html", colorbar_thickness = 15, colorbar_len = 0.5)
@@ -52,71 +53,62 @@ heatmaply_cor(C, color = viridis, plot_method = "plotly", dendrogram = F, reorde
 
 ## RQi: Differential expression of metabolites per ApoE genotype
 
-### Global test
+### Global test in AD group
 
-Performing a Global Test on the serum metabolites of AD patients, correcting for sex (Ho: E4 status has no effect on metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.046) between E4 carriers and non-carriers. Testing if the counts of E4 alleles have an effect on metabolite levels showed no significant nuance.
+Performing a Global Test on the serum metabolites of AD patients, correcting for sex (Ho: E4 status has no effect on metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.046) between E4 carriers and non-carriers. Moreover, a 
 
-```{r gt}
-load("data.Rdata")
+```{r, fig.height=8}
+load("data/clinical.Rdata")
+clinical$V_MMSE <- NULL
+df[,1:230] <- scale(df[,1:230])
 AD <- subset(df, Diagnosis == "Probable AD")
 AD$sex <- as.numeric(AD$sex) -1
-# Binary outcome
-gt.b <- globaltest::gt(E4 ~ 1, E4 ~ . -APOE -Diagnosis, data = AD)
+# Testing for effects
+gt.b <- globaltest::gt(E4 ~ 1, E4 ~ .-E4dose -Diagnosis -target, data = AD)
 gt.b
-
-# Multinomial outcome
-full$Diagnosis <- as.numeric(full$Diagnosis) - 1
-full$target[full$Diagnosis == 1 & full$E4 == 1] <- "AD with at least 1 ApoE4"
-full$target[full$Diagnosis == 1 & full$E4 == 0] <- "AD without ApoE4"
-full$target[full$Diagnosis == 0 & full$E4 == 1] <- "SCD with at least 1 ApoE4"
-full$target[full$Diagnosis == 0 & full$E4 == 0] <- "SCD without ApoE4"
-df$target <-  full$target
-df$target <- as.factor(df$target)
-
-AD$APOE <- as.factor(AD$APOE)
-gt.m <- globaltest::gt(target ~ 1, target ~ . , data = df)
-httpgd::hgd()
-
-gt.m
-covariates(gt.m)
+globaltest::covariates(gt.b)
 ```
 
+```{r gt, fig.height=8}
+# Multinomial outcome
+AD$E4dose <- as.factor(AD$E4dose)
+gt.m <- globaltest::gt(E4dose ~ 1, E4dose ~ .-E4 -Diagnosis -target, data = AD)
+gt.m
+globaltest::covariates(gt.m)
+```
+
+### Hierarchical global ANCOVA testing on generalised linear models, AD and SCD
 ```{r}
-df$Diagnosis <- df$sex <- df$APOE <- df$E4 <- NULL
-df[,232:245] <- NULL
-gGA <- gGlobalAncova(df[,1:230], formula.full = ~target, formula.red = ~1, model.dat = df, perm =1000
-)
-gGA
 # get a hierarchy for variables
 dend <- as.dendrogram(hclust(dist(t(df[,1:230]))))
-# hierarchical test
+# hierarchical test for ApoE4 presence and AD
 set.seed(555)
-res <- gGlobalAncova.hierarchical(df[,1:230], H = dend, formula.full = ~target, model.dat = df, alpha = 0.05, perm = 100)
-results(res)
+hierGA <- gGlobalAncova.hierarchical(df[,1:230], H = dend, formula.full = ~target +sex, model.dat = df, alpha = 0.05, perm = 100)
+results(hierGA)
 # get names of significant clusters
-sigEndnodes(res)
+sigEndnodes(hierGA)
 ```
-
-
+### Nested Linear Models
+Metabolite-level models to test for ApoE4 dose effects.
 ```{r}
-anova <- function(Y, x, ...) {
+nested <- function(Y, x, ...) {
   ### Analysis of Variance (ANOVA)
-  df <- cbind(Y, x, ...)
+  df <- cbind(Y, as.factor(x), ...)
   ncol <- ncol(Y)
   covariates <- names(...)
-  summaries <- purrr::map(df[, 1:ncol], ~ {
+  F_tests <- purrr::map(df[, 1:ncol], ~ {
     frm <- as.formula(paste0(".x ~", paste(covariates, collapse = "+")))
     rm <- lm(frm, data = df)
     ffm <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
     fm <- lm(ffm, data = df)
     anova(rm, fm)
   })
-  ## Correction for Multiple Testing
+  # Correction for Multiple Testing
   # Create a list to store the p-values
   p_values <- list(1:ncol)
-  # Extract the p-values of the F-tests from the aov summaries list and store them in p_values
+  # Extract the p-values of the F-tests from the anova summaries list and store them in p_values
   for (i in 1:ncol) {
-    p_values[[i]] <- summaries[[i]][["Pr(>F)"]][[2]]
+    p_values[[i]] <- F_tests[[i]][["Pr(>F)"]][[2]]
   }
   # Coerce p_values to dataframe and transpose it
   p_values <- t(data.frame(p_values))
@@ -126,20 +118,68 @@ anova <- function(Y, x, ...) {
 
   # Calculate the FDR-adjusted p-values
   p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
+  
   # Filter out the non-significant (a=0.05) FDR-adjusted p-values
-  return(dplyr::filter(p_values, p_values < 0.05))
+  sig <- dplyr::filter(p_values, p_values < 0.05)
+
+  t_tests <- purrr::map(df[, rownames(sig)], ~ {
+    f <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
+    mdl <- lm(f, data = df)
+    summary(mdl)$coefficients[1:length(table(x)), ]
+  })
+  out <- list("Sig. F tests"=sig[order(sig$p_adj),], "Coefficients" = t_tests)
+  return(out)
 }
 ```
-
+#### Testing in both SCD and AD
 ```{r}
+#Testing in all samples
 Y <- df[, 1:230]
 clinical$V_MMSE <- NULL
-gentest(Y, target, clinical)
+target <- df$target
+
+## Testing for effects of presence of ApoE4 in combination with AD diagnosis
+nested.all <- nested(Y, target, clinical)
+
+## Testing for effects of ApoE4 dose
+df$E4dose <- as.numeric(df$E4dose)-1
+df$E4dose[df$E4dose == 0] <- "0ApoE4"
+df$E4dose[df$E4dose == 1] <- "1ApoE4"
+df$E4dose[df$E4dose == 2] <- "2ApoE4"
+E4dose <- df$E4dose <- as.factor(df$E4dose)
+nested(Y, E4dose, clinical)[[1]]
+nested(Y, E4dose, clinical)[[2]]
+```
+
+#### Testing for ApoE4 dose effects in AD group only
+```{r}
+ADY <- AD[, 1:230]
+ADE4dose <- AD$E4dose
+ADclinical <- clinical[df$Diagnosis == "Probable AD",]
+
+##Testing for effects of ApoE4 dose
+nested(ADY, ADE4dose, ADclinical)
+```
+
+#### Testing for ApoE4 dose effects in SCD group only
+```{r}
+SCD <- df[df$Diagnosis == "Subjectieve klachten",]
+SCDY <- SCD[, 1:230]
+SCDE4dose <- SCD$E4dose
+SCDclinical <- clinical[df$Diagnosis == "Subjectieve klachten",]
+
+## Testing for effects of ApoE4 dose
+nested(SCDY, SCDE4dose, SCDclinical)
 ```
 
 ## RQii - Classification of metabolites on ApoE class
 ### Multinomial Classification of number of ApoE E4 alleles based on metabolites
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  comment = NA, warning = FALSE
+)
+```
 ```{r multifit}
 multifit <- function(
                 X,
@@ -147,11 +187,10 @@ multifit <- function(
                 model,
                 ctrl = NULL,
                 grid = NULL,
-                seed = 123, ...) {
+                seed = 87654, ...) {
   set.seed(seed)
   # Merge X and y into df
-  df <- merge.data.frame(X, y)
-
+  df <- cbind.data.frame(X, y)
   # Train the model
   mdl <- caret::train(df[, 1:ncol(X)], df$y,
     method = model,
@@ -164,101 +203,72 @@ multifit <- function(
   obs <- mdl$pred$obs
   preds <- mdl$pred$pred
   cm <- confusionMatrix(reference = obs, data = preds, mode = "everything")
-  # Predictions
+  # Get the multiclass AUC
   ys <- as.numeric(obs) -1
   yhats <- as.numeric(preds) -1
-  roc <- multiclass.roc(response = ys, predictor = yhats)
+  roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T)
   out <- list("cm" = cm, "roc" = roc, "model" = mdl)
   return(out)
 }
 ```
-#### Using 230 metabolites in AD
+
+### Preparation
 ```{r multi_preparation}
-X <- df[,1:230]
+load("data/data.Rdata")
+X <- scale(df[, 1:230])
 y <- df$target
-levels(y) <- make.names(levels(y))
-clnr <- as.data.frame(purrr::map(clinical[, 1:ncol(clinical)], ~ as.numeric(.x)))
-clnr <- as.data.frame(clnr)
-X <- cbind(df[, 1:230], clnr)
-require(ROSE)
+
+Xclin = cbind.data.frame(X, clin_dummy)
+
+
 ctrl <- trainControl(
   method = "repeatedcv",
   number = 10,
-  repeats = 1,
-  classProbs = TRUE,
+  repeats = 100,
+  savePredictions = "final",
+  classProbs = T,
   summaryFunction = multiClassSummary,
-  savePredictions = TRUE,
+  selectionFunction = best,
+  search = "random",
   sampling = "smote"
 )
 ```
 
-##### Multinomial Logistic Regression
+### Fitting a benchmark model: clinical characteristics only
 
 ```{r mlogit}
-mlr <- multifit(
-  X = clnr,
+bm <- multifit(
+  X = clin_dummy,
   y = y,
   model = "multinom",
   ctrl = ctrl,
-  trace = FALSE,
-  grid = expand.grid(decay=0.1)
+  grid = expand.grid(decay = 0),
+  trace = F
 )
-mlr$cm
-mlrm <- multifit(
-  X = X,
-  y = y,
-  model = "multinom",
-  ctrl = ctrl,
-  trace = FALSE,
-  grid = expand.grid(decay=0.1),
-preProcess =  c("center","scale")
-)
-mlrm$cm
-table(df$target)
+bm$cm
+bm$roc
+ggroc(bm$roc$rocs)
 ```
 
-##### Decision Tree
-
-```{r }
-require(C50)
-
-tree <- multifit(
-  X = clnr,
-  y = y,
-  model = "C5.0Tree",
-  ctrl = ctrl,
-  grid = NULL,
-  tuneLength = 2
-)
-tree$cm
-```
-
-##### Random Forest
-
-```{r multi_xgb}
-rf <- multifit(
-  X = clnr,
-  y = y,
-  model = "rf",
-  ctrl = ctrl,
-  tuneLength = 5
-)
-rf$cm
-```
+### Regularized Multinomial Regression adding 230 metabolites
 
 ```{r}
-#Get a performance metrics table
-metrics <- cbind(mlr$cm$byClass[3,], tree$cm$byClass[3,], rf$cm$byClass[3,])
-metrics
-#Plot ROC curves
-rocs <- list(mlr$roc, tree$roc, rf$roc)
-# Generate labels
-labels <- paste0(names(metrics), ", AUC = ", paste(round(metrics[12, ], 2)))
+mlr <- multifit(
+  X = Xclin,
+  y = y,
+  model = "multinom",
+  ctrl = ctrl,
+  grid = expand.grid(decay = 10),
+  trace = F
+)
+mlr$cm
+mlr$roc
+ggroc(mlr$roc$rocs)
 ```
 
-#### Projection to Latent Factors
+### Projection to Latent Factors
 
-```{r get_thomson, eval =FALSE, include=FALSE}
+```{r get_thomson}
 project <- function(X, m, seed) {
   set.seed(seed)
   X <- scale(as.matrix(df[,1:230]))
@@ -283,71 +293,72 @@ project <- function(X, m, seed) {
 ```
 
 ```{r}
-
+thomson <- project(X, 6, seed = 1234)
+X <- cbind(clin_dummy, thomson)
 ```
-##### Multinomial Logistic Regression
 
+#### Multinomial Logistic Regression adding 6 factors
 ```{r }
-
-ctrl <- trainControl(
-  method = "repeatedcv",
-  number = 10,
-  repeats = 1,
-  classProbs = TRUE,
-  summaryFunction = multiClassSummary,
-  savePredictions = TRUE,
-  sampling = "up"
-)
-X <- cbind(clnr, thomson)
 mlrf <- multifit(
   X = X,
   y = y,
   model = "multinom",
   ctrl = ctrl,
   trace = FALSE,
-  grid = expand.grid(decay = 0.01778279)
+  grid = expand.grid(decay = 0)
 )
 mlrf$cm
+mlrf$roc
+ggroc(mlrf$roc$rocs)
 ```
 
-##### Decision Tree
+#### Decision Tree
 
 ```{r multi_tree}
-mtreef <- multifit(
+tree <- multifit(
   X = X,
   y = y,
   model = "rpart2",
   ctrl = ctrl,
-  grid = mtree$model$bestTune
+  grid = expand.grid(maxdepth=3)
 )
-mtreef$cm
+tree$cm
+tree$roc
+ggroc(tree$roc$rocs)
 ```
 
-##### XGBoost Forest
+#### XGBoost Forest
 
 ```{r }
-require(gbm)
-mrff <- multifit(
+xgb <- multifit(
   X = X,
   y = y,
-  model = "gbm",
+  model = "xgbTree",
   ctrl = ctrl,
-  grid = expand.grid(interaction.depth = 1,
-                        n.trees = 50,
-                        shrinkage = 0.01,
-                        n.minobsinnode = 5)
+  grid = xgb.grid
 )
-mrff$cm
+xgb$cm
+xgb$roc
+ggroc(xgb$roc$rocs)
 ```
+## Model Comparison
+Observations:
+
+
+1. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models.  
+
+
+2. Fitting 6 ML-estimated factors obtained by the FMradio package (cummulatively explaining 30% of variace) yields increased classification performance, serving as a valuable dimension reduction technique for high-dimensional data.
+
+
+3. Looking at the confusion matrix and individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD+E4, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/SCD-E4 and SCD+E4/SCD-E4).
 
 ```{r}
-# Get a performance metrics table
-multimetricsf <- cbind(mlrf$cm$byClass[3, ], mtreef$cm$byClass[3, ], mrff$cm$byClass[3, ])
-names(multimetricsf) <- names(metrics)
-multimetricsf
+aucs <- c(MLR0 = bm$roc$auc, MLR1 = mlr$roc$auc, MLR2 = mlrf$roc$auc, TREE = tree$roc$auc, XGB = xgb$roc$auc)
+knitr::kable(t(aucs))
 ```
 
-## Network Analysis
+## RQiii - Network Analysis
 
 Code from rags2ridges
 
