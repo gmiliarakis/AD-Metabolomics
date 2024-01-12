@@ -129,7 +129,7 @@ ADclinical <- clinical[df$Diagnosis == "Probable AD",]
 nested(ADY, ADE4dose, ADclinical)
 ```
 
-###Testing for ApoE4 dose effects in SCD group only
+### Testing for ApoE4 dose effects in SCD group only
 ```{r}
 SCD <- df[df$Diagnosis == "Subjectieve klachten",]
 SCDY <- SCD[, 1:230]

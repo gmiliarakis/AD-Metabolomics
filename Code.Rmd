@@ -96,7 +96,7 @@ nested <- function(Y, x, ...) {
   df <- cbind(Y, as.factor(x), ...)
   ncol <- ncol(Y)
   covariates <- names(...)
-  F_tests <- purrr::map(df[, 1:ncol], ~ {
+  F_tests <- furrr::future_map(df[, 1:ncol], ~ {
     frm <- as.formula(paste0(".x ~", paste(covariates, collapse = "+")))
     rm <- lm(frm, data = df)
     ffm <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
@@ -122,7 +122,7 @@ nested <- function(Y, x, ...) {
   # Filter out the non-significant (a=0.05) FDR-adjusted p-values
   sig <- dplyr::filter(p_values, p_values < 0.05)
 
-  t_tests <- purrr::map(df[, rownames(sig)], ~ {
+  t_tests <- furrr::future_map(df[, rownames(sig)], ~ {
     f <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
     mdl <- lm(f, data = df)
     summary(mdl)$coefficients[1:length(table(x)), ]
@@ -341,8 +341,7 @@ xgb$cm
 xgb$roc
 ggroc(xgb$roc$rocs)
 ```
-## Model Comparison
-Observations:
+###
 
 
 1. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models.  
@@ -359,8 +358,6 @@ knitr::kable(t(aucs))
 ```
 
 ## RQiii - Network Analysis
-
-Code from rags2ridges
 
 ```{r preparation}
 # Store all observations of Class 1 in C1
@@ -385,63 +382,64 @@ Ts <- default.target.fused(Slist = S, ns = n, type = "DUPV")
 ```{r, eval=FALSE}
 # Get the optimal lambdas per class and fused with 10-fold CV
 set.seed(8910)
-# optf <- optPenalty.fused(
-#   Ylist = Ys,
-#   Tlist = Ts,
-#   lambda = as.matrix(cbind(
-#     c("ridge1", "fusion"),
-#     c("fusion", "ridge2")
-#   )),
-#   cv.method = "kCV",
-#   k = 10,
-#   verbose = FALSE
-# )
+optf <- optPenalty.fused(
+  Ylist = Ys,
+  Tlist = Ts,
+  lambda = default.penalty(Ys),
+  cv.method = "kCV",
+  k = 10,
+  verbose = FALSE
+)
+save(optf, file= "data/optf.Rdata")
 ```
 
 ```{r sparsify, echo = FALSE}
 # Create a list of the two-class data Y
-Ys <- list(C1 = C1, C2 = C2)
-Ps <- optP.fused$Plist
+load("data/optf.Rdata")
+Ys <- list(C0 = C0, C1 = C1)
+Ps <- optf$Plist
+
+Ps <- ridgeP.fused(S, n, Ts,lambda = optf$lambda, maxit = 1000)
+
 # Get the sparsified high precision matrices, correcting FDR at .001
 P0s <- sparsify.fused(Ps,
   threshold = "localFDR",
-  FDRcut = 0.999,
-  verbose = FALSE
+  FDRcut = 0.999
 )
 ```
 
 ```{r GGMs per class and diff, message=FALSE, echo = FALSE}
 # Merge the sparse high precision matrices
-TST <- Union(P0s$C1$sparseParCor, P0s$C2$sparseParCor)
-PCclass1 <- TST$M1subset
-PCclass2 <- TST$M2subset
+TST <- Union(P0s$S0$sparseParCor, P0s$S1$sparseParCor)
+PCE4NO <- TST$M1subset
+PCE4YES <- TST$M2subset
 
 # Create a color map per metabolite class
-Colors <- rownames(PCclass2)
-Colors[grep("Amine", rownames(PCclass2))] <- "lightblue"
-Colors[grep("Org.Acid", rownames(PCclass2))] <- "orange"
-Colors[grep("Lip", rownames(PCclass2))] <- "yellow"
-Colors[grep("Ox.Stress", rownames(PCclass2))] <- "purple"
+Colors <- rownames(PCE4YES)
+Colors[grep("Amine", rownames(PCE4YES))] <- "#e0ade6"
+Colors[grep("Org.Acid", rownames(PCE4YES))] <- "lightblue"
+Colors[grep("Lip", rownames(PCE4YES))] <- "yellow"
+Colors[grep("Ox.Stress", rownames(PCE4YES))] <- "purple"
 
 
 set.seed(111213)
 opar <- par(mfrow = c(1, 3))
-# Plot the sparsified ridge matrix of AD Class 2
-Coords <- Ugraph(PCclass2,
+# Plot the sparsified ridge matrix of ApoE4 carriers with AD
+Coords <- Ugraph(PCE4YES,
   type = "fancy", lay = "layout_with_fr",
   Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
-  main = "AD Class 2"
+  main = "ApoE4 carriers with AD"
 )
-# Plot he sparsified ridge matrix of AD Class 1
-Ugraph(PCclass1,
-  type = "fancy", lay = NULL, coords = Coords,
+# Plot he sparsified ridge matrix of ApoE4 non-carriers with AD
+Ugraph(PCE4NO,
+  type = "fancy", lay = "layout_with_fr",
   Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
-  main = "AD Class 1"
+  main = "ApoE4 non-carriers with AD"
 )
 
 # Plot the differential network
-DiffGraph(PCclass1, PCclass2,
-  lay = NULL, coords = Coords,
+DiffGraph(PCE4NO, PCE4YES,
+  lay = "layout_with_fr",
   Vcolor = Colors, Vsize = 7, Vcex = 0.3,
   main = "Differential Network"
 )
@@ -449,35 +447,14 @@ par(opar)
 ```
 
 ```{r centrality}
-PC0list <- list(PCclass1 = PCclass1, PCclass2 = PCclass2)
+PC0list <- list(PCE4NO = PCE4NO, PCE4YES = PCE4YES)
 # Get the network statistics
 NetStats <- GGMnetworkStats.fused(PC0list)
 
-# Get the centrality degree scores for each class
-DegreesAD1 <- data.frame(rownames(NetStats), NetStats$PCclass1.degree)
-DegreesAD2 <- data.frame(rownames(NetStats), NetStats$PCclass2.degree)
+NetStatsE4yes <- NetStats[,10:18]
+NetStatsE4no <- NetStats[, 1:9]
 
-# Order and show the centrality degree scores
-DegreesAD1o <- DegreesAD1[order(DegreesAD1[, 2], decreasing = TRUE), ]
-DegreesAD2o <- DegreesAD2[order(DegreesAD2[, 2], decreasing = TRUE), ]
-head(DegreesAD1o, 7)
-head(DegreesAD2o, 7)
-```
-
-```{r communities}
-# Get the communities per class
-set.seed(141516)
-opar <- par(mfrow = c(1, 2))
-CommC1 <- Communities(PCclass1,
-  Vcolor = Colors,
-  Vsize = 7, Vcex = 0.3, main = "Modules AD Class 1"
-)
-
-CommC2 <- Communities(PCclass2,
-  Vcolor = Colors,
-  Vsize = 7, Vcex = 0.3, main = "Modules AD Class 2"
-)
-par(opar)
+NetStatsE4yes[, c(3, 9)] <- NetStatsE4no[, c(3, 9)] <- NULL
 ```
 
 ```{r degree density plot }
@@ -496,9 +473,30 @@ legend(5, 0.5,
 ```
 
 ```{r wilcoxon rank sum }
-# Perform a Wilcoxon signed rank test to test if the centrality degree scores are different between the classes
-wilcox.test(DegreesAD1[, 2],
-  DegreesAD2[, 2],
-  paired = TRUE, alternative = "less"
+# Perform a Wilcoxon signed rank test
+
+w <- furrr::future_map2(NetStatsE4yes[, 1:7], NetStatsE4no[, 1:7], ~ {
+  wilcox.test(.x, .y, paired = TRUE, alternative = "greater")
+})
+p.values <- list(1:length(w))
+for(i in 1:length(w)){
+  p.values[i] <- w[[i]][['p.value']]
+}
+names(p.values) <- names(w)
+dplyr::filter(p.values, p.values<0.05)
+```
+```{r communities}
+# Get the communities per class
+set.seed(141516)
+opar <- par(mfrow = c(1, 2))
+CommC1 <- Communities(PCE4NO,
+  Vcolor = Colors,
+  Vsize = 7, Vcex = 0.3, main = "Modules AD Class 1"
 )
+
+CommC2 <- Communities(PCE4YES,
+  Vcolor = Colors,
+  Vsize = 7, Vcex = 0.3, main = "Modules AD Class 2"
+)
+par(opar)
 ```
