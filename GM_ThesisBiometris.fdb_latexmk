@@ -1,13 +1,13 @@
 # Fdb version 4
-["biber GM_ThesisBiometris"] 0 "GM_ThesisBiometris.bcf" "GM_ThesisBiometris.bbl" "GM_ThesisBiometris" 0 -1
+["biber GM_ThesisBiometris"] 0 "GM_ThesisBiometris.bcf" "GM_ThesisBiometris.bbl" "GM_ThesisBiometris" 1705161693.79709 -1
   "./entries.bib" 1705011683.35849 1892 055e71f3f1cfcf6af3fff9557ef39255 ""
   "./references.bib" 1705140626.39994 181037 263986cbae7f666ca2e17a8078ecba4f ""
-  "GM_ThesisBiometris.bcf" 1705155249.47203 121604 ea218213783976a3fd923bb8cd1ef9e3 "pdflatex"
+  "GM_ThesisBiometris.bcf" 1705161693.4321 121604 ea218213783976a3fd923bb8cd1ef9e3 "pdflatex"
   (generated)
   "GM_ThesisBiometris.bbl"
   "GM_ThesisBiometris.blg"
   (rewritten before read)
-["pdflatex"] 1705155245.42422 "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" "GM_ThesisBiometris.pdf" "GM_ThesisBiometris" 1705155249.92462 2
+["pdflatex"] 1705161689.40631 "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" "GM_ThesisBiometris.pdf" "GM_ThesisBiometris" 1705161693.79756 2
   "/Library/Application Support/MiKTeX/texmfs/install/fonts/enc/dvips/base/8r.enc" 1705152503.01004 4993 1194fb36dfcb11d9ae9802f2b00b60a3 ""
   "/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1705152501.51402 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/cmextra/cmbsy6.tfm" 1705152501.51412 1124 14ccf5552bc7f77ca02a8a402bea8bfb ""
@@ -305,11 +305,11 @@
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xstring/xstring.sty" 1705152636.35848 123 a302f2c651a95033260db60e51527ae8 ""
   "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" 1705155104.90295 46492 2a8cc9d5d522a47796d4fa6c9d74ff9a ""
   "GM_ThesisBiometris.acr" 0 -1 0 ""
-  "GM_ThesisBiometris.aux" 1705155249.43496 37228 df59d95e05877dd5a4f825b1f58a0d22 "pdflatex"
-  "GM_ThesisBiometris.bbl" 1705154520.08217 339231 e97d8bb1331b1a89debc5e8086ea14f0 "biber GM_ThesisBiometris"
-  "GM_ThesisBiometris.out" 1705155249.46768 10852 b3639f738afd5646b7148ba039e73c70 "pdflatex"
+  "GM_ThesisBiometris.aux" 1705161693.39472 37228 df59d95e05877dd5a4f825b1f58a0d22 "pdflatex"
+  "GM_ThesisBiometris.bbl" 1705161658.53504 339231 e97d8bb1331b1a89debc5e8086ea14f0 "biber GM_ThesisBiometris"
+  "GM_ThesisBiometris.out" 1705161693.428 10852 b3639f738afd5646b7148ba039e73c70 "pdflatex"
   "GM_ThesisBiometris.tex" 1705155104.90295 46492 2a8cc9d5d522a47796d4fa6c9d74ff9a ""
-  "GM_ThesisBiometris.toc" 1705155249.47363 4845 3b1fd339a794094099565376a42058cc "pdflatex"
+  "GM_ThesisBiometris.toc" 1705161693.43378 4845 3b1fd339a794094099565376a42058cc "pdflatex"
   "figures/ApoE@2x.png" 1701534906.48841 664484 40377c9024d4459e700610bef58d72f9 ""
   "figures/ApoEeffects.jpg" 1702915086.68947 745630 1e53b81ff0baf68d3f2c2b49542ab35a ""
   "figures/ApoEprot.png" 1701532490.45565 328647 4e00a914b581237e5a1e34905e05cf4b ""
