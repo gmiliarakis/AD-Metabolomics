@@ -56,9 +56,9 @@
       <file>standard.bbx</file>
       <file>numeric.bbx</file>
       <file>numeric-comp.bbx</file>
-      <file>ieee.bbx</file>
+      <file>nature.bbx</file>
       <file>numeric-comp.cbx</file>
-      <file>ieee.cbx</file>
+      <file>nature.cbx</file>
       <file>biblatex.cfg</file>
       <file>english.lbx</file>
     </requires>
@@ -82,7 +82,8 @@
       <file>GM_ThesisBiometris.bcf</file>
     </requires>
     <requires type="editable">
-      <file>references.bib</file>
+      <file>./references.bib</file>
+      <file>./entries.bib</file>
     </requires>
   </external>
 </requests>

@@ -96,7 +96,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxbibnames</bcf:key>
-      <bcf:value>6</bcf:value>
+      <bcf:value>5</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxcitenames</bcf:key>
@@ -104,7 +104,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxsortnames</bcf:key>
-      <bcf:value>6</bcf:value>
+      <bcf:value>5</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxitems</bcf:key>
@@ -116,7 +116,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minbibnames</bcf:key>
-      <bcf:value>3</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>mincitenames</bcf:key>
@@ -124,7 +124,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minsortnames</bcf:key>
-      <bcf:value>3</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minitems</bcf:key>
@@ -204,7 +204,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useafterword</bcf:key>
@@ -331,7 +331,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxbibnames</bcf:key>
-      <bcf:value>6</bcf:value>
+      <bcf:value>5</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxcitenames</bcf:key>
@@ -339,7 +339,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxsortnames</bcf:key>
-      <bcf:value>6</bcf:value>
+      <bcf:value>5</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxitems</bcf:key>
@@ -351,7 +351,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minbibnames</bcf:key>
-      <bcf:value>3</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>mincitenames</bcf:key>
@@ -359,7 +359,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minsortnames</bcf:key>
-      <bcf:value>3</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minitems</bcf:key>
@@ -419,7 +419,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useafterword</bcf:key>
@@ -642,7 +642,8 @@
     <bcf:option datatype="boolean">eprint</bcf:option>
     <bcf:option datatype="boolean">related</bcf:option>
     <bcf:option datatype="boolean">subentry</bcf:option>
-    <bcf:option datatype="boolean">dashed</bcf:option>
+    <bcf:option datatype="boolean">articletitle</bcf:option>
+    <bcf:option datatype="boolean">intitle</bcf:option>
     <bcf:option datatype="boolean">subentrycomp</bcf:option>
     <bcf:option datatype="boolean">bibtexcaseprotection</bcf:option>
     <bcf:option datatype="integer">mincrossrefs</bcf:option>
@@ -2362,83 +2363,187 @@
   <!-- CITATION DATA -->
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex" glob="false">references.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex" glob="false">./references.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex" glob="false">./entries.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1" intorder="1">Penke2023NewDisease</bcf:citekey>
-    <bcf:citekey order="2" intorder="1">MartinPrince2015WorldTrends</bcf:citekey>
-    <bcf:citekey order="3" intorder="1">Wimo2023The2019</bcf:citekey>
-    <bcf:citekey order="4" intorder="1">Penke2023NewDisease</bcf:citekey>
-    <bcf:citekey order="5" intorder="1">Heneka2015NeuroinflammationDisease</bcf:citekey>
-    <bcf:citekey order="5" intorder="2">Edwards2019ANeurodegeneration</bcf:citekey>
-    <bcf:citekey order="6" intorder="1">Rasmussen2019AlzheimersDiagnosis</bcf:citekey>
-    <bcf:citekey order="7" intorder="1">Scheltens2016AlzheimersDisease</bcf:citekey>
-    <bcf:citekey order="8" intorder="1">Beydoun2014EpidemiologicMeta-analysis</bcf:citekey>
-    <bcf:citekey order="9" intorder="1">VanCauwenberghe2015ThePerspectives</bcf:citekey>
-    <bcf:citekey order="10" intorder="1">Hardy2006AlzheimersReappraisal</bcf:citekey>
-    <bcf:citekey order="11" intorder="1">Edwards2019ANeurodegeneration</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">20232023Figures</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">Penke2023NewDisease</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">Heneka2015NeuroinflammationDisease</bcf:citekey>
+    <bcf:citekey order="4" intorder="2">Edwards2019ANeurodegeneration</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">Rasmussen2019AlzheimersDiagnosis</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">Scheltens2016AlzheimersDisease</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">Beydoun2014EpidemiologicMeta-analysis</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">VanCauwenberghe2015ThePerspectives</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">Hardy2006AlzheimersReappraisal</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">Edwards2019ANeurodegeneration</bcf:citekey>
+    <bcf:citekey order="11" intorder="1">Kepp2023TheReview</bcf:citekey>
+    <bcf:citekey order="11" intorder="2">Kurkinen2023TheThinking</bcf:citekey>
     <bcf:citekey order="12" intorder="1">Kepp2023TheReview</bcf:citekey>
-    <bcf:citekey order="12" intorder="2">Kurkinen2023TheThinking</bcf:citekey>
     <bcf:citekey order="13" intorder="1">Kepp2023TheReview</bcf:citekey>
     <bcf:citekey order="14" intorder="1">Kepp2023TheReview</bcf:citekey>
-    <bcf:citekey order="15" intorder="1">Kepp2023TheReview</bcf:citekey>
-    <bcf:citekey order="16" intorder="1">Barupal2019SetsPathophysiology</bcf:citekey>
-    <bcf:citekey order="16" intorder="2">Fernandez-Calle2022APOEDiseases</bcf:citekey>
-    <bcf:citekey order="16" intorder="3">Proitsi2017AssociationAnalysis</bcf:citekey>
-    <bcf:citekey order="17" intorder="1">Oeckl2019ADisease</bcf:citekey>
+    <bcf:citekey order="15" intorder="1">Corder1993GeneFamilies</bcf:citekey>
+    <bcf:citekey order="16" intorder="1">Mahley2016CentralMetabolism</bcf:citekey>
+    <bcf:citekey order="17" intorder="1">Lanfranco2021ExpressionInflammation</bcf:citekey>
     <bcf:citekey order="18" intorder="1">Husain2021APOETherapeutics</bcf:citekey>
-    <bcf:citekey order="19" intorder="1">Husain2021APOETherapeutics</bcf:citekey>
-    <bcf:citekey order="20" intorder="1">Gan2022EffectsPopulation</bcf:citekey>
-    <bcf:citekey order="21" intorder="1">Husain2021APOETherapeutics</bcf:citekey>
-    <bcf:citekey order="22" intorder="1">Parhizkar2022APOEDisease</bcf:citekey>
-    <bcf:citekey order="22" intorder="2">Husain2021APOETherapeutics</bcf:citekey>
-    <bcf:citekey order="23" intorder="1">Husain2021APOETherapeutics</bcf:citekey>
-    <bcf:citekey order="23" intorder="2">Arnold2020SexMetabolome</bcf:citekey>
-    <bcf:citekey order="24" intorder="1">Arnold2020SexMetabolome</bcf:citekey>
-    <bcf:citekey order="25" intorder="1">deLeeuw2017Blood-basedDisease</bcf:citekey>
-    <bcf:citekey order="25" intorder="2">Green2023InvestigatingDisease</bcf:citekey>
-    <bcf:citekey order="26" intorder="1">Proitsi2017AssociationAnalysis</bcf:citekey>
-    <bcf:citekey order="27" intorder="1">Varma2018BrainStudy</bcf:citekey>
-    <bcf:citekey order="27" intorder="2">Sun2022AssociationDisease</bcf:citekey>
-    <bcf:citekey order="27" intorder="3">Green2023InvestigatingDisease</bcf:citekey>
-    <bcf:citekey order="27" intorder="4">Oeckl2019ADisease</bcf:citekey>
-    <bcf:citekey order="27" intorder="5">Barupal2019SetsPathophysiology</bcf:citekey>
-    <bcf:citekey order="28" intorder="1">Fernandez-Calle2022APOEDiseases</bcf:citekey>
-    <bcf:citekey order="28" intorder="2">deLeeuw2017Blood-basedDisease</bcf:citekey>
-    <bcf:citekey order="29" intorder="1">Varma2018BrainStudy</bcf:citekey>
-    <bcf:citekey order="29" intorder="2">Jia2022ATypes</bcf:citekey>
-    <bcf:citekey order="29" intorder="3">Huo2020BrainAnalysis</bcf:citekey>
-    <bcf:citekey order="29" intorder="4">Weng2019TheImpairment</bcf:citekey>
-    <bcf:citekey order="30" intorder="1">Simpson2016BloodAging</bcf:citekey>
-    <bcf:citekey order="31" intorder="1">Fernandez-Calle2022APOEDiseases</bcf:citekey>
-    <bcf:citekey order="32" intorder="1">Oka2023MultiomicsCohort</bcf:citekey>
-    <bcf:citekey order="33" intorder="1">Weng2019TheImpairment</bcf:citekey>
-    <bcf:citekey order="33" intorder="2">Peeters2019StableData</bcf:citekey>
-    <bcf:citekey order="34" intorder="1">Peeters2022Rags2ridges:Matrices</bcf:citekey>
-    <bcf:citekey order="35" intorder="1">deLeeuw2017Blood-basedDisease</bcf:citekey>
-    <bcf:citekey order="36" intorder="1">deLeeuw2017Blood-basedDisease</bcf:citekey>
-    <bcf:citekey order="37" intorder="1">deLeeuw2017Blood-basedDisease</bcf:citekey>
-    <bcf:citekey order="38" intorder="1">Fernandez-Calle2022APOEDiseases</bcf:citekey>
-    <bcf:citekey order="39" intorder="1">VanDerFlier2018AmsterdamCare</bcf:citekey>
-    <bcf:citekey order="39" intorder="2">deLeeuw2017Blood-basedDisease</bcf:citekey>
-    <bcf:citekey order="40" intorder="1">deLeeuw2017Blood-basedDisease</bcf:citekey>
-    <bcf:citekey order="41" intorder="1">deLeeuw2017Blood-basedDisease</bcf:citekey>
-    <bcf:citekey order="42" intorder="1">Wilkinson2016TheStewardship</bcf:citekey>
-    <bcf:citekey order="43" intorder="1">Wilkinson2016TheStewardship</bcf:citekey>
-    <bcf:citekey order="44" intorder="1">Elshawi2019OnHypertension</bcf:citekey>
-    <bcf:citekey order="45" intorder="1">Geman1992NeuralDilemma</bcf:citekey>
-    <bcf:citekey order="46" intorder="1">Geman1992NeuralDilemma</bcf:citekey>
-    <bcf:citekey order="47" intorder="1">Benjamini1995ControllingTesting</bcf:citekey>
-    <bcf:citekey order="48" intorder="1">James2023AnEdition</bcf:citekey>
-    <bcf:citekey order="49" intorder="1">Tibshiranit1996RegressionLasso</bcf:citekey>
-    <bcf:citekey order="50" intorder="1">Tibshiranit1996RegressionLasso</bcf:citekey>
-    <bcf:citekey order="51" intorder="1">Peeters2019StableData</bcf:citekey>
-    <bcf:citekey order="52" intorder="1">Song2015DecisionPrediction</bcf:citekey>
-    <bcf:citekey order="53" intorder="1">Barabasi2015NetworkScience</bcf:citekey>
-    <bcf:citekey order="54" intorder="1">Peeters2022Rags2ridges:Matrices</bcf:citekey>
-    <bcf:citekey order="55" intorder="1">KollerProbabilisticTechniques</bcf:citekey>
-    <bcf:citekey order="56" intorder="1">Peeters2022Rags2ridges:Matrices</bcf:citekey>
-    <bcf:citekey order="57" intorder="1">Peeters2022Rags2ridges:Matrices</bcf:citekey>
+    <bcf:citekey order="19" intorder="1">Castellano2011HumanClearance</bcf:citekey>
+    <bcf:citekey order="19" intorder="2">Cruchaga2012CerebrospinalDisease</bcf:citekey>
+    <bcf:citekey order="20" intorder="1">Husain2021APOETherapeutics</bcf:citekey>
+    <bcf:citekey order="20" intorder="2">Yang2023ApolipoproteinDisease</bcf:citekey>
+    <bcf:citekey order="21" intorder="1">Liu2013ApolipoproteinTherapy</bcf:citekey>
+    <bcf:citekey order="22" intorder="1">Strittmatter1993ApolipoproteinDisease</bcf:citekey>
+    <bcf:citekey order="23" intorder="1">Liu2013ApolipoproteinTherapy</bcf:citekey>
+    <bcf:citekey order="24" intorder="1">Deming2017Genome-wideModifiers</bcf:citekey>
+    <bcf:citekey order="25" intorder="1">Belloy2019AForward</bcf:citekey>
+    <bcf:citekey order="25" intorder="2">Farrer1997EffectsMeta-analysis</bcf:citekey>
+    <bcf:citekey order="26" intorder="1">Yang2023ApolipoproteinDisease</bcf:citekey>
+    <bcf:citekey order="27" intorder="1">Yang2023ApolipoproteinDisease</bcf:citekey>
+    <bcf:citekey order="28" intorder="1">Belloy2019AForward</bcf:citekey>
+    <bcf:citekey order="28" intorder="2">Egert2012ApoEFactors</bcf:citekey>
+    <bcf:citekey order="28" intorder="3">Eisenberg2010WorldwideHistory</bcf:citekey>
+    <bcf:citekey order="28" intorder="4">Logue2011AAmericans</bcf:citekey>
+    <bcf:citekey order="29" intorder="1">Farrer1997EffectsMeta-analysis</bcf:citekey>
+    <bcf:citekey order="30" intorder="1">Farrer1997EffectsMeta-analysis</bcf:citekey>
+    <bcf:citekey order="30" intorder="2">Blue2019LocalHispanics</bcf:citekey>
+    <bcf:citekey order="30" intorder="3">Suchy-Dicey2022APOEStudy</bcf:citekey>
+    <bcf:citekey order="30" intorder="4">Rajabli2018AncestralPopulations</bcf:citekey>
+    <bcf:citekey order="30" intorder="5">Naslavsky2022GlobalSample</bcf:citekey>
+    <bcf:citekey order="31" intorder="1">Chen2011ApolipoproteinDisease</bcf:citekey>
+    <bcf:citekey order="32" intorder="1">Blue2019LocalHispanics</bcf:citekey>
+    <bcf:citekey order="32" intorder="2">Rajabli2018AncestralPopulations</bcf:citekey>
+    <bcf:citekey order="33" intorder="1">Rajabli2022AAncestry</bcf:citekey>
+    <bcf:citekey order="34" intorder="1">Arnold2020SexMetabolome</bcf:citekey>
+    <bcf:citekey order="35" intorder="1">Arnold2020SexMetabolome</bcf:citekey>
+    <bcf:citekey order="35" intorder="2">Yassine2020APOEDisease</bcf:citekey>
+    <bcf:citekey order="36" intorder="1">Yassine2020APOEDisease</bcf:citekey>
+    <bcf:citekey order="37" intorder="1">Hunsberger2019TheInterventions</bcf:citekey>
+    <bcf:citekey order="38" intorder="1">Yassine2020APOEDisease</bcf:citekey>
+    <bcf:citekey order="39" intorder="1">Trumble2017ApolipoproteinBurden</bcf:citekey>
+    <bcf:citekey order="40" intorder="1">Yassine2020APOEDisease</bcf:citekey>
+    <bcf:citekey order="41" intorder="1">Finch1999TheIsoforms</bcf:citekey>
+    <bcf:citekey order="42" intorder="1">Husain2021APOETherapeutics</bcf:citekey>
+    <bcf:citekey order="43" intorder="1">Yang2023ApolipoproteinDisease</bcf:citekey>
+    <bcf:citekey order="44" intorder="1">Husain2021APOETherapeutics</bcf:citekey>
+    <bcf:citekey order="45" intorder="1">Bu2022APOEVariants</bcf:citekey>
+    <bcf:citekey order="46" intorder="1">Yassine2020APOEDisease</bcf:citekey>
+    <bcf:citekey order="47" intorder="1">Yassine2020APOEDisease</bcf:citekey>
+    <bcf:citekey order="48" intorder="1">Yassine2020APOEDisease</bcf:citekey>
+    <bcf:citekey order="49" intorder="1">Hu2015OpposingMice</bcf:citekey>
+    <bcf:citekey order="50" intorder="1">Husain2021APOETherapeutics</bcf:citekey>
+    <bcf:citekey order="51" intorder="1">Flowers2020APOEBrain</bcf:citekey>
+    <bcf:citekey order="51" intorder="2">Courtney2016LXRDisease</bcf:citekey>
+    <bcf:citekey order="52" intorder="1">Hu2015OpposingMice</bcf:citekey>
+    <bcf:citekey order="52" intorder="2">Heinsinger2016ApolipoproteinFluid</bcf:citekey>
+    <bcf:citekey order="53" intorder="1">Nguyen2010MolecularE4</bcf:citekey>
+    <bcf:citekey order="54" intorder="1">Hatters2006ApolipoproteinFunction</bcf:citekey>
+    <bcf:citekey order="55" intorder="1">Hatters2006Amino-terminalFibrils</bcf:citekey>
+    <bcf:citekey order="56" intorder="1">Yassine2020APOEDisease</bcf:citekey>
+    <bcf:citekey order="57" intorder="1">Rawat2019ApoE4Astrocytes</bcf:citekey>
+    <bcf:citekey order="58" intorder="1">Yassine2020APOEDisease</bcf:citekey>
+    <bcf:citekey order="59" intorder="1">Zhao2017ApolipoproteinEndosomes</bcf:citekey>
+    <bcf:citekey order="60" intorder="1">Svennerholm1997ChangesSwedes</bcf:citekey>
+    <bcf:citekey order="61" intorder="1">Husain2021APOETherapeutics</bcf:citekey>
+    <bcf:citekey order="62" intorder="1">Marottoli2017PeripheralDysfunction</bcf:citekey>
+    <bcf:citekey order="62" intorder="2">Teng2017ApoEInjury</bcf:citekey>
+    <bcf:citekey order="62" intorder="3">Kloske2020TheDisease</bcf:citekey>
+    <bcf:citekey order="63" intorder="1">Husain2021APOETherapeutics</bcf:citekey>
+    <bcf:citekey order="64" intorder="1">Huang2017ApoE2Secretion</bcf:citekey>
+    <bcf:citekey order="64" intorder="2">Tachibana2016RescuingLRP1</bcf:citekey>
+    <bcf:citekey order="64" intorder="3">Safieh2019ApoE4:Disease</bcf:citekey>
+    <bcf:citekey order="65" intorder="1">Kloske2020TheDisease</bcf:citekey>
+    <bcf:citekey order="66" intorder="1">Cao2017ApoE4-associatedInjury</bcf:citekey>
+    <bcf:citekey order="66" intorder="2">Shi2017ApoE4Tauopathy</bcf:citekey>
+    <bcf:citekey order="66" intorder="3">Vasilevskaya2020InteractionAthletes</bcf:citekey>
+    <bcf:citekey order="66" intorder="4">Wang2018GainCorrector</bcf:citekey>
+    <bcf:citekey order="67" intorder="1">Hoe2006ApolipoproteinNeurons</bcf:citekey>
+    <bcf:citekey order="68" intorder="1">Barupal2019SetsPathophysiology</bcf:citekey>
+    <bcf:citekey order="68" intorder="2">Fernandez-Calle2022APOEDiseases</bcf:citekey>
+    <bcf:citekey order="68" intorder="3">Proitsi2017AssociationAnalysis</bcf:citekey>
+    <bcf:citekey order="69" intorder="1">Oeckl2019GlialImpairment</bcf:citekey>
+    <bcf:citekey order="70" intorder="1">Bandaru2009ApoE4Brain</bcf:citekey>
+    <bcf:citekey order="71" intorder="1">Novotny2023MetabolomicBrains</bcf:citekey>
+    <bcf:citekey order="72" intorder="1">Area-Gomez2020APOE4Mice</bcf:citekey>
+    <bcf:citekey order="72" intorder="2">Zhao2020AlzheimersPathways</bcf:citekey>
+    <bcf:citekey order="73" intorder="1">pena-bautista2020MetabolomicsEffect</bcf:citekey>
+    <bcf:citekey order="74" intorder="1">Farmer2021APO4Glycolysis</bcf:citekey>
+    <bcf:citekey order="75" intorder="1">Arnold2020SexMetabolome</bcf:citekey>
+    <bcf:citekey order="76" intorder="1">deLeeuw2017Blood-basedDisease</bcf:citekey>
+    <bcf:citekey order="76" intorder="2">Green2023InvestigatingDisease</bcf:citekey>
+    <bcf:citekey order="77" intorder="1">Proitsi2017AssociationAnalysis</bcf:citekey>
+    <bcf:citekey order="78" intorder="1">Varma2018BrainStudy</bcf:citekey>
+    <bcf:citekey order="78" intorder="2">Sun2022AssociationDisease</bcf:citekey>
+    <bcf:citekey order="78" intorder="3">Green2023InvestigatingDisease</bcf:citekey>
+    <bcf:citekey order="78" intorder="4">Oeckl2019GlialImpairment</bcf:citekey>
+    <bcf:citekey order="78" intorder="5">Barupal2019SetsPathophysiology</bcf:citekey>
+    <bcf:citekey order="79" intorder="1">Fernandez-Calle2022APOEDiseases</bcf:citekey>
+    <bcf:citekey order="79" intorder="2">deLeeuw2017Blood-basedDisease</bcf:citekey>
+    <bcf:citekey order="80" intorder="1">Varma2018BrainStudy</bcf:citekey>
+    <bcf:citekey order="80" intorder="2">Jia2022ATypes</bcf:citekey>
+    <bcf:citekey order="80" intorder="3">Huo2020BrainAnalysis</bcf:citekey>
+    <bcf:citekey order="80" intorder="4">Weng2019TheImpairment</bcf:citekey>
+    <bcf:citekey order="81" intorder="1">Simpson2016BloodAging</bcf:citekey>
+    <bcf:citekey order="82" intorder="1">Fernandez-Calle2022APOEDiseases</bcf:citekey>
+    <bcf:citekey order="83" intorder="1">Oka2023MultiomicsCohort</bcf:citekey>
+    <bcf:citekey order="84" intorder="1">Weng2019TheImpairment</bcf:citekey>
+    <bcf:citekey order="84" intorder="2">Peeters2019StableData</bcf:citekey>
+    <bcf:citekey order="85" intorder="1">Peeters2022Rags2ridges:Matrices</bcf:citekey>
+    <bcf:citekey order="86" intorder="1">deLeeuw2017Blood-basedDisease</bcf:citekey>
+    <bcf:citekey order="87" intorder="1">Fernandez-Calle2022APOEDiseases</bcf:citekey>
+    <bcf:citekey order="88" intorder="1">VanDerFlier2018AmsterdamCare</bcf:citekey>
+    <bcf:citekey order="88" intorder="2">deLeeuw2017Blood-basedDisease</bcf:citekey>
+    <bcf:citekey order="89" intorder="1">deLeeuw2017Blood-basedDisease</bcf:citekey>
+    <bcf:citekey order="90" intorder="1">Wilkinson2016TheStewardship</bcf:citekey>
+    <bcf:citekey order="91" intorder="1">Wilkinson2016TheStewardship</bcf:citekey>
+    <bcf:citekey order="92" intorder="1">Elshawi2019OnHypertension</bcf:citekey>
+    <bcf:citekey order="93" intorder="1">Geman1992NeuralDilemma</bcf:citekey>
+    <bcf:citekey order="94" intorder="1">Geman1992NeuralDilemma</bcf:citekey>
+    <bcf:citekey order="95" intorder="1">Benjamini1995ControllingTesting</bcf:citekey>
+    <bcf:citekey order="96" intorder="1">Simon2004DesignHealth</bcf:citekey>
+    <bcf:citekey order="97" intorder="1">Simon2004DesignHealth</bcf:citekey>
+    <bcf:citekey order="98" intorder="1">Goeman2004AOutcome</bcf:citekey>
+    <bcf:citekey order="98" intorder="2">Goeman2006TestingAlternative</bcf:citekey>
+    <bcf:citekey order="98" intorder="3">Goeman2023ThePackage</bcf:citekey>
+    <bcf:citekey order="99" intorder="1">Goeman2004AOutcome</bcf:citekey>
+    <bcf:citekey order="100" intorder="1">Goeman2023ThePackage</bcf:citekey>
+    <bcf:citekey order="101" intorder="1">Mansmann2005TestingApproach</bcf:citekey>
+    <bcf:citekey order="102" intorder="1">Hummel2008GlobalANCOVA:Effects</bcf:citekey>
+    <bcf:citekey order="103" intorder="1">Hummel2023GlobalExpression</bcf:citekey>
+    <bcf:citekey order="104" intorder="1">Hummel2023GlobalExpression</bcf:citekey>
+    <bcf:citekey order="105" intorder="1">Kuhn2008BuildingPackage</bcf:citekey>
+    <bcf:citekey order="106" intorder="1">DMwR2</bcf:citekey>
+    <bcf:citekey order="107" intorder="1">James2023AnEdition</bcf:citekey>
+    <bcf:citekey order="108" intorder="1">Tibshiranit1996RegressionLasso</bcf:citekey>
+    <bcf:citekey order="109" intorder="1">Tibshiranit1996RegressionLasso</bcf:citekey>
+    <bcf:citekey order="110" intorder="1">Peeters2019StableData</bcf:citekey>
+    <bcf:citekey order="111" intorder="1">Song2015DecisionPrediction</bcf:citekey>
+    <bcf:citekey order="112" intorder="1">rpart</bcf:citekey>
+    <bcf:citekey order="113" intorder="1">Chen2016XGBoost:System</bcf:citekey>
+    <bcf:citekey order="114" intorder="1">pROC</bcf:citekey>
+    <bcf:citekey order="115" intorder="1">Barabasi2015NetworkScience</bcf:citekey>
+    <bcf:citekey order="116" intorder="1">Peeters2022Rags2ridges:Matrices</bcf:citekey>
+    <bcf:citekey order="117" intorder="1">PerezDeSouza2020Network-basedInterpretation</bcf:citekey>
+    <bcf:citekey order="118" intorder="1">PerezDeSouza2020Network-basedInterpretation</bcf:citekey>
+    <bcf:citekey order="119" intorder="1">KollerProbabilisticTechniques</bcf:citekey>
+    <bcf:citekey order="120" intorder="1">Amara2022NetworksInterpretation</bcf:citekey>
+    <bcf:citekey order="121" intorder="1">Peeters2022Rags2ridges:Matrices</bcf:citekey>
+    <bcf:citekey order="122" intorder="1">Peeters2022Rags2ridges:Matrices</bcf:citekey>
+    <bcf:citekey order="123" intorder="1">Kuhn2008BuildingPackage</bcf:citekey>
+    <bcf:citekey order="124" intorder="1">dplyr</bcf:citekey>
+    <bcf:citekey order="125" intorder="1">DMwR2</bcf:citekey>
+    <bcf:citekey order="126" intorder="1">Goeman2004AOutcome</bcf:citekey>
+    <bcf:citekey order="126" intorder="2">Goeman2006TestingAlternative</bcf:citekey>
+    <bcf:citekey order="126" intorder="3">Goeman2023ThePackage</bcf:citekey>
+    <bcf:citekey order="127" intorder="1">Mansmann2005TestingApproach</bcf:citekey>
+    <bcf:citekey order="127" intorder="2">Hummel2008GlobalANCOVA:Effects</bcf:citekey>
+    <bcf:citekey order="127" intorder="3">Hummel2023GlobalExpression</bcf:citekey>
+    <bcf:citekey order="128" intorder="1">heatmaply</bcf:citekey>
+    <bcf:citekey order="129" intorder="1">Peeters2019StableData</bcf:citekey>
+    <bcf:citekey order="130" intorder="1">nnet</bcf:citekey>
+    <bcf:citekey order="131" intorder="1">pROC</bcf:citekey>
+    <bcf:citekey order="132" intorder="1">Peeters2022Rags2ridges:Matrices</bcf:citekey>
+    <bcf:citekey order="133" intorder="1">rpart</bcf:citekey>
+    <bcf:citekey order="134" intorder="1">Chen2016XGBoost:System</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">
