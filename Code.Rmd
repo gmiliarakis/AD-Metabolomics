@@ -1,16 +1,12 @@
 ---
-title: "Analysis"
+title: "ApoE4 dose effects on serum metabolome in Alzheimer's Disease"
+subtitle: "a Data Science approach"
+author: "George Miliarakis, MSc Thesis"
+date: "15-01-2024"
 output:
-  html_document: 
+    tufte::tufte_html: default
     toc: yes
     toc_depth: 4
-    theme: flatly
-  pdf_document:
-    toc: yes
-  html_notebook: 
-    toc: yes
-    theme: flatly
-    toc_depth: 5
     highlight: pygments
 editor_options:
   chunk_output_type: inline
@@ -18,7 +14,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  comment = "", warning = FALSE
+  comment = "", warning = FALSE, message = FALSE, echo = FALSE
 )
 ```
 
@@ -26,7 +22,10 @@ knitr::opts_chunk$set(
 require(heatmaply)
 require(globaltest)
 require(GlobalAncova)
-require(purrr)
+require(ggplot2)
+require(ggthemes)
+require(plotly)
+require(furrr)
 require(caret)
 require(dplyr)
 require(e1071)
@@ -41,21 +40,21 @@ require(rags2ridges)
 
 ## Data Exploration
 
-The (interactive) correlation heatmap reveals very high correlation among TG compounds.
+The (interactive) correlation heatmap reveals very high correlation among aminoacids and TG compounds.
 
 ```{r heatmap}
 load("data/data.Rdata")
-tabX <- df[df$Diagnosis == "Probable AD", 1:230]
+X <- df[df$Diagnosis == "Probable AD", 1:230]
 C <- round(cor(X), 2)
 
 heatmaply_cor(C, color = viridis, plot_method = "plotly", dendrogram = F, reorderfun = sort.default(d,w), main = "Correlation Heatmap", file = "heatmap.html", colorbar_thickness = 15, colorbar_len = 0.5)
 ```
 
-## RQi: Differential expression of metabolites per ApoE genotype
+## Differential expression of metabolites per ApoE genotype
 
 ### Global test in AD group
 
-Performing a Global Test on the serum metabolites of AD patients, correcting for sex (Ho: E4 status has no effect on metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.046) between E4 carriers and non-carriers. Moreover, a 
+Performing a Global Test on the serum metabolites of AD patients, correcting for sex (Ho: E4 status has no effect on metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.029 ) between E4 carriers and non-carriers. The presence of ApoE4, correcting for sex seems to have an effect on the metabolites shown in the plot below. The most significantly affected metabolites are triglycerides, diglycerides (positively) and γ-aminobutyric acid (negatively).
 
 ```{r, fig.height=8}
 load("data/clinical.Rdata")
@@ -69,6 +68,7 @@ gt.b
 globaltest::covariates(gt.b)
 ```
 
+Performing a Global Test on ApoE4 dose shows distinct effects depeding on the number of ApoE4 alleles (p = 0.199).
 ```{r gt, fig.height=8}
 # Multinomial outcome
 AD$E4dose <- as.factor(AD$E4dose)
@@ -77,23 +77,13 @@ gt.m
 globaltest::covariates(gt.m)
 ```
 
-### Hierarchical global ANCOVA testing on generalised linear models, AD and SCD
-```{r}
-# get a hierarchy for variables
-dend <- as.dendrogram(hclust(dist(t(df[,1:230]))))
-# hierarchical test for ApoE4 presence and AD
-set.seed(555)
-hierGA <- gGlobalAncova.hierarchical(df[,1:230], H = dend, formula.full = ~target +sex, model.dat = df, alpha = 0.05, perm = 100)
-results(hierGA)
-# get names of significant clusters
-sigEndnodes(hierGA)
-```
 ### Nested Linear Models
-Metabolite-level models to test for ApoE4 dose effects.
+Metabolite-level models to test for ApoE4 dose effects. The F-tests yielded p-values < 0.05, however none of them survived FDR correction.
 ```{r}
 nested <- function(Y, x, ...) {
   ### Analysis of Variance (ANOVA)
-  df <- cbind(Y, as.factor(x), ...)
+  x <- as.factor(x)
+  df <- cbind(Y, x, ...)
   ncol <- ncol(Y)
   covariates <- names(...)
   F_tests <- furrr::future_map(df[, 1:ncol], ~ {
@@ -120,48 +110,52 @@ nested <- function(Y, x, ...) {
   p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
   
   # Filter out the non-significant (a=0.05) FDR-adjusted p-values
-  sig <- dplyr::filter(p_values, p_values < 0.05)
-
-  t_tests <- furrr::future_map(df[, rownames(sig)], ~ {
+  sig <- as.data.frame(dplyr::filter(p_values, p_values < 0.05))
+  sig <- sig[order(sig$p_adj), ]
+  cat("Significant F-tests: \n")
+  print(sig)
+  cat("\nDose effects on metabolites:")
+  knitr::kable(sig)
+  summaries <- furrr::future_map(df[, rownames(sig)], ~ {
     f <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
     mdl <- lm(f, data = df)
     summary(mdl)$coefficients[1:length(table(x)), ]
   })
-  out <- list("Sig. F tests"=sig[order(sig$p_adj),], "Coefficients" = t_tests)
-  return(out)
+  summaries <- lapply(summaries, function(x) {
+    x <- x[, -c(2, 3)]
+    x <- t(x)
+  })
+  summaries <- plyr::ldply(summaries, id = 1:2)
+  return(knitr::kable(summaries, table.attr = "style='width:30%;'"))
 }
 ```
-#### Testing in both SCD and AD
+### SCD and AD
+The  metabolites most affected by ApoE4 dose are D-L-3-aminoisobutyric.acid, histamine, L-serine, cerebroside D18.1.24.0, lysophosphatidyl-choline 18.1, phosphatidyl-choline 34.4, 36.6 and 40.4, sphingomyelin 22 and 24, LpH.PGE2, cLpH.PGA2, HpH.LPA.C20.5 and taurine.
 ```{r}
-#Testing in all samples
 Y <- df[, 1:230]
-clinical$V_MMSE <- NULL
-target <- df$target
-
-## Testing for effects of presence of ApoE4 in combination with AD diagnosis
-nested.all <- nested(Y, target, clinical)
-
-## Testing for effects of ApoE4 dose
-df$E4dose <- as.numeric(df$E4dose)-1
-df$E4dose[df$E4dose == 0] <- "0ApoE4"
-df$E4dose[df$E4dose == 1] <- "1ApoE4"
-df$E4dose[df$E4dose == 2] <- "2ApoE4"
+df$E4dose <- as.numeric(df$E4dose) -1
+df$E4dose[df$E4dose == 0] <- "No ApoE4"
+df$E4dose[df$E4dose == 1] <- "1 ApoE4"
+df$E4dose[df$E4dose == 2] <- "2 ApoE4"
 E4dose <- df$E4dose <- as.factor(df$E4dose)
-nested(Y, E4dose, clinical)[[1]]
-nested(Y, E4dose, clinical)[[2]]
+## Testing for effects of ApoE4 dose
+nested(Y, relevel(E4dose, ref= "No ApoE4"), clinical)
 ```
 
-#### Testing for ApoE4 dose effects in AD group only
+### AD group only
+Among AD patients, ApoE4 dose seems to have an effect on several triglycerides, diglycerides, L-glutamic acid, L-lysine, 2- and 3-hydroxybutyric acid, glutamic acid, 3-phosphoglyceric acid, phosphatidylcholin, sphyngomyelin, HpH.PAF.C17, phosphoethanolamine, imino-diacetate.
 ```{r}
+AD <- subset(df, Diagnosis == "Probable AD")
 ADY <- AD[, 1:230]
 ADE4dose <- AD$E4dose
 ADclinical <- clinical[df$Diagnosis == "Probable AD",]
 
-##Testing for effects of ApoE4 dose
-nested(ADY, ADE4dose, ADclinical)
+## Testing for effects of ApoE4 dose
+nested(ADY, relevel(ADE4dose, ref= "No ApoE4"), ADclinical)
 ```
 
-#### Testing for ApoE4 dose effects in SCD group only
+### SCD group only
+Among individuals with SCD, lipid metabolites were not affected as much as in the AD group, with only LPC and PC showing a difference. Aminoacids (glycine, taurine, L-serine, serotonine, L-glutamic acid, L-glutamic acid, phosphoethanolamine) and oxidative stress compounds were mostly affected in this group.
 ```{r}
 SCD <- df[df$Diagnosis == "Subjectieve klachten",]
 SCDY <- SCD[, 1:230]
@@ -169,25 +163,18 @@ SCDE4dose <- SCD$E4dose
 SCDclinical <- clinical[df$Diagnosis == "Subjectieve klachten",]
 
 ## Testing for effects of ApoE4 dose
-nested(SCDY, SCDE4dose, SCDclinical)
+nested(SCDY, relevel(SCDE4dose, ref= "No ApoE4"), SCDclinical)
 ```
 
-## RQii - Classification of metabolites on ApoE class
-### Multinomial Classification of number of ApoE E4 alleles based on metabolites
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  comment = NA, warning = FALSE
-)
-```
+## Multinomial Classification of ApoE4 presence and AD
+The discriminative potential of the metabolites, correcting for clinical background features, on AD and ApoE4 or not (4-class response ADE4, AD, SCDE4, SCD)is assessed by first fitting a Multi-nomial Logistic Regression (benchmark model). The benchmark model fits only the clinical features. The model's AUC is compared with the same model (with altered hyperparameters) fitting clinical variables + 230 metabolites. The metabolites are then projected to 6 latent ML-estimated factors and 3 more models are fitted: Multi-nomial Logistic Regression, Decision Tree and XGBoost fitting clinical variables + 6 factors. The models' multi-class classification performance is compared using confusion matrices and AUCs.
 ```{r multifit}
-multifit <- function(
-                X,
-                y,
-                model,
-                ctrl = NULL,
-                grid = NULL,
-                seed = 87654, ...) {
+multifit <- function(X,
+                     y,
+                     model,
+                     ctrl = NULL,
+                     grid = NULL,
+                     seed = 87654, ...) {
   set.seed(seed)
   # Merge X and y into df
   df <- cbind.data.frame(X, y)
@@ -203,16 +190,24 @@ multifit <- function(
   obs <- mdl$pred$obs
   preds <- mdl$pred$pred
   cm <- confusionMatrix(reference = obs, data = preds, mode = "everything")
-  # Get the multiclass AUC
-  ys <- as.numeric(obs) -1
-  yhats <- as.numeric(preds) -1
-  roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T)
+  # Get the multi-class ROC curves
+  ys <- as.numeric(obs) - 1
+  yhats <- as.numeric(preds) - 1
+  roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T, legacy.axes = T)
   out <- list("cm" = cm, "roc" = roc, "model" = mdl)
   return(out)
 }
+
+evaluate <- function(model){
+print(model$roc$auc)
+cat("\n")
+print(model$cm)
+names(model$roc$rocs) <- c("ADE4-AD", "ADE4-SCDE4", "ADE4-SCD", "AD-SCDE4", "AD-SCD", "SCDE4-SCD")
+g <- ggroc(model$roc$rocs, legacy.axes = T) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
+ggplotly(g)
+}
 ```
 
-### Preparation
 ```{r multi_preparation}
 load("data/data.Rdata")
 X <- scale(df[, 1:230])
@@ -237,7 +232,7 @@ ctrl <- trainControl(
 ### Fitting a benchmark model: clinical characteristics only
 
 ```{r mlogit}
-bm <- multifit(
+benchmark <- multifit(
   X = clin_dummy,
   y = y,
   model = "multinom",
@@ -245,9 +240,8 @@ bm <- multifit(
   grid = expand.grid(decay = 0),
   trace = F
 )
-bm$cm
-bm$roc
-ggroc(bm$roc$rocs)
+
+evaluate(benchmark)
 ```
 
 ### Regularized Multinomial Regression adding 230 metabolites
@@ -261,14 +255,13 @@ mlr <- multifit(
   grid = expand.grid(decay = 10),
   trace = F
 )
-mlr$cm
-mlr$roc
-ggroc(mlr$roc$rocs)
+
+evaluate(mlr)
 ```
 
 ### Projection to Latent Factors
 
-```{r get_thomson}
+```{r get_thomson, results = FALSE}
 project <- function(X, m, seed) {
   set.seed(seed)
   X <- scale(as.matrix(df[,1:230]))
@@ -292,12 +285,12 @@ project <- function(X, m, seed) {
 }
 ```
 
-```{r}
+```{r, results = FALSE}
 thomson <- project(X, 6, seed = 1234)
 X <- cbind(clin_dummy, thomson)
 ```
 
-#### Multinomial Logistic Regression adding 6 factors
+### Multinomial Logistic Regression adding 6 factors
 ```{r }
 mlrf <- multifit(
   X = X,
@@ -307,12 +300,11 @@ mlrf <- multifit(
   trace = FALSE,
   grid = expand.grid(decay = 0)
 )
-mlrf$cm
-mlrf$roc
-ggroc(mlrf$roc$rocs)
+
+evaluate(mlrf)
 ```
 
-#### Decision Tree
+### Decision Tree
 
 ```{r multi_tree}
 tree <- multifit(
@@ -322,12 +314,11 @@ tree <- multifit(
   ctrl = ctrl,
   grid = expand.grid(maxdepth=3)
 )
-tree$cm
-tree$roc
-ggroc(tree$roc$rocs)
+
+evaluate(tree)
 ```
 
-#### XGBoost Forest
+### XGBoost Forest
 
 ```{r }
 xgb <- multifit(
@@ -337,11 +328,11 @@ xgb <- multifit(
   ctrl = ctrl,
   grid = xgb.grid
 )
-xgb$cm
-xgb$roc
-ggroc(xgb$roc$rocs)
+
+evaluate(xgb)
 ```
-###
+### Model Comparison
+Observations:
 
 
 1. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models.  
@@ -350,20 +341,21 @@ ggroc(xgb$roc$rocs)
 2. Fitting 6 ML-estimated factors obtained by the FMradio package (cummulatively explaining 30% of variace) yields increased classification performance, serving as a valuable dimension reduction technique for high-dimensional data.
 
 
-3. Looking at the confusion matrix and individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD+E4, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/SCD-E4 and SCD+E4/SCD-E4).
+3. Looking at the confusion matrix and individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/AD-E4 and SCD+E4/SCD-E4).
 
 ```{r}
-aucs <- c(MLR0 = bm$roc$auc, MLR1 = mlr$roc$auc, MLR2 = mlrf$roc$auc, TREE = tree$roc$auc, XGB = xgb$roc$auc)
-knitr::kable(t(aucs))
+aucs <- data.frame(AUC = c("Clinical features only" = benchmark$roc$auc, "Clinical features + 230 metabolites" = mlr$roc$auc, "Clinical features + 6 latent factors" = mlrf$roc$auc, "Decision Tree" = tree$roc$auc, "XGBoost" = xgb$roc$auc))
+
+knitr::kable(aucs)
 ```
 
-## RQiii - Network Analysis
-
+## Metabolite Covariance Network Analysis in AD
+The covariance network analysis shows distinct metabolic "images" among ApoE4 carriers and non-carriers in AD. The network vertices and edges are distinct. 
 ```{r preparation}
-# Store all observations of Class 1 in C1
-C1 <- scale(df[df$APOE == "E4NO",1:230])
-# Store all observations of Class 2 in C2
-C2 <- scale(df[APOE == "E4YES",1:230])
+# Store all observations of ApoE4 non-carriers in C1
+C1 <- scale(df[df$E4 == 0,1:230])
+# Store all observations of ApoE4 carriers in C2
+C2 <- scale(df[df$E4 == 1,1:230])
 
 # Get the covariance matrices of C1 and C2
 S1 <- covML(C1)
@@ -381,22 +373,22 @@ Ts <- default.target.fused(Slist = S, ns = n, type = "DUPV")
 
 ```{r, eval=FALSE}
 # Get the optimal lambdas per class and fused with 10-fold CV
-set.seed(8910)
-optf <- optPenalty.fused(
-  Ylist = Ys,
-  Tlist = Ts,
-  lambda = default.penalty(Ys),
-  cv.method = "kCV",
-  k = 10,
-  verbose = FALSE
-)
-save(optf, file= "data/optf.Rdata")
+# set.seed(8910)
+# optf <- optPenalty.fused(
+#   Ylist = Ys,
+#   Tlist = Ts,
+#   lambda = default.penalty(Ys),
+#   cv.method = "kCV",
+#   k = 10,
+#   verbose = FALSE
+# )
+# save(optf, file= "data/optf.Rdata")
 ```
 
 ```{r sparsify, echo = FALSE}
 # Create a list of the two-class data Y
 load("data/optf.Rdata")
-Ys <- list(C0 = C0, C1 = C1)
+Ys <- list(C1 = C1, C2 = C2)
 Ps <- optf$Plist
 
 Ps <- ridgeP.fused(S, n, Ts,lambda = optf$lambda, maxit = 1000)
@@ -407,43 +399,40 @@ P0s <- sparsify.fused(Ps,
   FDRcut = 0.999
 )
 ```
-
-```{r GGMs per class and diff, message=FALSE, echo = FALSE}
+GGMs showing distinct metabolic compositions among ApoE4 carriers (left), non-carriers(middle) and the differential edges (right).
+```{r GGMs per class and diff, message=FALSE, results = FALSE}
 # Merge the sparse high precision matrices
-TST <- Union(P0s$S0$sparseParCor, P0s$S1$sparseParCor)
+TST <- Union(P0s$S1$sparseParCor, P0s$S2$sparseParCor)
 PCE4NO <- TST$M1subset
 PCE4YES <- TST$M2subset
 
 # Create a color map per metabolite class
 Colors <- rownames(PCE4YES)
-Colors[grep("Amine", rownames(PCE4YES))] <- "#e0ade6"
-Colors[grep("Org.Acid", rownames(PCE4YES))] <- "lightblue"
+Colors[grep("Am", rownames(PCE4YES))] <- "pink"
+Colors[grep("OA", rownames(PCE4YES))] <- "lightblue"
 Colors[grep("Lip", rownames(PCE4YES))] <- "yellow"
-Colors[grep("Ox.Stress", rownames(PCE4YES))] <- "purple"
-
+Colors[grep("OS", rownames(PCE4YES))] <- "purple"
 
 set.seed(111213)
-opar <- par(mfrow = c(1, 3))
 # Plot the sparsified ridge matrix of ApoE4 carriers with AD
 Coords <- Ugraph(PCE4YES,
   type = "fancy", lay = "layout_with_fr",
-  Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
+  Vcolor = Colors, prune = FALSE, Vsize = 10, Vcex = 0.4,
   main = "ApoE4 carriers with AD"
 )
 # Plot he sparsified ridge matrix of ApoE4 non-carriers with AD
 Ugraph(PCE4NO,
-  type = "fancy", lay = "layout_with_fr",
-  Vcolor = Colors, prune = FALSE, Vsize = 7, Vcex = 0.3,
+  type = "fancy", lay= NULL, coords = Coords,
+  Vcolor = Colors, prune = FALSE, Vsize = 10, Vcex = 0.4,
   main = "ApoE4 non-carriers with AD"
 )
 
 # Plot the differential network
 DiffGraph(PCE4NO, PCE4YES,
-  lay = "layout_with_fr",
-  Vcolor = Colors, Vsize = 7, Vcex = 0.3,
+lay = NULL, coords = Coords,
+  Vcolor = Colors, Vsize = 10, Vcex = 0.4,
   main = "Differential Network"
 )
-par(opar)
 ```
 
 ```{r centrality}
@@ -456,22 +445,22 @@ NetStatsE4no <- NetStats[, 1:9]
 
 NetStatsE4yes[, c(3, 9)] <- NetStatsE4no[, c(3, 9)] <- NULL
 ```
-
+### Network statistics
 ```{r degree density plot }
-# Plot the densities of centrality degree scores
-plot(density(DegreesAD1[, 2]),
-  col = "blue", xlim = c(-1, 8), xlab = "Degree", main = ""
-)
-lines(density(DegreesAD2[, 2]),
-  col = "red"
-)
-legenda <- c("AD class 1", "AD class 2")
-legend(5, 0.5,
-  legend = legenda, 
-  lwd = rep(1, 2), lty = rep(1, 2), col = c("blue", "red"), cex = 0.7
-)
+# # Plot the densities of centrality degree scores
+# plot(density(DegreesAD1[, 2]),
+#   col = "blue", xlim = c(-1, 8), xlab = "Degree", main = ""
+# )
+# lines(density(DegreesAD2[, 2]),
+#   col = "red"
+# )
+# legenda <- c("AD class 1", "AD class 2")
+# legend(5, 0.5,
+#   legend = legenda, 
+#   lwd = rep(1, 2), lty = rep(1, 2), col = c("blue", "red"), cex = 0.7
+# )
 ```
-
+Wilcoxon Signed Rank test between the network statistics of ApoE4 carriers and non-carriers. The test shows distinct centrality degrees and average number of negative and positive edges.
 ```{r wilcoxon rank sum }
 # Perform a Wilcoxon signed rank test
 
@@ -483,20 +472,19 @@ for(i in 1:length(w)){
   p.values[i] <- w[[i]][['p.value']]
 }
 names(p.values) <- names(w)
-dplyr::filter(p.values, p.values<0.05)
+p.values[p.values<0.05]
 ```
+Distinct metabolite communities among ApoE4 carriers/non carriers
 ```{r communities}
 # Get the communities per class
 set.seed(141516)
-opar <- par(mfrow = c(1, 2))
 CommC1 <- Communities(PCE4NO,
   Vcolor = Colors,
-  Vsize = 7, Vcex = 0.3, main = "Modules AD Class 1"
+  Vsize = 10, Vcex = 0.5, main = "ApoE4 non-carriers"
 )
 
 CommC2 <- Communities(PCE4YES,
   Vcolor = Colors,
-  Vsize = 7, Vcex = 0.3, main = "Modules AD Class 2"
+  Vsize = 10, Vcex = 0.5, main = "ApoE4 carriers"
 )
-par(opar)
 ```
