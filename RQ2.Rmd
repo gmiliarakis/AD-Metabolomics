@@ -4,15 +4,11 @@ output:
   html_document: 
     toc: yes
     toc_depth: 4
-    output: tufte::tufte
+    tufte::tufte_handout: default
+    tufte::tufte_html: default
     highlight: pygments
   pdf_document:
     toc: yes
-  html_notebook: 
-    toc: yes
-    theme: tufte::tufte
-    toc_depth: 5
-    highlight: pygments
 editor_options:
   chunk_output_type: inline
 ---
@@ -85,7 +81,7 @@ Xclin = cbind.data.frame(X, clin_dummy)
 ctrl <- trainControl(
   method = "repeatedcv",
   number = 10,
-  repeats = 100,
+  repeats = 10,
   savePredictions = "final",
   classProbs = T,
   summaryFunction = multiClassSummary,
