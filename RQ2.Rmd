@@ -1,10 +1,14 @@
 ---
-title: "Classification of metabolites on the presence of ApoE4 and AD"
+title: "RQii - Classification of metabolites on ApoE class"
 output:
-    tufte::tufte_html: default
+  html_document: 
     toc: yes
     toc_depth: 4
+    tufte::tufte_handout: default
+    tufte::tufte_html: default
     highlight: pygments
+  pdf_document:
+    toc: yes
 editor_options:
   chunk_output_type: inline
 ---
@@ -21,11 +25,10 @@ require(DMwR2)
 require(nnet)
 require(ggplot2)
 require(ggthemes)
-require(plotly)
 ```
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  comment = NA, warning = FALSE, message = FALSE, echo=FALSE
+  comment = NA, warning = FALSE
 )
 ```
 ```{r multifit}
@@ -60,11 +63,9 @@ multifit <- function(X,
 
 evaluate <- function(model){
 print(model$roc$auc)
-cat("\n")
 print(model$cm)
 names(model$roc$rocs) <- c("ADE4-AD", "ADE4-SCDE4", "ADE4-SCD", "AD-SCDE4", "AD-SCD", "SCDE4-SCD")
-g <- ggroc(model$roc$rocs, legacy.axes = T) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
-ggplotly(g)
+ggroc(model$roc$rocs, legacy.axes=T) + scale_color_tableau() + theme_tufte()  + guides(color = guide_legend(title = "ROC curves")) 
 }
 ```
 
@@ -205,7 +206,6 @@ Observations:
 3. Looking at the confusion matrix and individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/AD-E4 and SCD+E4/SCD-E4).
 
 ```{r}
-aucs <- data.frame(AUC = c("Clinical features only" = benchmark$roc$auc, "Clinical features + 230 metabolites" = mlr$roc$auc, "Clinical features + 6 latent factors" = mlrf$roc$auc, "Decision Tree" = tree$roc$auc, "XGBoost" = xgb$roc$auc))
-
-knitr::kable(aucs)
+aucs <- c(MLR0 = benchmark$roc$auc, MLR1 = mlr$roc$auc, MLR2 = mlrf$roc$auc, TREE = tree$roc$auc, XGB = xgb$roc$auc)
+knitr::kable(t(aucs))
 ```
