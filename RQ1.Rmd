@@ -58,6 +58,7 @@ nested <- function(Y, x, ...) {
   # Filter out the non-significant (a=0.05) FDR-adjusted p-values
   sig <- as.data.frame(dplyr::filter(p_values, p_values < 0.05))
   sig <- sig[order(sig$p_adj), ]
+
   cat("Significant F-tests: \n")
   print(sig)
   cat("\nDose effects on metabolites:")
@@ -65,6 +66,7 @@ nested <- function(Y, x, ...) {
   summaries <- purrr::map(df[, rownames(sig)], ~ {
     f <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
     mdl <- lm(f, data = df)
+    plot(mdl)
     summary(mdl)$coefficients[1:length(table(x)), ]
   })
   summaries <- lapply(summaries, function(x) {

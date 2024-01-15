@@ -83,6 +83,16 @@
 \newacronym{cv}{CV}{Cross-Validation}
 \newacronym{gsk}{GSK-3$\beta$}{Glycogen synthase kinase-3$\beta$}
 \newacronym{csf}{CSF}{cerebrospinal fluid}
+\newacronym{rss}{RSS}{Residual Sum of Squares}
+\newacronym{anova}{ANOVA}{Analysis of Variance}
+\newacronym{smote}{SMOTE}{Synthetic Minority Over-Sampling Technique}
+\newacronym{ml}{ML}{Maximum Likelihood}
+\newacronym{fa}{FA}{Factor Analysis}
+\newacronym{lasso}{LASSO}{Least Absolute Shrinkage and Selection Operator}
+\newacronym{mnl}{MNL}{Multinomial Logistic Regression}
+\newacronym{roc}{ROC}{Receiver-Operator Characteristics curve}
+\newacronym{auc}{AUC}{Area Under the ROC curve}
+\newacronym{ggm}{GGM}{Gaussian graphical model}
 \renewcommand*{\glossarymark}[1]{}
 \setcounter{tocdepth}{3}
 
@@ -111,7 +121,7 @@
 \newcommand{\thesisSubTitle}{a Data Science approach}                            % State subtitle thesis
 \newcommand{\thesisDegree}{MSc Thesis}      % Choose type
 \newcommand{\university}{Wageningen University \& Research}                % You generally don't need to touch this
-\newcommand{\thesisPlaceDate}{Wageningen, December 2023}                      % State month and year
+\newcommand{\thesisPlaceDate}{Wageningen, March 2024}                      % State month and year
 %------------------------------------------------------------------------------
 
 
@@ -269,11 +279,8 @@ The amyloid plaque hypothesis has dominated the scientific discussion on the pat
 \subsection{Human apolipoprotein-E gene}
 LOAD is consistently shown associated with the gene that encodes apolipoprotein-E (ApoE) \cite{Corder1993GeneFamilies}. The structure and function of ApoE, as well as how the first defines the latter is described in section \ref{ApoEprot}.
 
-\subsubsection{Tissue expression}
-The principal producers of ApoE are hepatocytes in the liver \cite{Mahley2016CentralMetabolism}. In the CNS, ApoE is primarily expressed in glia, astrocytes, cells of which modulate metabolic homeostasis and neuronal communication, followed by microglia, the brain immune cells \cite{Lanfranco2021ExpressionInflammation}. Each genotype is linked to different expression levels \cite{Husain2021APOETherapeutics}. Carriers of $\varepsilon_2$ seem to have higher \acrfull{csf} levels of ApoE, compared to $\varepsilon_4$ carriers \cite{Castellano2011HumanClearance, Cruchaga2012CerebrospinalDisease}. 
-
-\subsubsection{ApoE4 and Alzheiner's Disease}
-Humans present three variants of the ApoE gene: $\varepsilon_2$, $\varepsilon_3$ and $\varepsilon_4$ \cite{Husain2021APOETherapeutics, Yang2023ApolipoproteinDisease}, resulting in six genotypes [Fig. \ref{fig1}]. In caucasian populations, the most abundant allele is In Caucasian populations apo$\varepsilon_3$ (rs7412 C/rs429358 T) is the most abundant, with a frequency of 78\%, and is considered neutral regarding the risk of AD \cite{Liu2013ApolipoproteinTherapy}. Apo$\varepsilon_4$ (rs7412 C/rs429358 C) has a frequency of 14\% and represents the strongest genetic risk factor for LOAD, with gene dose effects \cite{Strittmatter1993ApolipoproteinDisease}. Conversely, apo$\varepsilon_2$ (rs7412 T/rs429358 T) is found in 8\% of Caucasian populations, and carriers of this allele exhibit a reduced risk of LOAD \cite{Liu2013ApolipoproteinTherapy}. The various ApoE alleles are strongly linked to the primary pathological features of LOAD, namely amyloid-A$\beta$ and phosphorylated tau \cite{Deming2017Genome-wideModifiers}. While the association between ApoE alleles and LOAD risk or protection is observed across diverse ancestral backgrounds, the strength of this association varies \cite{Belloy2019AForward, Farrer1997EffectsMeta-analysis}, see section 1.2.2.
+\subsubsection{ApoE4 and Alzheimer's Disease}
+Humans present three variants of the ApoE gene: $\varepsilon_2$, $\varepsilon_3$ and $\varepsilon_4$ \cite{Husain2021APOETherapeutics, Yang2023ApolipoproteinDisease}, resulting in six genotypes [Fig. \ref{fig1}]. In caucasian populations, the most abundant allele is ApoE3 (rs7412 C/rs429358 T), with a frequency of 78\%, and is considered neutral regarding the risk of AD \cite{Liu2013ApolipoproteinTherapy}. ApoE4 (rs7412 C/rs429358 C) has a frequency of 14\% and represents the strongest genetic risk factor for LOAD, with gene dose effects \cite{Strittmatter1993ApolipoproteinDisease}. Conversely, ApoE2 (rs7412 T/rs429358 T) is found in 8\% of Caucasian populations, and carriers of this allele exhibit a reduced risk of LOAD \cite{Liu2013ApolipoproteinTherapy}. The various ApoE alleles are strongly linked to the primary pathological features of LOAD, namely amyloid-A$\beta$ and phosphorylated tau \cite{Deming2017Genome-wideModifiers}. While the association between ApoE alleles and LOAD risk or protection is observed across diverse ancestral backgrounds, the strength of this association varies \cite{Belloy2019AForward, Farrer1997EffectsMeta-analysis}, see section 1.2.2.
 
 \begin{figure}[]
   \includegraphics[width=0.7\textwidth]{figures/ApoE@2x.png}
@@ -282,15 +289,18 @@ Humans present three variants of the ApoE gene: $\varepsilon_2$, $\varepsilon_3$
 \end{figure}
 
 \subsubsection{ApoE and ancestry in Alzheimer's Disease}
-The majority of studies exploring the relationship between ApoE alleles and the genetics of LOAD have primarily focused on Northern European populations\cite{Yang2023ApolipoproteinDisease}. However, smaller investigations involving diverse ancestral backgrounds indicate variations in ApoE4 allele frequencies across different populations\cite{Yang2023ApolipoproteinDisease}. While ApoE4 is present in 14\% of Caucasian Americans, its prevalence increases to 40\% among African Americans, 37\% in Oceania, and 26\% in Australia. Southern Asia and Europe exhibit ApoE4 allelic frequencies of less than 10\%, compared with Northern Europe where it rises to 25\% \cite{Belloy2019AForward, Egert2012ApoEFactors, Eisenberg2010WorldwideHistory, Logue2011AAmericans}.
+The majority of studies exploring the relationship between ApoE alleles and the genetics of LOAD have primarily focused on Northern European populations\cite{Yang2023ApolipoproteinDisease}. However, smaller studies involving diverse ancestral backgrounds show variations in ApoE4 allele \cite{Yang2023ApolipoproteinDisease}. While ApoE4 is present in 14\% of Caucasian Americans, its prevalence increases to 40\% among African Americans, 37\% in Oceania, and 26\% in Australia. Southern Asia and Europe exhibit ApoE4 allelic frequencies of less than 10\%, compared to Northern Europe where it rises to 25\% \cite{Belloy2019AForward, Egert2012ApoEFactors, Eisenberg2010WorldwideHistory, Logue2011AAmericans}.
 
-The epidemiological impact of ApoE alleles also differs among populations. In Korea, Japan, and Japanese-American communities, ApoE4 confers a higher risk of LOAD compared to Caucasians \cite{Farrer1997EffectsMeta-analysis}. Conversely, for Native Americans, Hispanic Americans, African Americans, and those of African descent, APOE4 is associated with a lower risk of LOAD than in Caucasian-American populations \cite{Farrer1997EffectsMeta-analysis, Blue2019LocalHispanics, Suchy-Dicey2022APOEStudy, Rajabli2018AncestralPopulations, Naslavsky2022GlobalSample}. A recent study in a Chinese population found that ApoE3 is more protective than ApoE2 \cite{Chen2011ApolipoproteinDisease}. Some of these population-specific effects are attributed to the ApoE haplotype \cite{Blue2019LocalHispanics, Rajabli2018AncestralPopulations}. A recent discovery of a novel locus (19q13.31) could contribute to attenuating ApoE4-mediated AD risk in African Americans \cite{Rajabli2022AAncestry}.
+The epidemiological impact of ApoE alleles also differs among populations. In Korea, Japan, and Japanese-American communities, ApoE4 confers a higher risk of LOAD compared to Caucasians \cite{Farrer1997EffectsMeta-analysis}. Conversely, for Native Americans, Hispanic Americans, African Americans, and those of African descent, ApoE4 is associated with a lower risk of LOAD than in Caucasian-American populations \cite{Farrer1997EffectsMeta-analysis, Blue2019LocalHispanics, Suchy-Dicey2022APOEStudy, Rajabli2018AncestralPopulations, Naslavsky2022GlobalSample}. A recent study in a Chinese population found that ApoE3 is more protective than ApoE2 \cite{Chen2011ApolipoproteinDisease}. Some of these population-specific effects are attributed to the ApoE haplotype \cite{Blue2019LocalHispanics, Rajabli2018AncestralPopulations}. A recent discovery of a novel locus (19q13.31) could contribute to attenuating ApoE4-mediated AD risk in African Americans \cite{Rajabli2022AAncestry}.
 
 \subsubsection{ApoE and sex synergy in Alzheimer's Disease}
 Notably, sex (60\% females) and ApoE4 allelic composition (50\% has at least one $\varepsilon_4$ allele) are the strongest genetic risk factors for SAD \cite{, Arnold2020SexMetabolome}. In this regard, it is shown that the ApoE4 genotype has a larger impact on females, as they present greater impairment of mitochondrial energy production, compared to males \cite{Arnold2020SexMetabolome, Yassine2020APOEDisease}.
 
 \subsubsection{Evolution of ApoE over time}
-Interestingly, humans are the only ApoE polymorphic species\cite{Yassine2020APOEDisease}. All other animal species have one ApoE variant, which resembles the human $\varepsilon_3$ allele \cite{Hunsberger2019TheInterventions}. ApoE $\varepsilon_4$ is the oldest human allele, followed by $\varepsilon_3$ and $\varepsilon_2$ \cite{Yassine2020APOEDisease}. In highly infectious environments, with food scarcity and shorter lifespans, $\varepsilon_4$ may be adaptive, reducing mortality \cite{Trumble2017ApolipoproteinBurden}. However, as humans transitioned into modern, less infectious environments, with food abundance and longer life expectancy, $\varepsilon_4$ started to burden the arteries and brain, increasing the risk of diseases related to ageing \cite{Yassine2020APOEDisease}. $\varepsilon_3$ emerged from $\varepsilon_4$ and reflects the shift from a plant-based diet to a meat-based one, where genes adaptive to high meat consumption were and still are vital to regulate increased cholesterol levels \cite{Finch1999TheIsoforms}. 
+Interestingly, humans are the only species exhibiting polymorphism in the ApoE gene \cite{Yassine2020APOEDisease}. All other animal species have one ApoE variant, which resembles the human ApoE3 allele \cite{Hunsberger2019TheInterventions}. ApoE4 is the oldest human allele, followed by ApoE3 and ApoE2 in age \cite{Yassine2020APOEDisease}. ApoE4 may be adaptive, reducing mortality in highly infectious environments, with food scarcity and shorter lifespans \cite{Trumble2017ApolipoproteinBurden}. However, as human environments became less septic, with food abundance and longer life expectancy, ApoE4 started to burden the arteries and brain, increasing the risk of diseases related to ageing \cite{Yassine2020APOEDisease}. The emergence of ApoE3 from ApoE4 putatively reflects the shift in human diet from a plant-based one to a meat-rich one, where genes adaptive to high meat consumption were and still are vital to regulate increased cholesterol levels \cite{Finch1999TheIsoforms}. 
+
+\subsubsection{Tissue expression}
+The principal producers of ApoE are hepatocytes in the liver \cite{Mahley2016CentralMetabolism}. In the CNS, ApoE is primarily expressed in glia, astrocytes, cells of which modulate metabolic homeostasis and neuronal communication, followed by microglia, the brain immune cells \cite{Lanfranco2021ExpressionInflammation}. Each genotype is linked to different expression levels \cite{Husain2021APOETherapeutics}. ApoE2 carriers seem to have higher \acrfull{csf} levels of ApoE, compared to ApoE4 carriers \cite{Castellano2011HumanClearance, Cruchaga2012CerebrospinalDisease}. 
 
 \newpage
 \subsection{Apo-lipoprotein E}\label{ApoEprot}
@@ -330,7 +340,7 @@ Metabolism entails the repertoire of chemical reactions that keep living organis
 \subsubsection{Measured in blood}
 Transcriptomic and lipidomic analyses in humanized ApoE mice associated ApoE4 with decreased free fatty acid levels, many increased  tricarboxylic acid (TCA) cycle metabolites, as well as changes in plasma levels of phosphatidylcholines and unsaturated fatty acids \cite{Area-Gomez2020APOE4Mice, Zhao2020AlzheimersPathways}. A recent study on 58 individuals found six downregulated plasma metabolites (including lysophospholipids and cardiolipin) in ApoE4 carriers \cite{pena-bautista2020MetabolomicsEffect}. Further, the plasma metabolome of the latter reveals a preference for aerobic glycolysis \cite{Farmer2021APO4Glycolysis}. Significant correlations of ApoE genotype and sex with metabolites were observed, i.e. several phosphatidylcholines were found in a large study of more than 1500 individuals \cite{Arnold2020SexMetabolome}
 
-Perturbed serum metabolites associated with AD are amines, aminoacids \cite{deLeeuw2017Blood-basedDisease, Green2023InvestigatingDisease}, cholesteryl esters \cite{Proitsi2017AssociationAnalysis}, sphingolipids \cite{Varma2018BrainStudy,Sun2022AssociationDisease,Green2023InvestigatingDisease,Oeckl2019GlialImpairment,Barupal2019SetsPathophysiology}, fatty acids \cite{Fernandez-Calle2022APOEDiseases,deLeeuw2017Blood-basedDisease}, glycerophospholipids \cite{Varma2018BrainStudy, Jia2022ATypes,Huo2020BrainAnalysis, Weng2019TheImpairment}, phosphatidylcholines \cite{Simpson2016BloodAging} and lipid peroxidation compounds \cite{Fernandez-Calle2022APOEDiseases}. These molecules are usually identified via high-throughput metabolomic pipelines (coupled with Mass Spectrometry (MS) detectors) that trace all compounds in a sample and result in high-dimensional data \cite{Oka2023MultiomicsCohort}. The latter often require advanced statistical methods e.g. projection to latent structures \cite{Weng2019TheImpairment, Peeters2019StableData} or graphical models \cite{Peeters2022Rags2ridges:Matrices} in order to extract putatively meaningful information. 
+Perturbed serum metabolites associated with AD are aminoacids, amines \cite{deLeeuw2017Blood-basedDisease, Green2023InvestigatingDisease}, cholesteryl esters \cite{Proitsi2017AssociationAnalysis}, sphingolipids \cite{Varma2018BrainStudy,Sun2022AssociationDisease,Green2023InvestigatingDisease,Oeckl2019GlialImpairment,Barupal2019SetsPathophysiology}, fatty acids \cite{Fernandez-Calle2022APOEDiseases,deLeeuw2017Blood-basedDisease}, glycerophospholipids \cite{Varma2018BrainStudy, Jia2022ATypes,Huo2020BrainAnalysis, Weng2019TheImpairment}, phosphatidylcholines \cite{Simpson2016BloodAging} and lipid peroxidation compounds \cite{Fernandez-Calle2022APOEDiseases}. These molecules are usually identified via high-throughput metabolomic pipelines (coupled with Mass Spectrometry (MS) detectors) that trace all compounds in a sample and result in high-dimensional data \cite{Oka2023MultiomicsCohort}. The latter often require advanced statistical methods e.g. projection to latent structures \cite{Weng2019TheImpairment, Peeters2019StableData} or graphical models \cite{Peeters2022Rags2ridges:Matrices} in order to extract putatively meaningful information. 
 With such techniques, de Leeuw et al. discovered distinct serum metabolic signatures among AD patients-controls and those carrying at least one ApoE $\varepsilon_4$ allele \cite{deLeeuw2017Blood-basedDisease}, as they appear in Fig. \ref{fig2}. The different metabolic profiles, however, among ApoE4 non-carriers remain obscure. The present data science approach shows ApoE4-mediated differentially expressed metabolites, potentially unveiling distinct pathways of metabolic deregulation in AD.
 
 \begin{figure}
@@ -342,74 +352,32 @@ With such techniques, de Leeuw et al. discovered distinct serum metabolic signat
 
 \newpage
 \subsection{Research Questions}
-ApoE $\varepsilon_4$ carriers --particularly females-- experience metabolic disturbances and are at increased risk of SAD. The mechanistic links, however, between ApoE genotype, metabolism and AD development are not entirely known \cite{Fernandez-Calle2022APOEDiseases}, more so among $\varepsilon_4$ non-carriers. Linking specific serum metabolites to distinct ApoE genotypes can reveal metabolic disturbances leading to AD, especially in absence of the ApoE $\varepsilon_4$ allele. Hence, in an effort to elucidate potential links between ApoE genotypes and serum metabolites in AD, one could state the following research questions:
+ApoE $\varepsilon_4$ carriers --particularly females-- experience metabolic disturbances and are at increased risk of SAD. The mechanistic links, however, between ApoE4 dose, metabolism and AD development are not entirely known \cite{Fernandez-Calle2022APOEDiseases}. Tracking ApoE4 dose effects on serum metabolites can reveal metabolic perturbations preceding or co-existing with AD. Hence, in an effort to elucidate ApoE4-mediated changes in serum metabolites in AD and SCD, one could state the following research questions (RQ):
 
-\textbf{RQ}: What are the mechanistic links between ApoE genotype and serum metabolites in AD?
+Are there mechanistic links between ApoE4 dose and serum metabolome in AD?
 \begin{enumerate}
-    \item Are there ApoE4 dose effects in serum metabolite levels?
-    \item How discriminatory are serum metabolites among ApoE genotypes?
-    \item How do the network topologies of metabolites differ among ApoE genotypes?
+    \item Are there ApoE4 dose effects on serum metabolite levels in AD?
+    \item How discriminatory are serum metabolites of ApoE4 status and/or AD?
+    \item How do the covariance network topologies of metabolites differ between ApoE4 carriers and non-carriers?
 \end{enumerate}
 \clearpage
 \section{Data}
-The data were collected from 127 AD patients and 120 SCD ($n$ = 247) individuals in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depression medication, mean arterial pressure (MAP) and body mass index (BMI). The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data set is high-dimensional, in the sense that it contains more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
+The data were collected from 127 AD patients and 120 SCD ($n$ = 247) individuals in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depressants, mean arterial pressure (MAP) and body mass index (BMI). The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data set is high-dimensional, in the sense that it contains more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
 \newpage
 \section{Methodology}
 \subsection{Data management}
-The FAIR principles for data management and stewardship in science were published by  ~\citeauthor{Wilkinson2016TheStewardship} in 2016 \cite{Wilkinson2016TheStewardship}. FAIR stands for Findable, Accessible, Interactive, and Reusable data; the intention is to create and use data that are well-documented and reproducible. These principles were considered at every step of the study and implemented when applicable. All analysis was performed in R (version 4.3.1), and the current report was written in \LaTeX (Tex Live version 2023). All files are stored in a private Github repository with git as \acrfull{vcs}.
+The FAIR principles for data management and stewardship in science were published by  ~\citeauthor{Wilkinson2016TheStewardship} in 2016 \cite{Wilkinson2016TheStewardship}. FAIR stands for Findable, Accessible, Interactive, and Reusable data; the intention is to create and use data that are well-documented and reproducible. These principles were considered at every step of the study and implemented when applicable. All analysis was performed in R (version 4.3.2), and the current report was written in \LaTeX (Tex Live version 2023). All files are committed to a private Github repository --with git as \acrfull{vcs}.
 
 \subsection{Data exploration and Visualisation}
 An interactive correlation heatmap was created to visualise the Pearson correlation coefficients using the package \textsf{heatmaply}. 
 
-\subsection{Feature engineering}
-The ApoE allele and genotype frequencies in the population are reflected in the AD and SCD data, as shown in Table \ref{Table:ApoEgenfreq}. That is, the most abundant allele is $\varepsilon$3, followed by $\varepsilon4$ and $\varepsilon2$. The most common genotype was $\varepsilon3\varepsilon3$, followed by $\varepsilon3\varepsilon4$ and $\varepsilon4\varepsilon4$.
-
-\begin{table}[h!]
-\begin{tabular}{cccccc} \toprule
-$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
-2    & 18   & 7    & 106  & 85   & 29   \\ \bottomrule
-\end{tabular}
-\caption{Individual ApoE genotype counts among SCD and AD patients.} \label{Table:ApoEgenfreq}
-\end{table}
-
-The genotypes are not equally represented in the data and hence, don't enable analysis without feature engineering. The following two sections describe the features created to balance the classes when studying only the AD group and both AD and SCD.
-\subsubsection{AD group}
-An obvious and "low-res" approach would be to bin the samples into two groups: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ dose effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The frequencies of $\varepsilon4$ doses are shown in Table \ref{Table:E4binAD}.
-
-\begin{table}[h!]
-\begin{tabular}{cccccc} \toprule
-$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
-0    & 3    & 2    & 37   & 59   & 26 \\ \bottomrule
-\end{tabular}
-\caption{Individual ApoE genotype counts among AD patients.} \label{Table:ApoEfreqAD}
-\end{table}
-
-\begin{table}[h!]
-\begin{tabular}{ccc} \toprule
-No $\varepsilon4$  & 1x$\varepsilon4$& 2x$\varepsilon4$\\ \midrule
-40    & 61   & 26 \\ \bottomrule
-\end{tabular}
-\caption{ApoE $\varepsilon4$ dose frequencies among AD patients.} \label{Table:E4binAD}
-\end{table}
-
-\subsubsection{SCD and AD}\label{Meth_target}
-In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis, a four-level feature ("ApoE4AD") was created, as shown in Table \ref{Table:target}.
-
-\begin{table}[h!]
-\begin{tabular}{rcc} \toprule
-& $\geq$1 $\varepsilon4$ & no $\varepsilon4$\\ \midrule
-AD \vline  & 34& 86\\
- SCD \vline & 87& 40\\ \bottomrule 
-\end{tabular}
-\caption{Feature combining ApoE4 status and AD diagnosis.} \label{Table:target}
-\end{table}
+\subsection{Data Wrangling and Feature Engineering}
+The data were processed using base R and \textsf{dplyr} \cite{dplyr}.
    
 
 \subsection{Statistical Analysis}
-The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this study to find the optimal balance between the performance of a model with its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}.
-
 \subsubsection{ApoE4 dose effects on plasma metabolite levels in AD}
-A straight-forward way to test whether metabolites are differentially expressed depending on ApoE4 dose, controlling for clinical variables, is ANOVA (Analysis of Variance) on $p$ nested linear models. The dependent variable in each model is a metabolite; the nested model, eq. \eqref{rm}, has only clinical variables, while the full model, eq. \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2) as explanatory variables. Let $m_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and D the ApoE4 dose; the nested models then are:
+A straight-forward way to test whether metabolites are distinctly expressed depending on ApoE4 dose, controlling for clinical variables, is \acrshort{anova} (Analysis of Variance) on $p$ nested linear models. The dependent variable in each model is a metabolite; the nested model, eq. \eqref{rm}, has only clinical variables, while the full model, eq. \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2) as explanatory variables. Let $m_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and D the ApoE4 dose; the nested models then are:
 \begin{align}
     & m_j = \beta_0 + \sum_{k=1}^m\beta_kx_k +\varepsilon \label{rm} \\
     & m_j = \beta_0 + \sum_{k=1}^m\beta_kx_k + \beta_{m+1}D_{\varepsilon4} + \varepsilon \label{fm}
@@ -422,34 +390,36 @@ A more elegant alternative to multiple testing is global test \cite{Simon2004Des
 The R package \textsf{GlobalTest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage} developed by \citeauthor{Goeman2004AOutcome} originally fits a logistic regression model, using genes to predict the response $Y \in [1,..., k]$ (or $k$), representing clinical or biological group membership. This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}.
 The hypothesis test is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The tests uses the -usually- low-dimensional ($n$ × $n$) the intra-sample covariance matrix instead of the larger ($p$ × $p$) metabolite covariance matrix. Hence, this method is rather efficient. The test statistic under $H_0$ follows, asymptotically, a normal distribution. In other words, this method tests whether the metabolite levels are discriminating over the dose of ApoE4. The \texttt{gt()} function of the package was used to screen for differences in metabolite levels based on the ApoE4 dose. The \texttt{covariates()} function was used to visualise the ApoE4 dose effects on metabolite levels.
 
-Inspired by global testing, a global ANCOVA method was introduced  by \citeauthor{Mansmann2005TestingApproach} and  extended by \citeauthor{Hummel2008GlobalANCOVA:Effects}, featuring (generalised) linear model comparison based on the extra sum of squares (SS) principle \cite{Hummel2023GlobalExpression}. This method tests whether the gene or metabolite expression levels are independent of the response, i.e. $H_0 : P(X|Y = 1) = P(X|Y = k)$. The high dimensionality is treated by merging the residual sums of squares (RSS) of individual models to the RSS of a global model \cite{Hummel2023GlobalExpression}. The test statistic uses the aggregated RSS and under $H_0$ follows, asymptotically, a $\chi^2$-distribution. The R package \textsf{GlobalAncova} also features a hierarchical generalised linear model comparison function, \texttt{gGlobalAncova.hierarchical()} to fit metabolic pathways. This function was used to test for nuances depending on the 4-class variable ApoE4AD.
+Inspired by global testing, a global ANCOVA method was introduced  by \citeauthor{Mansmann2005TestingApproach} and  extended by \citeauthor{Hummel2008GlobalANCOVA:Effects}, featuring (generalised) linear model comparison based on the extra sum of squares (SS) principle \cite{Hummel2023GlobalExpression}. This method tests whether the gene expression or metabolite  levels are independent of the response variable, i.e. $H_0 : P(X|Y = 1) = P(X|Y = k)$. The high dimensionality is treated by aggregating the residual sums of squares (\acrshort{rss}) of individual models to the RSS of a global model \cite{Hummel2023GlobalExpression}. The test statistic uses the aggregated RSS and under $H_0$ follows, asymptotically, a $\chi^2$-distribution. The R package \textsf{GlobalAncova} also features a hierarchical generalised linear model comparison function, \texttt{gGlobalAncova.hierarchical()} that enables the modeling of (metabolic) pathways. This function was used to test for nuances depending on the 4-class variable ApoE4AD.
 
 \subsubsection{Machine Learning}
-The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl(), train() and confusionMatrix()} were used to fit and evaluate the models. A sampling method used to deal with the unbalanced classes was SMOTE (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
+The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this study to find the optimal balance between the performance of a model with its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}. One needs to consider this trade-off during model and evaluation method selection, as some impose more bias or variance than others.
 
-Considering interpretability, Multinomial Logistic Regression (MNL) is inherently interpretable. Let $y = k$, with $k \in N, [1,4]$ representing the k-th class of ApoE4AD and $\beta_{kj}$ its set of coefficients,  $\beta_{lj}$ the coefficients of the rest of classes for $j$-th metabolite, then a MNL model calculated the probability
+The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl(), train() and confusionMatrix()} were used to fit and evaluate the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
 
-\[\textrm{Pr}(y=k|X=x) =  \dfrac{e^{\sum_{j=1}^{p}\beta_{kj}x_j}}{\sum_{l=1}^{5}\sum_{j=1}^{p}e^{\beta_{lj}x_j}}\]
+Considering interpretability, Multinomial Logistic Regression (\acrshort{mnl}) is inherently interpretable. Let $y = k$, with $k \in N, [1,4]$ representing the k-th class of ApoE4AD and $\beta_{kj}$ its set of coefficients,  $\beta_{lj}$ the coefficients of the rest of classes for $j$-th metabolite, then a MNL model calculated the probability
 
-When $p > n$, the coefficient estimation method has low bias and high variance, in that small changes in the training data can result in very different coefficient estimates \cite{James2023AnEdition}. Regularization trades off a small increase in bias for a great decrease in variance, by shrinking the unimportant coefficients towards zero. LASSO (Least Absolute Shrinkage and Selection Operator) \cite{Tibshiranit1996RegressionLasso}, also called L1-regularization shrinks the MNL coefficients to 0, thus weeding out spurious correlations and reducing the number of predictors \cite{Tibshiranit1996RegressionLasso}. It does so by introducing the term  \[\lambda\sum_{j=1}^{p}|\beta_j|\] where $\lambda \geq 0$ is a tuning parameter that balances the coefficient shrinking effect. The package \textsf{nnet}, as implemented in \textsf{caret}'s \texttt{train()} function was used in this case.
+\[\textrm{Pr}(y=k|X=x) =  \dfrac{e^{\sum_{j=1}^{p}\beta_{kj}x_j}}{\sum_{l=1}^{4}\sum_{j=1}^{p}e^{\beta_{lj}x_j}}\]
 
-A method to treat multi-collinearity and high dimensionality is a 2-stage Maximum Likelihood(ML) factor analysis (FA), such as the one the package \textsf{FMradio} \cite{Peeters2019StableData} performs. In the 1st stage, a L1-regularised ML estimation is used to filter out redundant features from the data matrix. In the second stage, ML FA projects the aforementioned matrix to an orthogonal space where the features are replaced by -fewer- factors that explain their covariance. One can then use the produced factor scores as predictors in MNL.
+When $p > n$, the coefficient estimation method has low bias and high variance, in that small changes in the training data can result in very different coefficient estimates \cite{James2023AnEdition}. Regularization trades off a small increase in bias for a great decrease in variance, by shrinking the unimportant coefficients towards zero. \acrshort{lasso} (Least Absolute Shrinkage and Selection Operator) \cite{Tibshiranit1996RegressionLasso}, also called L1-regularization shrinks the MNL coefficients to 0, thus weeding out spurious correlations and reducing the number of predictors \cite{Tibshiranit1996RegressionLasso}. It does so by introducing the term  \[\lambda\sum_{j=1}^{p}|\beta_j|\] where $\lambda \geq 0$ is a tuning parameter that balances the coefficient shrinking effect. The package \textsf{nnet}, as implemented in \textsf{caret}'s \texttt{train()} function was used in this case.
+
+A method to treat multi-collinearity and high dimensionality is a 2-stage \acrfull{ml} \acrfull{fa}, such as the one the package \textsf{FMradio} \cite{Peeters2019StableData} performs. In the 1st stage, a L1-regularised ML estimation is used to filter out redundant features from the data matrix. In the second stage, ML FA projects the aforementioned matrix to an orthogonal space where the features are replaced by -fewer- factors that explain their covariance. One can then use the produced factor scores as predictors in MNL.
 
 Decision Trees (DT) are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data into branches and leaves(nodes) \cite{Song2015DecisionPrediction}. The \texttt{rpart2()} \cite{rpart} function of \textsf{rpart} was used.
 
 Random Forests (RF) are ensemble learning methods, that bag several DTs and average their decisions with a majority vote. Despite RFs tend to outperform DTs, they often operate as a \textit{black box} and are poorly interpretable. The state-of-the-art ensemble learner \texttt{xgbTree} of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used.
 
-The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated 10-fold Cross-Validation (CV). The best model's performance was then holistically assessed using repeated 10-fold CV-obtained AUC (Area Under the ROC curve) using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}.
+The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated (100 times) 10-fold Cross-Validation (CV). The best model's performance was then holistically assessed using repeated 10-fold CV-obtained \acrfull{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}.
 
 \subsubsection{Network analysis}
 Network science offers a unifying framework for data and system representation, applicable to any domain \cite{Barabasi2015NetworkScience}. A network, in an abstract sense, consists of nodes connected with links, also referred to as edges. In data science, a network whose nodes represent random features, whose joint probability distribution is defined by the ensemble of their edges is called \textit{graphical model} \cite{Peeters2022Rags2ridges:Matrices}. A metabolomic covariance correlation network represents the ensemble of metabolites based on their covariance, showing nuances among the samples that non-graphical statistical methods on individual metabolites may fail to detect \cite{PerezDeSouza2020Network-basedInterpretation}. It may provide insights into correlated metabolites that don't belong in the same metabolic pathway \cite{PerezDeSouza2020Network-basedInterpretation}.
 
 
-A \textit{Gaussian graphical model} (GGM) is an undirected graph that represents the conditional independence properties of the features \cite{KollerProbabilisticTechniques}. The statistic employed by GGMs is the partial correlation which also adjusts for indirect correlation, i.e. two metabolites are correlated with a third one and are shown correlated with each other \cite{Amara2022NetworksInterpretation}. For instance, let $\mathcal{G=(V,E)}$ be a GGM consisting of a set $\mathcal{V}$ of $p$ vertices, corresponding to random features $Y_1,...,Y_p$ with joint probability distribution $P \sim N_p(\mathbf{0, \Sigma})$, and set of edges $\mathcal{E}$, such that for all pairs $\{Y_i , Y_j\}$ with $i\neq j$:
+A \textit{Gaussian graphical model} (\acrshort{ggm}) is an undirected graph that represents the conditional independence properties of the features \cite{KollerProbabilisticTechniques}. The statistic employed by GGMs is the partial correlation which also adjusts for indirect correlation, i.e. two metabolites are correlated with a third one and are shown correlated with each other \cite{Amara2022NetworksInterpretation}. For instance, let $\mathcal{G=(V,E)}$ be a GGM consisting of a set $\mathcal{V}$ of $p$ vertices, corresponding to random features $Y_1,...,Y_p$ with joint probability distribution $P \sim N_p(\mathbf{0, \Sigma})$, and set of edges $\mathcal{E}$, such that for all pairs $\{Y_i , Y_j\}$ with $i\neq j$:
 
 \[ \mathbf{\Sigma}_{ij}^{-1} = (\mathbf{\Omega}_{ij})=0 \Longleftrightarrow Y_i \Perp Y_j\mid\{Y_k : k \neq i,j\} \Longleftrightarrow (i, j) \notin \mathcal{E} \]
 
-In natural language, a zero value in the inverse covariance matrix (usually referred to as precision matrix $\mathbf{\Omega}$) implies that the respective random features are independent, given the rest of features, and they are not connected by an undirected $((i, j) \notin \mathcal{E})$ \cite{Peeters2022Rags2ridges:Matrices}.
+In natural language, a zero value in the inverse covariance matrix (usually referred to as precision matrix $\mathbf{\Omega}$) implies that the respective random features are independent, given the rest of features, and they are not connected by an undirected edge $((i, j) \notin \mathcal{E})$ \cite{Peeters2022Rags2ridges:Matrices}.
 
 In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices} was used to generate the feature covariance matrix, as well as the precision matrix, regularise it and represent it in a GGM --as shown in Fig. \ref{fig2}. The package was designed for metabolomic GGMs.
 
@@ -477,7 +447,47 @@ In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Mat
 \section{Results}
 
 \subsection{Data Exploration and Visualisation}
+The ApoE allele and genotype frequencies in the population are reflected in the AD and SCD data, as shown in Table \ref{Table:ApoEgenfreq}. That is, the most abundant allele is $\varepsilon$3, followed by $\varepsilon4$ and $\varepsilon2$. The most common genotype was $\varepsilon3\varepsilon3$, followed by $\varepsilon3\varepsilon4$ and $\varepsilon4\varepsilon4$.
 
+\begin{table}[!ht]
+\caption{Individual ApoE genotype counts among SCD and AD patients.} \label{Table:ApoEgenfreq}
+\begin{tabular}{cccccc} \toprule
+$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
+2    & 18   & 7    & 106  & 85   & 29   \\ \bottomrule
+\end{tabular}
+\end{table}
+
+The genotypes are not equally represented in the data and hence, don't enable analysis without feature engineering. The following two sections describe the features created to balance the classes when studying only the AD group and both AD and SCD.
+\subsubsection{AD group}
+An obvious and "low-res" approach would be to bin the samples into two groups: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ dose effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The frequencies of $\varepsilon4$ doses are shown in Table \ref{Table:E4binAD}.
+
+\begin{table}[!ht]
+\caption{Individual ApoE genotype counts among AD patients.} \label{Table:ApoEfreqAD}
+\begin{tabular}{cccccc} \toprule
+$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
+0    & 3    & 2    & 37   & 59   & 26 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!ht]
+\caption{ApoE $\varepsilon4$ dose frequencies among AD patients.} \label{Table:E4binAD}
+\begin{tabular}{ccc} \toprule
+No $\varepsilon4$  & 1x$\varepsilon4$& 2x$\varepsilon4$\\ \midrule
+40    & 61   & 26 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{SCD and AD}\label{Meth_target}
+In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis, a four-level feature ("ApoE4AD") was created, as shown in Table \ref{Table:target}.
+
+\begin{table}[!ht]
+\caption{Feature combining ApoE4 status and AD diagnosis.} \label{Table:target}
+\begin{tabular}{rcc} \toprule
+& $\geq$1 $\varepsilon4$ & no $\varepsilon4$\\ \midrule
+AD \vline  & 34& 86\\
+ SCD \vline & 87& 40\\ \bottomrule 
+\end{tabular}
+\end{table}
 \subsection{RQi - Differential expression of plasma metabolites per ApoE4 dose among AD and SCD}
 \subsubsection{Global Test}
 
@@ -493,7 +503,7 @@ In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Mat
 
 \subsubsection{Fitting the metabolomic ML-estimated 6-factor Latent Projection}
 
-\subsection{RQiii - Network analysis of metabolites}
+\subsection{RQiii - Covariance Network analysis of metabolites}
 
 \clearpage
 \section{Discussion}

@@ -69,7 +69,6 @@
       \verb https://www.mdpi.com/1422-0067/24/6/5383
       \endverb
       \keyw{Alzheimer’s disease,A{$\beta$},amyloid clearance,drug targets,genetics,heat shock proteins,neuroinflammation,tau,toxic amyloids,vascular dysfunction}
-      \warn{\item Datamodel: article entry 'Penke2023NewDisease' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{20232023Figures}{article}{}
       \list{publisher}{1}{%
@@ -97,9 +96,6 @@
       \verb https://onlinelibrary.wiley.com/doi/full/10.1002/alz.13016%20https://onlinelibrary.wiley.com/doi/abs/10.1002/alz.13016%20https://alz-journals.onlinelibrary.wiley.com/doi/10.1002/alz.13016
       \endverb
       \keyw{19,Alzheimer's dementia,Alzheimer's disease,Biomarkers,COVID,Caregivers,Dementia,Dementia workforce,Diagnostic criteria,Family caregiver,Health care costs,Health care expenditures,Health care professional,Incidence,Long,MCI due to Alzheimer's disease,Medicaid spending,Medicare spending,Mild cognitive impairment,Morbidity,Mortality,Prevalence,Primary care physician,Risk factors,term care costs}
-      \warn{\item Datamodel: article entry '20232023Figures' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry '20232023Figures' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
-      \warn{\item Datamodel: article entry '20232023Figures' (./references.bib): Missing mandatory field 'author'}
     \endentry
     \entry{Heneka2015NeuroinflammationDisease}{article}{}
       \name{author}{37}{}{%
@@ -321,8 +317,6 @@
       \verb https://pubmed.ncbi.nlm.nih.gov/25792098/
       \endverb
       \keyw{Alzheimer Disease* / genetics,Alzheimer Disease* / immunology,Alzheimer Disease* / metabolism,Alzheimer Disease* / pathology,Alzheimer Disease* / prevention {\&} control,Animal,Animals,Anti-Inflammatory Agents,Astrocytes / immunology,Astrocytes / pathology,Biomarkers / blood,Biomarkers / cerebrospinal fluid,Brain Injuries / complications*,Brain Injuries / metabolism,Clinical Trials as Topic,Disease Models,Disease Progression,Humans,Immunity,Immunization,Inflammation / diagnosis,Inflammation / immunology,Inflammation / metabolism*,Inflammation Mediators / immunology,Inflammation Mediators / metabolism*,Innate*,Locus Coeruleus / pathology,MEDLINE,Markus P Kummer,Michael T Heneka,Microglia / immunology*,Microglia / pathology*,Monica J Carson,NCBI,NIH,NLM,National Center for Biotechnology Information,National Institutes of Health,National Library of Medicine,Non-Steroidal / therapeutic use*,Nootropic Agents / administration {\&} dosage,Obesity / complications*,Obesity / metabolism,PMC5909703,Phagocytosis,Protein Folding,PubMed Abstract,Review,Risk Factors,Severity of Illness Index,doi:10.1016/S1474-4422(15)70016-5,pmid:25792098}
-      \warn{\item Datamodel: article entry 'Heneka2015NeuroinflammationDisease' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Heneka2015NeuroinflammationDisease' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Edwards2019ANeurodegeneration}{article}{}
       \name{author}{1}{}{%
@@ -364,8 +358,6 @@
       \verb http://www.cell.com/article/S016622361930027X/fulltext%20http://www.cell.com/article/S016622361930027X/abstract%20https://www.cell.com/trends/neurosciences/abstract/S0166-2236(19)30027-X
       \endverb
       \keyw{amyloid {$\beta$} plaques,cognitive failure,hyperphosphorylated Tau,microglia,neurofibrillary tangles,synaptic loss}
-      \warn{\item Datamodel: article entry 'Edwards2019ANeurodegeneration' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Edwards2019ANeurodegeneration' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Rasmussen2019AlzheimersDiagnosis}{article}{}
       \name{author}{2}{}{%
@@ -409,8 +401,6 @@
       \verb{url}
       \verb /pmc/articles/PMC6935598/%20/pmc/articles/PMC6935598/?report=abstract%20https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6935598/
       \endverb
-      \warn{\item Datamodel: article entry 'Rasmussen2019AlzheimersDiagnosis' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Rasmussen2019AlzheimersDiagnosis' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Scheltens2016AlzheimersDisease}{article}{}
       \name{author}{7}{}{%
@@ -484,8 +474,6 @@
       \verb https://pubmed.ncbi.nlm.nih.gov/26921134/
       \endverb
       \keyw{Aged,Alzheimer Disease* / diagnosis,Alzheimer Disease* / metabolism,Alzheimer Disease* / prevention {\&} control,Alzheimer Disease* / psychology,Amyloid beta-Peptides / metabolism*,Biomarkers / metabolism,Brain / metabolism*,Brain / pathology*,Cognition,Female,Fluorodeoxyglucose F18 / administration {\&} dosage,Humans,Kaj Blennow,MEDLINE,Magnetic Resonance Imaging,Male,NCBI,NIH,NLM,National Center for Biotechnology Information,National Institutes of Health,National Library of Medicine,Neuropsychological Tests,Philip Scheltens,Positron-Emission Tomography / methods,PubMed Abstract,Radiopharmaceuticals / administration {\&} dosage,Review,Risk Reduction Behavior*,Wiesje Maria Van der Flier,doi:10.1016/S0140-6736(15)01124-1,pmid:26921134,tau Proteins / metabolism*}
-      \warn{\item Datamodel: article entry 'Scheltens2016AlzheimersDisease' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Scheltens2016AlzheimersDisease' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Beydoun2014EpidemiologicMeta-analysis}{article}{}
       \name{author}{6}{}{%
@@ -552,8 +540,6 @@
       \verb https://bmcpublichealth.biomedcentral.com/articles/10.1186/1471-2458-14-643
       \endverb
       \keyw{Alzheimer's disease,Cognition,Dementia,Meta-analysis,Nutrition,Risk factor}
-      \warn{\item Datamodel: article entry 'Beydoun2014EpidemiologicMeta-analysis' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Beydoun2014EpidemiologicMeta-analysis' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{VanCauwenberghe2015ThePerspectives}{article}{}
       \name{author}{3}{}{%
@@ -605,8 +591,6 @@
       \verb https://www.nature.com/articles/gim2015117
       \endverb
       \keyw{Alzheimer's disease,Disease genetics,Medical genetics,monogenic AD,susceptibility loci}
-      \warn{\item Datamodel: article entry 'VanCauwenberghe2015ThePerspectives' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'VanCauwenberghe2015ThePerspectives' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Hardy2006AlzheimersReappraisal}{article}{}
       \name{author}{1}{}{%
@@ -641,8 +625,6 @@
       \verb{doi}
       \verb 10.3233/JAD-2006-9S317
       \endverb
-      \warn{\item Datamodel: article entry 'Hardy2006AlzheimersReappraisal' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Hardy2006AlzheimersReappraisal' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Kepp2023TheReview}{article}{}
       \name{author}{5}{}{%
@@ -695,8 +677,6 @@
       \verb https://doi.org/10.1093/brain/awad159
       \endverb
       \keyw{Alzheimer’s disease,aducanumab,amyloid cascade hypothesis,lecanemab,{$\beta$}-amyloid}
-      \warn{\item Datamodel: article entry 'Kepp2023TheReview' (./references.bib): Invalid field 'isbn' for entrytype 'article'}
-      \warn{\item Datamodel: article entry 'Kepp2023TheReview' (./references.bib): Missing mandatory field 'journaltitle'}
     \endentry
     \entry{Kurkinen2023TheThinking}{article}{}
       \name{author}{6}{}{%
@@ -763,8 +743,6 @@
       \verb https://www.mdpi.com/2218-273X/13/3/453/htm%20https://www.mdpi.com/2218-273X/13/3/453
       \endverb
       \keyw{E280A,EAAT2,amyloid hypothesis,astrocyte,dementia,presenilin}
-      \warn{\item Datamodel: article entry 'Kurkinen2023TheThinking' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Kurkinen2023TheThinking' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Corder1993GeneFamilies}{article}{}
       \name{author}{9}{}{%
@@ -836,62 +814,6 @@
       \verb{doi}
       \verb 10.1126/SCIENCE.8346443
       \endverb
-      \warn{\item Datamodel: article entry 'Corder1993GeneFamilies' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-    \endentry
-    \entry{Mahley2016CentralMetabolism}{article}{}
-      \name{author}{1}{}{%
-        {{hash=da67f3b000421a66fa0725b7fbcda3ba}{%
-           family={Mahley},
-           familyi={M\bibinitperiod},
-           given={R.W.},
-           giveni={R\bibinitperiod}}}%
-      }
-      \strng{namehash}{da67f3b000421a66fa0725b7fbcda3ba}
-      \strng{fullhash}{da67f3b000421a66fa0725b7fbcda3ba}
-      \strng{bibnamehash}{da67f3b000421a66fa0725b7fbcda3ba}
-      \strng{authorbibnamehash}{da67f3b000421a66fa0725b7fbcda3ba}
-      \strng{authornamehash}{da67f3b000421a66fa0725b7fbcda3ba}
-      \strng{authorfullhash}{da67f3b000421a66fa0725b7fbcda3ba}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{Arterioscler. Thromb. Vasc. Biol.}
-      \field{title}{{Central nervous system lipoproteins: ApoE and regulation of cholesterol metabolism}}
-      \field{volume}{36}
-      \field{year}{2016}
-      \field{pages}{1305\bibrangedash 1315}
-      \range{pages}{11}
-    \endentry
-    \entry{Lanfranco2021ExpressionInflammation}{article}{}
-      \name{author}{2}{}{%
-        {{hash=bba8d84700b6651104735e9713233423}{%
-           family={Lanfranco},
-           familyi={L\bibinitperiod},
-           given={M.F.},
-           giveni={M\bibinitperiod}}}%
-        {{hash=a54e14ae28c3ec7cf018fb9b257501df}{%
-           given={et},
-           giveni={e\bibinitperiod},
-           prefix={al.\bibnamedelimi et},
-           prefixi={a\bibinitperiod\bibinitdelim e\bibinitperiod}}}%
-      }
-      \strng{namehash}{25d000964736fc7cdbb88cc0dba36414}
-      \strng{fullhash}{0798aa2c0be50f2b10001f035c296dce}
-      \strng{bibnamehash}{0798aa2c0be50f2b10001f035c296dce}
-      \strng{authorbibnamehash}{0798aa2c0be50f2b10001f035c296dce}
-      \strng{authornamehash}{25d000964736fc7cdbb88cc0dba36414}
-      \strng{authorfullhash}{0798aa2c0be50f2b10001f035c296dce}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{Glia}
-      \field{title}{{Expression and secretion of apoE isoforms in astrocytes and microglia during inflammation}}
-      \field{volume}{69}
-      \field{year}{2021}
-      \field{pages}{1478\bibrangedash 1493}
-      \range{pages}{16}
     \endentry
     \entry{Husain2021APOETherapeutics}{article}{}
       \name{author}{3}{}{%
@@ -936,194 +858,6 @@
       \verb 10.3389/FNINS.2021.630502/BIBTEX
       \endverb
       \keyw{APOE,APOE receptors,Alzheimer’s disease,amyloid {$\beta$},lipidation,therapeutics}
-      \warn{\item Datamodel: article entry 'Husain2021APOETherapeutics' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
-    \endentry
-    \entry{Castellano2011HumanClearance}{article}{}
-      \name{author}{15}{}{%
-        {{hash=56fb63830e41059307530c94184caaef}{%
-           family={Castellano},
-           familyi={C\bibinitperiod},
-           given={Joseph\bibnamedelima M.},
-           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
-        {{hash=358372f73d7624ca26aea1fc21aa5ee8}{%
-           family={Kim},
-           familyi={K\bibinitperiod},
-           given={Jungsu},
-           giveni={J\bibinitperiod}}}%
-        {{hash=358254430a64f690063cb7d9b8ee6cbd}{%
-           family={Stewart},
-           familyi={S\bibinitperiod},
-           given={Floy\bibnamedelima R.},
-           giveni={F\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
-        {{hash=e0879b52aa4eccf0ea6c596bbbcefd95}{%
-           family={Jiang},
-           familyi={J\bibinitperiod},
-           given={Hong},
-           giveni={H\bibinitperiod}}}%
-        {{hash=17a8045f01524e01a1c1d7c512e6a2c2}{%
-           family={DeMattos},
-           familyi={D\bibinitperiod},
-           given={Ronald\bibnamedelima B.},
-           giveni={R\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
-        {{hash=27cd685564056f75cc56a21113981ac8}{%
-           family={Patterson},
-           familyi={P\bibinitperiod},
-           given={Bruce\bibnamedelima W.},
-           giveni={B\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
-        {{hash=f9bbb8180c8af9e136c4298c66b2eb3d}{%
-           family={Fagan},
-           familyi={F\bibinitperiod},
-           given={Anne\bibnamedelima M.},
-           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
-        {{hash=6003f5f36946357afbb725f5a96aacb5}{%
-           family={Morris},
-           familyi={M\bibinitperiod},
-           given={John\bibnamedelima C.},
-           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
-        {{hash=70f7f28321430967f4b2cf94dd52ae09}{%
-           family={Mawuenyega},
-           familyi={M\bibinitperiod},
-           given={Kwasi\bibnamedelima G.},
-           giveni={K\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
-        {{hash=acbb6f9cf3a3b2bbf3979b7b9f155f71}{%
-           family={Cruchaga},
-           familyi={C\bibinitperiod},
-           given={Carlos},
-           giveni={C\bibinitperiod}}}%
-        {{hash=518e6002d0cb9a9c7f18e4918d5a628f}{%
-           family={Goate},
-           familyi={G\bibinitperiod},
-           given={Alison\bibnamedelima M.},
-           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
-        {{hash=3348eae88a1ea4da5463804b92b54156}{%
-           family={Bales},
-           familyi={B\bibinitperiod},
-           given={Kelly\bibnamedelima R.},
-           giveni={K\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
-        {{hash=6950cf827b0587807736ac7d2cbe6196}{%
-           family={Paul},
-           familyi={P\bibinitperiod},
-           given={Steven\bibnamedelima M.},
-           giveni={S\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
-        {{hash=7d389235e4cc36e9dc75fd3e3a9aba13}{%
-           family={Bateman},
-           familyi={B\bibinitperiod},
-           given={Randall\bibnamedelima J.},
-           giveni={R\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
-        {{hash=aed4354e32cf07fbb7aea1613aa6b1be}{%
-           family={Holtzman},
-           familyi={H\bibinitperiod},
-           given={David\bibnamedelima M.},
-           giveni={D\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
-      }
-      \strng{namehash}{aee8b3b0d50921884a0e6912e6b10c81}
-      \strng{fullhash}{21859df18eda77414e04704f83ba6dc3}
-      \strng{bibnamehash}{aee8b3b0d50921884a0e6912e6b10c81}
-      \strng{authorbibnamehash}{aee8b3b0d50921884a0e6912e6b10c81}
-      \strng{authornamehash}{aee8b3b0d50921884a0e6912e6b10c81}
-      \strng{authorfullhash}{21859df18eda77414e04704f83ba6dc3}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{issn}{19466234}
-      \field{journaltitle}{Science Translational Medicine}
-      \field{month}{6}
-      \field{number}{89}
-      \field{title}{{Human apoE isoforms differentially regulate brain amyloid-{$\beta$} peptide clearance}}
-      \field{volume}{3}
-      \field{year}{2011}
-      \verb{doi}
-      \verb 10.1126/SCITRANSLMED.3002156
-      \endverb
-      \warn{\item Datamodel: article entry 'Castellano2011HumanClearance' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-    \endentry
-    \entry{Cruchaga2012CerebrospinalDisease}{article}{}
-      \name{author}{12}{}{%
-        {{hash=acbb6f9cf3a3b2bbf3979b7b9f155f71}{%
-           family={Cruchaga},
-           familyi={C\bibinitperiod},
-           given={Carlos},
-           giveni={C\bibinitperiod}}}%
-        {{hash=93ece562c3118c85e5de5a20c4f0ec16}{%
-           family={Kauwe},
-           familyi={K\bibinitperiod},
-           given={John\bibnamedelima S.K.},
-           giveni={J\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
-        {{hash=307cedef4c97a098891bd1248242c6ad}{%
-           family={Nowotny},
-           familyi={N\bibinitperiod},
-           given={Petra},
-           giveni={P\bibinitperiod}}}%
-        {{hash=d19261d65cfea09c4df9e1b6d8173277}{%
-           family={Bales},
-           familyi={B\bibinitperiod},
-           given={Kelly},
-           giveni={K\bibinitperiod}}}%
-        {{hash=2007c56edbca720217dbe0121c94614b}{%
-           family={Pickering},
-           familyi={P\bibinitperiod},
-           given={Eve\bibnamedelima H.},
-           giveni={E\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
-        {{hash=fdd0c48ac1e88c446fd98ce0d497d870}{%
-           family={Mayo},
-           familyi={M\bibinitperiod},
-           given={Kevin},
-           giveni={K\bibinitperiod}}}%
-        {{hash=5d50a6949e91df772173ff67070c2370}{%
-           family={Bertelsen},
-           familyi={B\bibinitperiod},
-           given={Sarah},
-           giveni={S\bibinitperiod}}}%
-        {{hash=ca6b029d69311687465763813acda8b0}{%
-           family={Hinrichs},
-           familyi={H\bibinitperiod},
-           given={Anthony},
-           giveni={A\bibinitperiod}}}%
-        {{hash=f9bbb8180c8af9e136c4298c66b2eb3d}{%
-           family={Fagan},
-           familyi={F\bibinitperiod},
-           given={Anne\bibnamedelima M.},
-           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
-        {{hash=aed4354e32cf07fbb7aea1613aa6b1be}{%
-           family={Holtzman},
-           familyi={H\bibinitperiod},
-           given={David\bibnamedelima M.},
-           giveni={D\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
-        {{hash=6003f5f36946357afbb725f5a96aacb5}{%
-           family={Morris},
-           familyi={M\bibinitperiod},
-           given={John\bibnamedelima C.},
-           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
-        {{hash=518e6002d0cb9a9c7f18e4918d5a628f}{%
-           family={Goate},
-           familyi={G\bibinitperiod},
-           given={Alison\bibnamedelima M.},
-           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
-      }
-      \strng{namehash}{450cf3d013baad3cddd8dd07125ec820}
-      \strng{fullhash}{90d1d39db19c67dfdb0878c9476aac6c}
-      \strng{bibnamehash}{450cf3d013baad3cddd8dd07125ec820}
-      \strng{authorbibnamehash}{450cf3d013baad3cddd8dd07125ec820}
-      \strng{authornamehash}{450cf3d013baad3cddd8dd07125ec820}
-      \strng{authorfullhash}{90d1d39db19c67dfdb0878c9476aac6c}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{issn}{09646906}
-      \field{journaltitle}{Human Molecular Genetics}
-      \field{month}{10}
-      \field{number}{20}
-      \field{title}{{Cerebrospinal fluid APOE levels: An endophenotype for genetic studies for Alzheimer's disease}}
-      \field{volume}{21}
-      \field{year}{2012}
-      \field{pages}{4558\bibrangedash 4571}
-      \range{pages}{14}
-      \verb{doi}
-      \verb 10.1093/HMG/DDS296
-      \endverb
-      \warn{\item Datamodel: article entry 'Cruchaga2012CerebrospinalDisease' (./references.bib): Field 'pmid' invalid in data model - ignoring}
     \endentry
     \entry{Yang2023ApolipoproteinDisease}{article}{}
       \name{author}{4}{}{%
@@ -1157,8 +891,8 @@
       \strng{authorbibnamehash}{246c0b1a90866efe12200f664278f3ba}
       \strng{authornamehash}{24c433725ccfce133f5814130a70461e}
       \strng{authorfullhash}{246c0b1a90866efe12200f664278f3ba}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{1043-2760}
@@ -1180,8 +914,6 @@
       \verb http://www.cell.com/article/S1043276023000929/fulltext%20http://www.cell.com/article/S1043276023000929/abstract%20https://www.cell.com/trends/endocrinology-metabolism/abstract/S1043-2760(23)00092-9
       \endverb
       \keyw{Alzheimer's disease,apolipoprotein E,lipid metabolism,neurodegenerative disease}
-      \warn{\item Datamodel: article entry 'Yang2023ApolipoproteinDisease' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Yang2023ApolipoproteinDisease' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Liu2013ApolipoproteinTherapy}{article}{}
       \name{author}{2}{}{%
@@ -1202,8 +934,8 @@
       \strng{authorbibnamehash}{91112ae49464dea3f50e619bee970b7c}
       \strng{authornamehash}{bef5329c311dd0e35fa95a65904e596a}
       \strng{authorfullhash}{91112ae49464dea3f50e619bee970b7c}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Nat. Rev. Neurosci.}
@@ -1232,8 +964,8 @@
       \strng{authorbibnamehash}{8eb095a94af3dc3247434bbd0758a627}
       \strng{authornamehash}{8e1c256a137f03e3e85f69db64f8a471}
       \strng{authorfullhash}{8eb095a94af3dc3247434bbd0758a627}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Proc. Natl. Acad. Sci. U. S. A.}
@@ -1383,8 +1115,6 @@
       \verb https://www.cambridge.org/core/journals/proceedings-of-the-nutrition-society/article/apoe-genotype-from-geographic-distribution-to-function-and-responsiveness-to-dietary-factors/D9F35B3FFE46F48CAFE131E0E94CC62C
       \endverb
       \keyw{ApoE genotype,CVD,Flavonoids,Vitamin D,n-3 fatty acids}
-      \warn{\item Datamodel: article entry 'Egert2012ApoEFactors' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Egert2012ApoEFactors' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Eisenberg2010WorldwideHistory}{article}{}
       \name{author}{3}{}{%
@@ -1436,8 +1166,6 @@
       \verb https://onlinelibrary.wiley.com/doi/full/10.1002/ajpa.21298%20https://onlinelibrary.wiley.com/doi/abs/10.1002/ajpa.21298%20https://onlinelibrary.wiley.com/doi/10.1002/ajpa.21298
       \endverb
       \keyw{CEPH,HGDP,cholesterol,metabolism,population structure,selection}
-      \warn{\item Datamodel: article entry 'Eisenberg2010WorldwideHistory' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Eisenberg2010WorldwideHistory' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Logue2011AAmericans}{article}{}
       \name{author}{15}{}{%
@@ -1549,7 +1277,6 @@
       \verb https://jamanetwork.com/journals/jamaneurology/fullarticle/1108047
       \endverb
       \keyw{african american,alzheimer's disease,apolipoprotein e,apolipoprotein e genotype,cd33 antigen,environmental factors,european continental ancestry group,genes,genetics,genome,genome-wide association study,single nucleotide polymorphism}
-      \warn{\item Datamodel: article entry 'Logue2011AAmericans' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Blue2019LocalHispanics}{article}{}
       \name{author}{5}{}{%
@@ -1588,8 +1315,8 @@
       \strng{authorbibnamehash}{0f9a19c9937d650bee3a99be021f35ba}
       \strng{authornamehash}{065d942e4cbd5de570d264337a9c831d}
       \strng{authorfullhash}{0f9a19c9937d650bee3a99be021f35ba}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{1552-5279}
@@ -1611,8 +1338,6 @@
       \verb https://onlinelibrary.wiley.com/doi/full/10.1016/j.jalz.2019.07.016%20https://onlinelibrary.wiley.com/doi/abs/10.1016/j.jalz.2019.07.016%20https://alz-journals.onlinelibrary.wiley.com/doi/10.1016/j.jalz.2019.07.016
       \endverb
       \keyw{APOE,Admixture,Age at onset,Alzheimer's disease,Ancestry}
-      \warn{\item Datamodel: article entry 'Blue2019LocalHispanics' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Blue2019LocalHispanics' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Suchy-Dicey2022APOEStudy}{article}{}
       \name{author}{5}{}{%
@@ -1651,8 +1376,8 @@
       \strng{authorbibnamehash}{4cd65cfe75e6c796d7f885322644fa3d}
       \strng{authornamehash}{ff8bb0f7f8789878171d631caa4b8131}
       \strng{authorfullhash}{4cd65cfe75e6c796d7f885322644fa3d}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{1552-5279}
@@ -1674,8 +1399,6 @@
       \verb https://onlinelibrary.wiley.com/doi/full/10.1002/alz.12573%20https://onlinelibrary.wiley.com/doi/abs/10.1002/alz.12573%20https://alz-journals.onlinelibrary.wiley.com/doi/10.1002/alz.12573
       \endverb
       \keyw{APOE genotype,Alzheimer's disease,cerebral atrophy,cognitive impairment,vascular dementia}
-      \warn{\item Datamodel: article entry 'Suchy-Dicey2022APOEStudy' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Suchy-Dicey2022APOEStudy' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Rajabli2018AncestralPopulations}{article}{}
       \name{author}{28}{}{%
@@ -1830,8 +1553,8 @@
       \strng{authornamehash}{8f4370d223fd8140b5d17dba41e671ac}
       \strng{authorfullhash}{eeeedcb409ffb2cd9e75dab4f32ba68a}
       \field{extraname}{1}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{isbn}{1111111111}
@@ -1854,9 +1577,6 @@
       \verb https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1007791
       \endverb
       \keyw{African American people,African people,Alzheimer's disease,Apolipoprotein genes,European Union,Genomics,Haplotypes,Medical risk factors}
-      \warn{\item Datamodel: article entry 'Rajabli2018AncestralPopulations' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Rajabli2018AncestralPopulations' (./references.bib): Invalid field 'isbn' for entrytype 'article'}
-      \warn{\item Datamodel: article entry 'Rajabli2018AncestralPopulations' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Naslavsky2022GlobalSample}{article}{}
       \name{author}{16}{}{%
@@ -1950,8 +1670,8 @@
       \strng{authorbibnamehash}{e076b225e9f0297cde8aebcdaba2e517}
       \strng{authornamehash}{e076b225e9f0297cde8aebcdaba2e517}
       \strng{authorfullhash}{e27cdea90ea8e83617dff86bf65cf155}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{1476-5578}
@@ -1973,8 +1693,6 @@
       \verb https://www.nature.com/articles/s41380-022-01729-x
       \endverb
       \keyw{Genetics,Neuroscience,Predictive markers}
-      \warn{\item Datamodel: article entry 'Naslavsky2022GlobalSample' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Naslavsky2022GlobalSample' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Chen2011ApolipoproteinDisease}{article}{}
       \name{author}{2}{}{%
@@ -1996,8 +1714,8 @@
       \strng{authornamehash}{566c428dd6cc61573b78afe8c506e81a}
       \strng{authorfullhash}{94b25706f603e7fde72438a182f64b80}
       \field{extraname}{1}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{J. Biol. Chem.}
@@ -2150,8 +1868,8 @@
       \strng{authornamehash}{8f4370d223fd8140b5d17dba41e671ac}
       \strng{authorfullhash}{72daf1936b6dc043a7c139f0a67bf942}
       \field{extraname}{2}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{isbn}{1111111111}
@@ -2174,9 +1892,6 @@
       \verb https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1009977
       \endverb
       \keyw{African American people,Alzheimer's disease,Apolipoprotein genes,Genetic loci,Genomics,Heredity,Medical risk factors,Variant genotypes}
-      \warn{\item Datamodel: article entry 'Rajabli2022AAncestry' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Rajabli2022AAncestry' (./references.bib): Invalid field 'isbn' for entrytype 'article'}
-      \warn{\item Datamodel: article entry 'Rajabli2022AAncestry' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Arnold2020SexMetabolome}{article}{}
       \name{author}{30}{}{%
@@ -2363,8 +2078,6 @@
       \verb https://www.nature.com/articles/s41467-020-14959-w
       \endverb
       \keyw{Alzheimer's disease,Metabolomics,Predictive markers}
-      \warn{\item Datamodel: article entry 'Arnold2020SexMetabolome' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Arnold2020SexMetabolome' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Yassine2020APOEDisease}{article}{}
       \name{author}{2}{}{%
@@ -2404,7 +2117,6 @@
       \verb 10.3389/FNAGI.2020.00150/BIBTEX
       \endverb
       \keyw{APOE,Alzheimer’s disease,aging,diet,genetics}
-      \warn{\item Datamodel: article entry 'Yassine2020APOEDisease' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Hunsberger2019TheInterventions}{article}{}
       \name{author}{5}{}{%
@@ -2465,7 +2177,6 @@
       \verb{url}
       \verb /neuronalsignal/article/3/2/NS20180203/110989/The-role-of-APOE4-in-Alzheimer-s-disease%20https://dx.doi.org/10.1042/NS20180203
       \endverb
-      \warn{\item Datamodel: article entry 'Hunsberger2019TheInterventions' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Trumble2017ApolipoproteinBurden}{article}{}
       \name{author}{8}{}{%
@@ -2536,8 +2247,6 @@
       \verb 10.1096/FJ.201601084R/-/DC1
       \endverb
       \keyw{Alzheimer's disease,Antagonistic pleiotropy,Cognitive decline,Mismatch,Tsimane}
-      \warn{\item Datamodel: article entry 'Trumble2017ApolipoproteinBurden' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Trumble2017ApolipoproteinBurden' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Finch1999TheIsoforms}{article}{}
       \name{author}{2}{}{%
@@ -2561,8 +2270,8 @@
       \strng{authorbibnamehash}{64f033b4fcfa77cca9727b2beb9f2c7e}
       \strng{authornamehash}{389c7c0e9b27c81e0d416fc1f989dc3e}
       \strng{authorfullhash}{64f033b4fcfa77cca9727b2beb9f2c7e}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{01974580}
@@ -2577,8 +2286,246 @@
       \verb 10.1016/S0197-4580(99)00053-6
       \endverb
       \keyw{Alzheimer disease,Evolution,Primate,Reproduction,apoE allele}
-      \warn{\item Datamodel: article entry 'Finch1999TheIsoforms' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Finch1999TheIsoforms' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
+    \endentry
+    \entry{Mahley2016CentralMetabolism}{article}{}
+      \name{author}{1}{}{%
+        {{hash=da67f3b000421a66fa0725b7fbcda3ba}{%
+           family={Mahley},
+           familyi={M\bibinitperiod},
+           given={R.W.},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{da67f3b000421a66fa0725b7fbcda3ba}
+      \strng{fullhash}{da67f3b000421a66fa0725b7fbcda3ba}
+      \strng{bibnamehash}{da67f3b000421a66fa0725b7fbcda3ba}
+      \strng{authorbibnamehash}{da67f3b000421a66fa0725b7fbcda3ba}
+      \strng{authornamehash}{da67f3b000421a66fa0725b7fbcda3ba}
+      \strng{authorfullhash}{da67f3b000421a66fa0725b7fbcda3ba}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Arterioscler. Thromb. Vasc. Biol.}
+      \field{title}{{Central nervous system lipoproteins: ApoE and regulation of cholesterol metabolism}}
+      \field{volume}{36}
+      \field{year}{2016}
+      \field{pages}{1305\bibrangedash 1315}
+      \range{pages}{11}
+    \endentry
+    \entry{Lanfranco2021ExpressionInflammation}{article}{}
+      \name{author}{2}{}{%
+        {{hash=bba8d84700b6651104735e9713233423}{%
+           family={Lanfranco},
+           familyi={L\bibinitperiod},
+           given={M.F.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=a54e14ae28c3ec7cf018fb9b257501df}{%
+           given={et},
+           giveni={e\bibinitperiod},
+           prefix={al.\bibnamedelimi et},
+           prefixi={a\bibinitperiod\bibinitdelim e\bibinitperiod}}}%
+      }
+      \strng{namehash}{25d000964736fc7cdbb88cc0dba36414}
+      \strng{fullhash}{0798aa2c0be50f2b10001f035c296dce}
+      \strng{bibnamehash}{0798aa2c0be50f2b10001f035c296dce}
+      \strng{authorbibnamehash}{0798aa2c0be50f2b10001f035c296dce}
+      \strng{authornamehash}{25d000964736fc7cdbb88cc0dba36414}
+      \strng{authorfullhash}{0798aa2c0be50f2b10001f035c296dce}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Glia}
+      \field{title}{{Expression and secretion of apoE isoforms in astrocytes and microglia during inflammation}}
+      \field{volume}{69}
+      \field{year}{2021}
+      \field{pages}{1478\bibrangedash 1493}
+      \range{pages}{16}
+    \endentry
+    \entry{Castellano2011HumanClearance}{article}{}
+      \name{author}{15}{}{%
+        {{hash=56fb63830e41059307530c94184caaef}{%
+           family={Castellano},
+           familyi={C\bibinitperiod},
+           given={Joseph\bibnamedelima M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=358372f73d7624ca26aea1fc21aa5ee8}{%
+           family={Kim},
+           familyi={K\bibinitperiod},
+           given={Jungsu},
+           giveni={J\bibinitperiod}}}%
+        {{hash=358254430a64f690063cb7d9b8ee6cbd}{%
+           family={Stewart},
+           familyi={S\bibinitperiod},
+           given={Floy\bibnamedelima R.},
+           giveni={F\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=e0879b52aa4eccf0ea6c596bbbcefd95}{%
+           family={Jiang},
+           familyi={J\bibinitperiod},
+           given={Hong},
+           giveni={H\bibinitperiod}}}%
+        {{hash=17a8045f01524e01a1c1d7c512e6a2c2}{%
+           family={DeMattos},
+           familyi={D\bibinitperiod},
+           given={Ronald\bibnamedelima B.},
+           giveni={R\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=27cd685564056f75cc56a21113981ac8}{%
+           family={Patterson},
+           familyi={P\bibinitperiod},
+           given={Bruce\bibnamedelima W.},
+           giveni={B\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=f9bbb8180c8af9e136c4298c66b2eb3d}{%
+           family={Fagan},
+           familyi={F\bibinitperiod},
+           given={Anne\bibnamedelima M.},
+           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=6003f5f36946357afbb725f5a96aacb5}{%
+           family={Morris},
+           familyi={M\bibinitperiod},
+           given={John\bibnamedelima C.},
+           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=70f7f28321430967f4b2cf94dd52ae09}{%
+           family={Mawuenyega},
+           familyi={M\bibinitperiod},
+           given={Kwasi\bibnamedelima G.},
+           giveni={K\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=acbb6f9cf3a3b2bbf3979b7b9f155f71}{%
+           family={Cruchaga},
+           familyi={C\bibinitperiod},
+           given={Carlos},
+           giveni={C\bibinitperiod}}}%
+        {{hash=518e6002d0cb9a9c7f18e4918d5a628f}{%
+           family={Goate},
+           familyi={G\bibinitperiod},
+           given={Alison\bibnamedelima M.},
+           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=3348eae88a1ea4da5463804b92b54156}{%
+           family={Bales},
+           familyi={B\bibinitperiod},
+           given={Kelly\bibnamedelima R.},
+           giveni={K\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=6950cf827b0587807736ac7d2cbe6196}{%
+           family={Paul},
+           familyi={P\bibinitperiod},
+           given={Steven\bibnamedelima M.},
+           giveni={S\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=7d389235e4cc36e9dc75fd3e3a9aba13}{%
+           family={Bateman},
+           familyi={B\bibinitperiod},
+           given={Randall\bibnamedelima J.},
+           giveni={R\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=aed4354e32cf07fbb7aea1613aa6b1be}{%
+           family={Holtzman},
+           familyi={H\bibinitperiod},
+           given={David\bibnamedelima M.},
+           giveni={D\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \strng{namehash}{aee8b3b0d50921884a0e6912e6b10c81}
+      \strng{fullhash}{21859df18eda77414e04704f83ba6dc3}
+      \strng{bibnamehash}{aee8b3b0d50921884a0e6912e6b10c81}
+      \strng{authorbibnamehash}{aee8b3b0d50921884a0e6912e6b10c81}
+      \strng{authornamehash}{aee8b3b0d50921884a0e6912e6b10c81}
+      \strng{authorfullhash}{21859df18eda77414e04704f83ba6dc3}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{19466234}
+      \field{journaltitle}{Science Translational Medicine}
+      \field{month}{6}
+      \field{number}{89}
+      \field{title}{{Human apoE isoforms differentially regulate brain amyloid-{$\beta$} peptide clearance}}
+      \field{volume}{3}
+      \field{year}{2011}
+      \verb{doi}
+      \verb 10.1126/SCITRANSLMED.3002156
+      \endverb
+    \endentry
+    \entry{Cruchaga2012CerebrospinalDisease}{article}{}
+      \name{author}{12}{}{%
+        {{hash=acbb6f9cf3a3b2bbf3979b7b9f155f71}{%
+           family={Cruchaga},
+           familyi={C\bibinitperiod},
+           given={Carlos},
+           giveni={C\bibinitperiod}}}%
+        {{hash=93ece562c3118c85e5de5a20c4f0ec16}{%
+           family={Kauwe},
+           familyi={K\bibinitperiod},
+           given={John\bibnamedelima S.K.},
+           giveni={J\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=307cedef4c97a098891bd1248242c6ad}{%
+           family={Nowotny},
+           familyi={N\bibinitperiod},
+           given={Petra},
+           giveni={P\bibinitperiod}}}%
+        {{hash=d19261d65cfea09c4df9e1b6d8173277}{%
+           family={Bales},
+           familyi={B\bibinitperiod},
+           given={Kelly},
+           giveni={K\bibinitperiod}}}%
+        {{hash=2007c56edbca720217dbe0121c94614b}{%
+           family={Pickering},
+           familyi={P\bibinitperiod},
+           given={Eve\bibnamedelima H.},
+           giveni={E\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=fdd0c48ac1e88c446fd98ce0d497d870}{%
+           family={Mayo},
+           familyi={M\bibinitperiod},
+           given={Kevin},
+           giveni={K\bibinitperiod}}}%
+        {{hash=5d50a6949e91df772173ff67070c2370}{%
+           family={Bertelsen},
+           familyi={B\bibinitperiod},
+           given={Sarah},
+           giveni={S\bibinitperiod}}}%
+        {{hash=ca6b029d69311687465763813acda8b0}{%
+           family={Hinrichs},
+           familyi={H\bibinitperiod},
+           given={Anthony},
+           giveni={A\bibinitperiod}}}%
+        {{hash=f9bbb8180c8af9e136c4298c66b2eb3d}{%
+           family={Fagan},
+           familyi={F\bibinitperiod},
+           given={Anne\bibnamedelima M.},
+           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=aed4354e32cf07fbb7aea1613aa6b1be}{%
+           family={Holtzman},
+           familyi={H\bibinitperiod},
+           given={David\bibnamedelima M.},
+           giveni={D\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=6003f5f36946357afbb725f5a96aacb5}{%
+           family={Morris},
+           familyi={M\bibinitperiod},
+           given={John\bibnamedelima C.},
+           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=518e6002d0cb9a9c7f18e4918d5a628f}{%
+           family={Goate},
+           familyi={G\bibinitperiod},
+           given={Alison\bibnamedelima M.},
+           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \strng{namehash}{450cf3d013baad3cddd8dd07125ec820}
+      \strng{fullhash}{90d1d39db19c67dfdb0878c9476aac6c}
+      \strng{bibnamehash}{450cf3d013baad3cddd8dd07125ec820}
+      \strng{authorbibnamehash}{450cf3d013baad3cddd8dd07125ec820}
+      \strng{authornamehash}{450cf3d013baad3cddd8dd07125ec820}
+      \strng{authorfullhash}{90d1d39db19c67dfdb0878c9476aac6c}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{09646906}
+      \field{journaltitle}{Human Molecular Genetics}
+      \field{month}{10}
+      \field{number}{20}
+      \field{title}{{Cerebrospinal fluid APOE levels: An endophenotype for genetic studies for Alzheimer's disease}}
+      \field{volume}{21}
+      \field{year}{2012}
+      \field{pages}{4558\bibrangedash 4571}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1093/HMG/DDS296
+      \endverb
     \endentry
     \entry{Bu2022APOEVariants}{article}{}
       \name{author}{1}{}{%
@@ -2620,8 +2567,6 @@
       \verb https://molecularneurodegeneration.biomedcentral.com/articles/10.1186/s13024-022-00556-6
       \endverb
       \keyw{Molecular Medicine,Neurology,Neurosciences,TREM2}
-      \warn{\item Datamodel: article entry 'Bu2022APOEVariants' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Bu2022APOEVariants' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Hu2015OpposingMice}{article}{}
       \name{author}{6}{}{%
@@ -2688,8 +2633,6 @@
       \verb https://molecularneurodegeneration.biomedcentral.com/articles/10.1186/s13024-015-0001-3
       \endverb
       \keyw{Alzheimer's disease,ApoE,ApoE-TR mice,A{$\alpha$},Lipidation}
-      \warn{\item Datamodel: article entry 'Hu2015OpposingMice' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Hu2015OpposingMice' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Flowers2020APOEBrain}{article}{}
       \name{author}{2}{}{%
@@ -2729,8 +2672,6 @@
       \verb 10.1016/J.NBD.2019.104724
       \endverb
       \keyw{APOE,Apolipoprotein,Functional MRI,Glycosylation,Inflammation,Lipoprotein,Mouse model}
-      \warn{\item Datamodel: article entry 'Flowers2020APOEBrain' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Flowers2020APOEBrain' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Courtney2016LXRDisease}{article}{}
       \name{author}{2}{}{%
@@ -2777,8 +2718,6 @@
       \verb http://www.cell.com/article/S1043276016300042/fulltext%20http://www.cell.com/article/S1043276016300042/abstract%20https://www.cell.com/trends/endocrinology-metabolism/abstract/S1043-2760(16)30004-2
       \endverb
       \keyw{Brain,Cholesterol,Lipoprotein,Liver X receptor,Neurodegenerative disease}
-      \warn{\item Datamodel: article entry 'Courtney2016LXRDisease' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Courtney2016LXRDisease' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Heinsinger2016ApolipoproteinFluid}{article}{}
       \name{author}{3}{}{%
@@ -2830,7 +2769,6 @@
       \verb https://dx.doi.org/10.1093/jnen/nlw067
       \endverb
       \keyw{Alzheimer disease,Cerebrospinal fluid,Clinical dementia rating,Cognitively normal,Lipoproteins,Risk factor}
-      \warn{\item Datamodel: article entry 'Heinsinger2016ApolipoproteinFluid' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Nguyen2010MolecularE4}{article}{}
       \name{author}{7}{}{%
@@ -2901,8 +2839,6 @@
       \verb{url}
       \verb https://pubs.acs.org/doi/abs/10.1021/bi1017655
       \endverb
-      \warn{\item Datamodel: article entry 'Nguyen2010MolecularE4' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Nguyen2010MolecularE4' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Hatters2006ApolipoproteinFunction}{article}{}
       \name{author}{3}{}{%
@@ -2945,7 +2881,6 @@
       \verb{doi}
       \verb 10.1016/J.TIBS.2006.06.008
       \endverb
-      \warn{\item Datamodel: article entry 'Hatters2006ApolipoproteinFunction' (./references.bib): Field 'pmid' invalid in data model - ignoring}
     \endentry
     \entry{Hatters2006Amino-terminalFibrils}{article}{}
       \name{author}{4}{}{%
@@ -2997,8 +2932,6 @@
       \verb 10.1016/J.JMB.2006.06.080
       \endverb
       \keyw{Alzheimer's disease,aggregate toxicity,amyloid,apolipoproteins,protein misfolding}
-      \warn{\item Datamodel: article entry 'Hatters2006Amino-terminalFibrils' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Hatters2006Amino-terminalFibrils' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Rawat2019ApoE4Astrocytes}{article}{}
       \name{author}{14}{}{%
@@ -3105,8 +3038,6 @@
       \verb https://www.jneurosci.org/content/39/48/9611%20https://www.jneurosci.org/content/39/48/9611.abstract
       \endverb
       \keyw{ABCA1,Aggregation,Alzheimer's Disease,Apoe,Lipids}
-      \warn{\item Datamodel: article entry 'Rawat2019ApoE4Astrocytes' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Rawat2019ApoE4Astrocytes' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Zhao2017ApolipoproteinEndosomes}{article}{}
       \name{author}{9}{}{%
@@ -3189,8 +3120,6 @@
       \verb https://pubmed.ncbi.nlm.nih.gov/28957663/
       \endverb
       \keyw{Aging / metabolism,Aging / physiology,Animals,Apolipoprotein E3 / genetics,Apolipoprotein E4 / genetics,Apolipoprotein E4 / metabolism*,Cell Respiration / physiology,Chia-Chen Liu,Diet,Endosomes / metabolism*,Female,Glycolysis / physiology,Guojun Bu,High-Fat,Insulin / metabolism*,Insulin / physiology*,Insulin Resistance / physiology*,Knockout,MEDLINE,Male,Mice,Mitochondria / physiology,NCBI,NIH,NLM,Na Zhao,National Center for Biotechnology Information,National Institutes of Health,National Library of Medicine,Neurons / cytology*,Neurons / metabolism*,Neurons / physiology,PMC5621659,Primary Cell Culture,PubMed Abstract,Receptor,Transgenic,doi:10.1016/j.neuron.2017.09.003,pmid:28957663}
-      \warn{\item Datamodel: article entry 'Zhao2017ApolipoproteinEndosomes' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Zhao2017ApolipoproteinEndosomes' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Svennerholm1997ChangesSwedes}{article}{}
       \name{author}{3}{}{%
@@ -3242,8 +3171,6 @@
       \verb https://link.springer.com/article/10.1007/s004010050717
       \endverb
       \keyw{Ageing,Brain weight,Gangliosides,Myelin lipids,Proteins}
-      \warn{\item Datamodel: article entry 'Svennerholm1997ChangesSwedes' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Svennerholm1997ChangesSwedes' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Marottoli2017PeripheralDysfunction}{article}{}
       \name{author}{6}{}{%
@@ -3308,8 +3235,6 @@
       \verb https://journals.sagepub.com/doi/10.1177/1759091417719201
       \endverb
       \keyw{Alzheimer’s disease,Apolipoprotein E4,Cerebrovasculature,Inflammation}
-      \warn{\item Datamodel: article entry 'Marottoli2017PeripheralDysfunction' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Marottoli2017PeripheralDysfunction' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Teng2017ApoEInjury}{article}{}
       \name{author}{12}{}{%
@@ -3406,8 +3331,6 @@
       \verb https://www.nature.com/articles/s41598-017-06932-3
       \endverb
       \keyw{Blood,Cell death in the nervous system,brain barrier}
-      \warn{\item Datamodel: article entry 'Teng2017ApoEInjury' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Teng2017ApoEInjury' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Kloske2020TheDisease}{article}{}
       \name{author}{2}{}{%
@@ -3445,8 +3368,6 @@
       \verb 10.3389/FIMMU.2020.00754
       \endverb
       \keyw{apolipoprotein E allele,cytokines,dementia,microglia,neuroinflammation}
-      \warn{\item Datamodel: article entry 'Kloske2020TheDisease' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Kloske2020TheDisease' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Huang2017ApoE2Secretion}{article}{}
       \name{author}{4}{}{%
@@ -3497,8 +3418,6 @@
       \verb 10.1016/J.CELL.2016.12.044
       \endverb
       \keyw{APP,Alzheimer's disease,ApoE,A{$\beta$},CRISPR,CRISPRi,DLK,MAP kinase signaling,amyloid precursor protein,apolipoprotein E,beta amyloid,cFos,dual leucine-zipper kinase,transcription}
-      \warn{\item Datamodel: article entry 'Huang2017ApoE2Secretion' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Huang2017ApoE2Secretion' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Tachibana2016RescuingLRP1}{article}{}
       \name{author}{7}{}{%
@@ -3563,8 +3482,6 @@
       \verb 10.1016/J.EXPNEUROL.2015.12.003
       \endverb
       \keyw{Aging,ApoE,Bexarotene,LRP1,Nuclear receptor,RXR agonist,Retinoid,Synapse}
-      \warn{\item Datamodel: article entry 'Tachibana2016RescuingLRP1' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Tachibana2016RescuingLRP1' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Safieh2019ApoE4:Disease}{article}{}
       \name{author}{3}{}{%
@@ -3617,9 +3534,6 @@
       \verb https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-019-1299-4
       \endverb
       \keyw{Biomedicine,Human apoE-targeted replacement mice,Medicine/Public Health,apoE4 lipidation,apoE4 therapeutics,general}
-      \warn{\item Datamodel: article entry 'Safieh2019ApoE4:Disease' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Safieh2019ApoE4:Disease' (./references.bib): Invalid field 'isbn' for entrytype 'article'}
-      \warn{\item Datamodel: article entry 'Safieh2019ApoE4:Disease' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Cao2017ApoE4-associatedInjury}{article}{}
       \name{author}{13}{}{%
@@ -3712,8 +3626,6 @@
       \verb{doi}
       \verb 10.1038/S41598-017-11654-7
       \endverb
-      \warn{\item Datamodel: article entry 'Cao2017ApoE4-associatedInjury' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Cao2017ApoE4-associatedInjury' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Shi2017ApoE4Tauopathy}{article}{}
       \name{author}{33}{}{%
@@ -3915,8 +3827,6 @@
       \verb https://www.nature.com/articles/nature24016
       \endverb
       \keyw{Alzheimer's disease,Cell death in the nervous system}
-      \warn{\item Datamodel: article entry 'Shi2017ApoE4Tauopathy' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Shi2017ApoE4Tauopathy' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Vasilevskaya2020InteractionAthletes}{article}{}
       \name{author}{20}{}{%
@@ -4046,8 +3956,6 @@
       \verb 10.1016/J.NICL.2020.102212
       \endverb
       \keyw{Apoe4,Chronic traumatic encephalopathy,Concussion,Positron emission tomography,Tau}
-      \warn{\item Datamodel: article entry 'Vasilevskaya2020InteractionAthletes' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Vasilevskaya2020InteractionAthletes' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Wang2018GainCorrector}{article}{}
       \name{author}{2}{}{%
@@ -4190,7 +4098,6 @@
       \verb 10.1016/J.DADM.2019.07.002
       \endverb
       \keyw{Alzheimer's disease,Dyslipidemias,Lipid biochemistry,Lipidomics,Mass spectrometry}
-      \warn{\item Datamodel: article entry 'Barupal2019SetsPathophysiology' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Fernandez-Calle2022APOEDiseases}{article}{}
       \name{author}{12}{}{%
@@ -4287,8 +4194,6 @@
       \verb https://link.springer.com/articles/10.1186/s13024-022-00566-4%20https://link.springer.com/article/10.1186/s13024-022-00566-4
       \endverb
       \keyw{Molecular Medicine,Neuroinflammation,Neurology,Neurosciences}
-      \warn{\item Datamodel: article entry 'Fernandez-Calle2022APOEDiseases' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Fernandez-Calle2022APOEDiseases' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Proitsi2017AssociationAnalysis}{article}{}
       \name{author}{16}{}{%
@@ -4399,8 +4304,6 @@
       \verb 10.1016/J.JALZ.2016.08.003
       \endverb
       \keyw{Alzheimer's disease,Biomarkers,Brain atrophy,Classification,Dementia,Lipidomics,Machine learning,Metabolomics,Multivariate,Random forest,Rate of cognitive decline,sMRI}
-      \warn{\item Datamodel: article entry 'Proitsi2017AssociationAnalysis' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Proitsi2017AssociationAnalysis' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Oeckl2019GlialImpairment}{article}{}
       \name{author}{15}{}{%
@@ -4511,8 +4414,6 @@
       \verb https://pubmed.ncbi.nlm.nih.gov/30594925/
       \endverb
       \keyw{Aged,Alzheimer Disease / blood*,Alzheimer Disease / psychology*,Biomarkers / blood,Cognitive Dysfunction / psychology*,Diagnosis,Differential,Female,Frontotemporal Dementia / blood,Frontotemporal Dementia / cerebrospinal fluid,Frontotemporal Dementia / psychology,Glial Fibrillary Acidic Protein / blood*,Glial Fibrillary Acidic Protein / cerebrospinal fluid,Humans,Lewy Body Disease / blood,Lewy Body Disease / cerebrospinal fluid,Lewy Body Disease / psychology,MEDLINE,Male,Markus Otto,Mental Status and Dementia Tests,Middle Aged,NCBI,NIH,NLM,National Center for Biotechnology Information,National Institutes of Health,National Library of Medicine,Non-U.S. Gov't,Parkinson Disease / blood,Parkinson Disease / cerebrospinal fluid,Parkinson Disease / psychology,Patrick Oeckl,Pilot Projects,PubMed Abstract,Research Support,Sensitivity and Specificity,Steffen Halbgebauer,doi:10.3233/JAD-180325,pmid:30594925}
-      \warn{\item Datamodel: article entry 'Oeckl2019GlialImpairment' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Oeckl2019GlialImpairment' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Bandaru2009ApoE4Brain}{article}{}
       \name{author}{7}{}{%
@@ -4578,8 +4479,6 @@
       \verb 10.1016/J.NEUROBIOLAGING.2007.07.024
       \endverb
       \keyw{Alzheimer's disease,ApoE,ApoE4,Apolipoprotein,Ceramide,Cholesterol,Sphingolipid,Sphingomeylin,Sterol}
-      \warn{\item Datamodel: article entry 'Bandaru2009ApoE4Brain' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Bandaru2009ApoE4Brain' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Novotny2023MetabolomicBrains}{article}{}
       \name{author}{27}{}{%
@@ -4751,7 +4650,6 @@
       \verb https://onlinelibrary.wiley.com/doi/full/10.1002/alz.12800%20https://onlinelibrary.wiley.com/doi/abs/10.1002/alz.12800%20https://alz-journals.onlinelibrary.wiley.com/doi/10.1002/alz.12800
       \endverb
       \keyw{APOE,APP,PSEN1,PSEN2,TREM2,autosomal dominant Alzheimer's disease,citrylglutamate,lipidomics,metabolomics,{$\beta$}}
-      \warn{\item Datamodel: article entry 'Novotny2023MetabolomicBrains' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Area-Gomez2020APOE4Mice}{article}{}
       \name{author}{17}{}{%
@@ -4873,8 +4771,6 @@
       \verb https://www.nature.com/articles/s41598-020-61142-8
       \endverb
       \keyw{Alzheimer's disease,Molecular neuroscience}
-      \warn{\item Datamodel: article entry 'Area-Gomez2020APOE4Mice' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Area-Gomez2020APOE4Mice' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Zhao2020AlzheimersPathways}{article}{}
       \name{author}{32}{}{%
@@ -5072,8 +4968,6 @@
       \verb http://www.cell.com/article/S0896627320301859/fulltext%20http://www.cell.com/article/S0896627320301859/abstract%20https://www.cell.com/neuron/abstract/S0896-6273(20)30185-9
       \endverb
       \keyw{APOE,Alzheimer's disease,Serpina3,age,extracellular vesicles,inflammation,lipid metabolism,metabolomics,sex,transcriptomics}
-      \warn{\item Datamodel: article entry 'Zhao2020AlzheimersPathways' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Zhao2020AlzheimersPathways' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{pena-bautista2020MetabolomicsEffect}{article}{}
       \name{author}{6}{}{%
@@ -5133,8 +5027,6 @@
       \verb 10.1016/J.JPBA.2019.113088
       \endverb
       \keyw{Alzheimer disease,Apolipoprotein E,Biomarker,Lipid,Metabolomics,Plasma}
-      \warn{\item Datamodel: article entry 'pena-bautista2020MetabolomicsEffect' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'pena-bautista2020MetabolomicsEffect' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Farmer2021APO4Glycolysis}{article}{}
       \name{author}{2}{}{%
@@ -5276,8 +5168,6 @@
       \verb 10.1016/J.DADM.2017.07.006
       \endverb
       \keyw{Alzheimer's disease,Amino acids,Biomarkers,Graphical modeling,Metabolomics,Oxidative stress}
-      \warn{\item Datamodel: article entry 'deLeeuw2017Blood-basedDisease' (./references.bib): Field 'arxivid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'deLeeuw2017Blood-basedDisease' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Green2023InvestigatingDisease}{article}{}
       \name{author}{23}{}{%
@@ -5429,8 +5319,6 @@
       \verb https://alzres.biomedcentral.com/articles/10.1186/s13195-023-01184-y%20http://creativecommons.org/publicdomain/zero/1.0/
       \endverb
       \keyw{Ageing,Alzheimer’s disease,Birth cohort,Brain imaging,Dementia,Metabolites,Polygenic scores,Weighted-gene coexpression network analysis}
-      \warn{\item Datamodel: article entry 'Green2023InvestigatingDisease' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Green2023InvestigatingDisease' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Varma2018BrainStudy}{article}{}
       \name{author}{19}{}{%
@@ -5563,9 +5451,6 @@
       \verb https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002482
       \endverb
       \keyw{Alzheimer's disease,Blood,Cerebrospinal fluid,Cognitive impairment,Metabolic pathways,Metabolites,Metabolomics,Sphingolipids}
-      \warn{\item Datamodel: article entry 'Varma2018BrainStudy' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Varma2018BrainStudy' (./references.bib): Invalid field 'isbn' for entrytype 'article'}
-      \warn{\item Datamodel: article entry 'Varma2018BrainStudy' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Sun2022AssociationDisease}{article}{}
       \name{author}{10}{}{%
@@ -5651,8 +5536,6 @@
       \verb{url}
       \verb https://onlinelibrary.wiley.com/doi/full/10.1002/ana.26464%20https://onlinelibrary.wiley.com/doi/abs/10.1002/ana.26464%20https://onlinelibrary.wiley.com/doi/10.1002/ana.26464
       \endverb
-      \warn{\item Datamodel: article entry 'Sun2022AssociationDisease' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Sun2022AssociationDisease' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Jia2022ATypes}{article}{}
       \name{author}{12}{}{%
@@ -5749,8 +5632,6 @@
       \verb https://onlinelibrary.wiley.com/doi/full/10.1002/alz.12484%20https://onlinelibrary.wiley.com/doi/abs/10.1002/alz.12484%20https://alz-journals.onlinelibrary.wiley.com/doi/10.1002/alz.12484
       \endverb
       \keyw{Alzheimer's disease,dementia,diagnostic model,metabolite,neurodegenerative disease}
-      \warn{\item Datamodel: article entry 'Jia2022ATypes' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Jia2022ATypes' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Huo2020BrainAnalysis}{article}{}
       \name{author}{6}{}{%
@@ -5810,8 +5691,6 @@
       \verb 10.1016/J.NEUROBIOLAGING.2019.10.014
       \endverb
       \keyw{AD neuropathology,Alzheimer's dementia,Cognitive decline,Postmortem brain metabolomics,Targeted metabolomics}
-      \warn{\item Datamodel: article entry 'Huo2020BrainAnalysis' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Huo2020BrainAnalysis' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Weng2019TheImpairment}{article}{}
       \name{author}{5}{}{%
@@ -5866,7 +5745,6 @@
       \verb 10.3389/FNEUR.2019.01223/BIBTEX
       \endverb
       \keyw{Alzheimer's disease,P 180 kit,dementia,metabolomics,mild cognitive impairment,serum metabolite}
-      \warn{\item Datamodel: article entry 'Weng2019TheImpairment' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Simpson2016BloodAging}{article}{}
       \name{author}{11}{}{%
@@ -5958,8 +5836,6 @@
       \verb https://journals.sagepub.com/doi/full/10.1177/0271678X15611678
       \endverb
       \keyw{Alzheimer's disease's,biomarker,phosphatidylcholine,positron emission tomography imaging,verbal memory}
-      \warn{\item Datamodel: article entry 'Simpson2016BloodAging' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Simpson2016BloodAging' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Oka2023MultiomicsCohort}{article}{}
       \name{author}{4}{}{%
@@ -6006,7 +5882,6 @@
       \verb{url}
       \verb https://www.researchsquare.com%20https://www.researchsquare.com/article/rs-2973576/v1
       \endverb
-      \warn{\item Datamodel: article entry 'Oka2023MultiomicsCohort' (./references.bib): Missing mandatory field 'journaltitle'}
     \endentry
     \entry{Peeters2019StableData}{article}{}
       \name{author}{12}{}{%
@@ -6099,9 +5974,6 @@
       \verb https://arxiv.org/abs/1903.11696v1
       \endverb
       \keyw{Classification,Factor analysis,High-dimensional data,Prediction models,Ra-diomics}
-      \warn{\item Datamodel: article entry 'Peeters2019StableData' (./references.bib): Field 'arxivid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Peeters2019StableData' (./references.bib): Invalid field 'isbn' for entrytype 'article'}
-      \warn{\item Datamodel: article entry 'Peeters2019StableData' (./references.bib): Missing mandatory field 'journaltitle'}
     \endentry
     \entry{Peeters2022Rags2ridges:Matrices}{article}{}
       \name{author}{3}{}{%
@@ -6155,8 +6027,6 @@
       \verb https://www.jstatsoft.org/index.php/jss/article/view/v102i04
       \endverb
       \keyw{R,dimensional data,graphical modeling,high,networks,regularization}
-      \warn{\item Datamodel: article entry 'Peeters2022Rags2ridges:Matrices' (./references.bib): Field 'arxivid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Peeters2022Rags2ridges:Matrices' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{VanDerFlier2018AmsterdamCare}{article}{}
       \name{author}{2}{}{%
@@ -6202,8 +6072,6 @@
       \verb https://pubmed.ncbi.nlm.nih.gov/29562540/
       \endverb
       \keyw{Alzheimer Disease / diagnosis,Alzheimer Disease / epidemiology*,Alzheimer Disease / therapy*,Biomarkers / cerebrospinal fluid,Brain / diagnostic imaging,Brain / physiopathology,Cohort Studies,Early Diagnosis,Humans,MEDLINE,Magnetic Resonance Imaging,NCBI,NIH,NLM,National Center for Biotechnology Information,National Institutes of Health,National Library of Medicine,Netherlands,Non-U.S. Gov't,PMC5870023,Philip Scheltens,PubMed Abstract,Quality Improvement,Research Support,Review,Surveys and Questionnaires,Wiesje M van der Flier,doi:10.3233/JAD-170850,pmid:29562540}
-      \warn{\item Datamodel: article entry 'VanDerFlier2018AmsterdamCare' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'VanDerFlier2018AmsterdamCare' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Wilkinson2016TheStewardship}{article}{}
       \name{author}{53}{}{%
@@ -6511,112 +6379,54 @@
       \verb https://www.nature.com/articles/sdata201618
       \endverb
       \keyw{Publication characteristics,Research data}
-      \warn{\item Datamodel: article entry 'Wilkinson2016TheStewardship' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Wilkinson2016TheStewardship' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
-    \entry{Elshawi2019OnHypertension}{article}{}
-      \name{author}{3}{}{%
-        {{hash=ab485215bc9299482265e2ee520f7d10}{%
-           family={Elshawi},
-           familyi={E\bibinitperiod},
-           given={Radwa},
+    \entry{dplyr}{manual}{}
+      \name{author}{5}{}{%
+        {{hash=1d0f6977ce2d043e298a59a1cd75b7ef}{%
+           family={Wickham},
+           familyi={W\bibinitperiod},
+           given={Hadley},
+           giveni={H\bibinitperiod}}}%
+        {{hash=3bd2c624a8715b2aeffcecaa24f3d017}{%
+           family={François},
+           familyi={F\bibinitperiod},
+           given={Romain},
            giveni={R\bibinitperiod}}}%
-        {{hash=284d9a7134a65b3d37ce2866854b9ceb}{%
-           family={Al-Mallah},
-           familyi={A\bibinithyphendelim M\bibinitperiod},
-           given={Mouaz\bibnamedelima H.},
-           giveni={M\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
-        {{hash=80b2c0d16adb4ccde7a9eb8a7b731fea}{%
-           family={Sakr},
-           familyi={S\bibinitperiod},
-           given={Sherif},
-           giveni={S\bibinitperiod}}}%
+        {{hash=4caae9be043b32573c94b11203a4a2fe}{%
+           family={Henry},
+           familyi={H\bibinitperiod},
+           given={Lionel},
+           giveni={L\bibinitperiod}}}%
+        {{hash=1435ca4f08e53208e1c34297357afa80}{%
+           family={Müller},
+           familyi={M\bibinitperiod},
+           given={Kirill},
+           giveni={K\bibinitperiod}}}%
+        {{hash=858f3a61393526cfc73cb860925a277a}{%
+           family={Vaughan},
+           familyi={V\bibinitperiod},
+           given={Davis},
+           giveni={D\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
-        {BioMed Central Ltd}%
-      }
-      \strng{namehash}{a33be71416a322268204e4e8ea8e816b}
-      \strng{fullhash}{7829504b5300fa16ec3f1e8d7496eabc}
-      \strng{bibnamehash}{7829504b5300fa16ec3f1e8d7496eabc}
-      \strng{authorbibnamehash}{7829504b5300fa16ec3f1e8d7496eabc}
-      \strng{authornamehash}{a33be71416a322268204e4e8ea8e816b}
-      \strng{authorfullhash}{7829504b5300fa16ec3f1e8d7496eabc}
+      \strng{namehash}{e0731a35ef88164c57848ecb7ca5f8ca}
+      \strng{fullhash}{bb08bfc9d8f14760ac7a6c241486e72c}
+      \strng{bibnamehash}{bb08bfc9d8f14760ac7a6c241486e72c}
+      \strng{authorbibnamehash}{bb08bfc9d8f14760ac7a6c241486e72c}
+      \strng{authornamehash}{e0731a35ef88164c57848ecb7ca5f8ca}
+      \strng{authorfullhash}{bb08bfc9d8f14760ac7a6c241486e72c}
       \field{sortinit}{9}
       \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{issn}{14726947}
-      \field{journaltitle}{BMC Medical Informatics and Decision Making}
-      \field{month}{7}
-      \field{number}{1}
-      \field{title}{{On the interpretability of machine learning-based model for predicting hypertension}}
-      \field{volume}{19}
-      \field{year}{2019}
-      \field{pages}{1\bibrangedash 32}
-      \range{pages}{32}
-      \verb{doi}
-      \verb 10.1186/S12911-019-0874-0/FIGURES/48
-      \endverb
+      \field{note}{R package version 1.1.4, https://github.com/tidyverse/dplyr}
+      \field{title}{dplyr: A Grammar of Data Manipulation}
+      \field{year}{2023}
       \verb{urlraw}
-      \verb https://bmcmedinformdecismak.biomedcentral.com/articles/10.1186/s12911-019-0874-0
+      \verb https://dplyr.tidyverse.org
       \endverb
       \verb{url}
-      \verb https://bmcmedinformdecismak.biomedcentral.com/articles/10.1186/s12911-019-0874-0
+      \verb https://dplyr.tidyverse.org
       \endverb
-      \keyw{Hypertension,Interpretability,Machine learning}
-      \warn{\item Datamodel: article entry 'Elshawi2019OnHypertension' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Elshawi2019OnHypertension' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
-    \endentry
-    \entry{Geman1992NeuralDilemma}{article}{}
-      \name{author}{3}{}{%
-        {{hash=559187c6e8cad5a03e2e2c57be738be0}{%
-           family={Geman},
-           familyi={G\bibinitperiod},
-           given={Stuart},
-           giveni={S\bibinitperiod}}}%
-        {{hash=5e800f4e8612595408e837b525dcb194}{%
-           family={Bienenstock},
-           familyi={B\bibinitperiod},
-           given={Elie},
-           giveni={E\bibinitperiod}}}%
-        {{hash=354d7f4444d2ce013f0557758d97d4da}{%
-           family={Doursat},
-           familyi={D\bibinitperiod},
-           given={René},
-           giveni={R\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {MIT Press}%
-      }
-      \strng{namehash}{43bd93a92ad993ba4dc5fbb4579b6753}
-      \strng{fullhash}{dd71a5679a5bb79d7c782553f3d32dd4}
-      \strng{bibnamehash}{dd71a5679a5bb79d7c782553f3d32dd4}
-      \strng{authorbibnamehash}{dd71a5679a5bb79d7c782553f3d32dd4}
-      \strng{authornamehash}{43bd93a92ad993ba4dc5fbb4579b6753}
-      \strng{authorfullhash}{dd71a5679a5bb79d7c782553f3d32dd4}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{issn}{0899-7667}
-      \field{journaltitle}{Neural Computation}
-      \field{month}{1}
-      \field{number}{1}
-      \field{title}{{Neural Networks and the Bias/Variance Dilemma}}
-      \field{volume}{4}
-      \field{year}{1992}
-      \field{pages}{1\bibrangedash 58}
-      \range{pages}{58}
-      \verb{doi}
-      \verb 10.1162/NECO.1992.4.1.1
-      \endverb
-      \verb{urlraw}
-      \verb https://dx.doi.org/10.1162/neco.1992.4.1.1
-      \endverb
-      \verb{url}
-      \verb https://dx.doi.org/10.1162/neco.1992.4.1.1
-      \endverb
-      \warn{\item Datamodel: article entry 'Geman1992NeuralDilemma' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Benjamini1995ControllingTesting}{article}{}
       \name{author}{2}{}{%
@@ -6653,9 +6463,6 @@
       \verb{doi}
       \verb 10.2307/2346101
       \endverb
-      \warn{\item Datamodel: article entry 'Benjamini1995ControllingTesting' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Benjamini1995ControllingTesting' (./references.bib): Field 'arxivid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Benjamini1995ControllingTesting' (./references.bib): Invalid field 'isbn' for entrytype 'article'}
     \endentry
     \entry{Simon2004DesignHealth}{article}{}
       \name{author}{6}{}{%
@@ -6705,8 +6512,6 @@
       \field{year}{2004}
       \field{pages}{199}
       \range{pages}{1}
-      \warn{\item Datamodel: article entry 'Simon2004DesignHealth' (./references.bib): Invalid field 'isbn' for entrytype 'article'}
-      \warn{\item Datamodel: article entry 'Simon2004DesignHealth' (./references.bib): Missing mandatory field 'journaltitle'}
     \endentry
     \entry{Goeman2004AOutcome}{article}{}
       \name{author}{4}{}{%
@@ -6766,8 +6571,6 @@
       \verb https://pubmed.ncbi.nlm.nih.gov/14693814/
       \endverb
       \keyw{Algorithms,Cluster Analysis,Comparative Study,Computer-Assisted / methods*,Diagnosis,Evaluation Study,Feasibility Studies,Gene Expression Profiling / methods*,Genetic Predisposition to Disease / genetics*,Genetic Testing / methods*,Genetic*,Hans C van Houwelingen,Humans,Jelle J Goeman,Leukemia / diagnosis,Leukemia / genetics,MEDLINE,Models,NCBI,NIH,NLM,National Center for Biotechnology Information,National Institutes of Health,National Library of Medicine,Oligonucleotide Array Sequence Analysis / methods*,PubMed Abstract,Reproducibility of Results,Sample Size,Sara A van de Geer,Sensitivity and Specificity,Statistical*,Statistics as Topic*,Validation Study,doi:10.1093/bioinformatics/btg382,pmid:14693814}
-      \warn{\item Datamodel: article entry 'Goeman2004AOutcome' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Goeman2004AOutcome' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Goeman2006TestingAlternative}{article}{}
       \name{author}{3}{}{%
@@ -6820,7 +6623,6 @@
       \verb https://onlinelibrary.wiley.com/doi/full/10.1111/j.1467-9868.2006.00551.x%20https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9868.2006.00551.x%20https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2006.00551.x
       \endverb
       \keyw{Empirical Bayes modelling,F,High dimensional data,Hypothesis testing,Locally most powerful test,Power,Score test,test}
-      \warn{\item Datamodel: article entry 'Goeman2006TestingAlternative' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Goeman2023ThePackage}{article}{}
       \name{author}{5}{}{%
@@ -6863,7 +6665,6 @@
       \field{labeltitlesource}{title}
       \field{title}{{The Global Test and the globaltest R package}}
       \field{year}{2023}
-      \warn{\item Datamodel: article entry 'Goeman2023ThePackage' (./references.bib): Missing mandatory field 'journaltitle'}
     \endentry
     \entry{Mansmann2005TestingApproach}{article}{}
       \name{author}{2}{}{%
@@ -6887,8 +6688,8 @@
       \strng{authorbibnamehash}{0a092346fec271b59d7afba2825a2e54}
       \strng{authornamehash}{cb6e3863de8250f188ef6a2fabaa1c42}
       \strng{authorfullhash}{0a092346fec271b59d7afba2825a2e54}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{00261270}
@@ -6909,8 +6710,6 @@
       \verb http://www.thieme-connect.com/products/ejournals/html/10.1055/s-0038-1633992%20http://www.thieme-connect.de/DOI/DOI?10.1055/s-0038-1633992
       \endverb
       \keyw{ANCOVA,Global test,Microarrays,Permutation test}
-      \warn{\item Datamodel: article entry 'Mansmann2005TestingApproach' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Mansmann2005TestingApproach' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Hummel2008GlobalANCOVA:Effects}{article}{}
       \name{author}{3}{}{%
@@ -6963,8 +6762,6 @@
       \verb https://pubmed.ncbi.nlm.nih.gov/18024976/
       \endverb
       \keyw{Algorithms*,Biological*,Computer Simulation,Gene Expression Profiling / methods*,MEDLINE,Manuela Hummel,Models,Multigene Family / physiology*,NCBI,NIH,NLM,National Center for Biotechnology Information,National Institutes of Health,National Library of Medicine,Non-U.S. Gov't,Proteome / metabolism*,PubMed Abstract,Reinhard Meister,Research Support,Signal Transduction / physiology,Software*,Ulrich Mansmann,User-Computer Interface*,doi:10.1093/bioinformatics/btm531,pmid:18024976}
-      \warn{\item Datamodel: article entry 'Hummel2008GlobalANCOVA:Effects' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Hummel2008GlobalANCOVA:Effects' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Hummel2023GlobalExpression}{article}{}
       \name{author}{3}{}{%
@@ -6997,7 +6794,107 @@
       \field{labeltitlesource}{title}
       \field{title}{{Global testing of dierential gene expression}}
       \field{year}{2023}
-      \warn{\item Datamodel: article entry 'Hummel2023GlobalExpression' (./references.bib): Missing mandatory field 'journaltitle'}
+    \endentry
+    \entry{Elshawi2019OnHypertension}{article}{}
+      \name{author}{3}{}{%
+        {{hash=ab485215bc9299482265e2ee520f7d10}{%
+           family={Elshawi},
+           familyi={E\bibinitperiod},
+           given={Radwa},
+           giveni={R\bibinitperiod}}}%
+        {{hash=284d9a7134a65b3d37ce2866854b9ceb}{%
+           family={Al-Mallah},
+           familyi={A\bibinithyphendelim M\bibinitperiod},
+           given={Mouaz\bibnamedelima H.},
+           giveni={M\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=80b2c0d16adb4ccde7a9eb8a7b731fea}{%
+           family={Sakr},
+           familyi={S\bibinitperiod},
+           given={Sherif},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {BioMed Central Ltd}%
+      }
+      \strng{namehash}{a33be71416a322268204e4e8ea8e816b}
+      \strng{fullhash}{7829504b5300fa16ec3f1e8d7496eabc}
+      \strng{bibnamehash}{7829504b5300fa16ec3f1e8d7496eabc}
+      \strng{authorbibnamehash}{7829504b5300fa16ec3f1e8d7496eabc}
+      \strng{authornamehash}{a33be71416a322268204e4e8ea8e816b}
+      \strng{authorfullhash}{7829504b5300fa16ec3f1e8d7496eabc}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{14726947}
+      \field{journaltitle}{BMC Medical Informatics and Decision Making}
+      \field{month}{7}
+      \field{number}{1}
+      \field{title}{{On the interpretability of machine learning-based model for predicting hypertension}}
+      \field{volume}{19}
+      \field{year}{2019}
+      \field{pages}{1\bibrangedash 32}
+      \range{pages}{32}
+      \verb{doi}
+      \verb 10.1186/S12911-019-0874-0/FIGURES/48
+      \endverb
+      \verb{urlraw}
+      \verb https://bmcmedinformdecismak.biomedcentral.com/articles/10.1186/s12911-019-0874-0
+      \endverb
+      \verb{url}
+      \verb https://bmcmedinformdecismak.biomedcentral.com/articles/10.1186/s12911-019-0874-0
+      \endverb
+      \keyw{Hypertension,Interpretability,Machine learning}
+    \endentry
+    \entry{Geman1992NeuralDilemma}{article}{}
+      \name{author}{3}{}{%
+        {{hash=559187c6e8cad5a03e2e2c57be738be0}{%
+           family={Geman},
+           familyi={G\bibinitperiod},
+           given={Stuart},
+           giveni={S\bibinitperiod}}}%
+        {{hash=5e800f4e8612595408e837b525dcb194}{%
+           family={Bienenstock},
+           familyi={B\bibinitperiod},
+           given={Elie},
+           giveni={E\bibinitperiod}}}%
+        {{hash=354d7f4444d2ce013f0557758d97d4da}{%
+           family={Doursat},
+           familyi={D\bibinitperiod},
+           given={René},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {MIT Press}%
+      }
+      \strng{namehash}{43bd93a92ad993ba4dc5fbb4579b6753}
+      \strng{fullhash}{dd71a5679a5bb79d7c782553f3d32dd4}
+      \strng{bibnamehash}{dd71a5679a5bb79d7c782553f3d32dd4}
+      \strng{authorbibnamehash}{dd71a5679a5bb79d7c782553f3d32dd4}
+      \strng{authornamehash}{43bd93a92ad993ba4dc5fbb4579b6753}
+      \strng{authorfullhash}{dd71a5679a5bb79d7c782553f3d32dd4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{0899-7667}
+      \field{journaltitle}{Neural Computation}
+      \field{month}{1}
+      \field{number}{1}
+      \field{title}{{Neural Networks and the Bias/Variance Dilemma}}
+      \field{volume}{4}
+      \field{year}{1992}
+      \field{pages}{1\bibrangedash 58}
+      \range{pages}{58}
+      \verb{doi}
+      \verb 10.1162/NECO.1992.4.1.1
+      \endverb
+      \verb{urlraw}
+      \verb https://dx.doi.org/10.1162/neco.1992.4.1.1
+      \endverb
+      \verb{url}
+      \verb https://dx.doi.org/10.1162/neco.1992.4.1.1
+      \endverb
     \endentry
     \entry{Kuhn2008BuildingPackage}{article}{}
       \name{author}{1}{}{%
@@ -7039,7 +6936,6 @@
       \verb https://www.jstatsoft.org/index.php/jss/article/view/v028i05
       \endverb
       \keyw{Model building,NetWorkSpaces,Parallel processing,R,Tuning parameters}
-      \warn{\item Datamodel: article entry 'Kuhn2008BuildingPackage' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{DMwR2}{book}{}
       \name{author}{1}{}{%
@@ -7107,7 +7003,6 @@
       \field{labeltitlesource}{title}
       \field{title}{{An Introduction to Statistical Learning with Applications in R Second Edition}}
       \field{year}{2023}
-      \warn{\item Datamodel: article entry 'James2023AnEdition' (./references.bib): Missing mandatory field 'journaltitle'}
     \endentry
     \entry{Tibshiranit1996RegressionLasso}{article}{}
       \name{author}{1}{}{%
@@ -7149,7 +7044,6 @@
       \verb https://onlinelibrary.wiley.com/doi/full/10.1111/j.2517-6161.1996.tb02080.x%20https://onlinelibrary.wiley.com/doi/abs/10.1111/j.2517-6161.1996.tb02080.x%20https://rss.onlinelibrary.wiley.com/doi/10.1111/j.2517-6161.1996.tb02080.x
       \endverb
       \keyw{quadratic programming,regression,shrinkage,subset selection}
-      \warn{\item Datamodel: article entry 'Tibshiranit1996RegressionLasso' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{Song2015DecisionPrediction}{article}{}
       \name{author}{2}{}{%
@@ -7196,8 +7090,6 @@
       \verb /pmc/articles/PMC4466856/%20/pmc/articles/PMC4466856/?report=abstract%20https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4466856/
       \endverb
       \keyw{Classification,Data mining,Decision tree,Prediction}
-      \warn{\item Datamodel: article entry 'Song2015DecisionPrediction' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Song2015DecisionPrediction' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{rpart}{article}{}
       \true{moreauthor}
@@ -7266,6 +7158,7 @@
       \field{journaltitle}{Proceedings of the ACM SIGKDD International Conference on Knowledge Discovery and Data Mining}
       \field{month}{3}
       \field{title}{{XGBoost: A Scalable Tree Boosting System}}
+      \field{volume}{13-17-August-2016}
       \field{year}{2016}
       \field{pages}{785\bibrangedash 794}
       \range{pages}{10}
@@ -7279,10 +7172,6 @@
       \verb https://arxiv.org/abs/1603.02754v3
       \endverb
       \keyw{Large-scale Machine learning,Learning,Machine}
-      \warn{\item Datamodel: article entry 'Chen2016XGBoost:System' (./references.bib): Field 'arxivid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'Chen2016XGBoost:System' (./references.bib): Invalid field 'isbn' for entrytype 'article'}
-      \warn{\item Datamodel: article entry 'Chen2016XGBoost:System' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
-      \warn{\item Datamodel: article entry 'Chen2016XGBoost:System' (./references.bib): Invalid value of field 'volume' must be datatype 'integer' - ignoring field}
     \endentry
     \entry{pROC}{article}{}
       \name{author}{7}{}{%
@@ -7418,8 +7307,6 @@
       \verb 10.1080/14789450.2020.1766975
       \endverb
       \keyw{Metabolomics,correlation,network}
-      \warn{\item Datamodel: article entry 'PerezDeSouza2020Network-basedInterpretation' (./references.bib): Field 'pmid' invalid in data model - ignoring}
-      \warn{\item Datamodel: article entry 'PerezDeSouza2020Network-basedInterpretation' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
     \endentry
     \entry{KollerProbabilisticTechniques}{article}{}
       \name{author}{2}{}{%
@@ -7445,8 +7332,6 @@
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{{Probabilistic Graphical Models: Principles and Techniques}}
-      \warn{\item Datamodel: article entry 'KollerProbabilisticTechniques' (./references.bib): Missing mandatory field - one of 'date, year' must be defined}
-      \warn{\item Datamodel: article entry 'KollerProbabilisticTechniques' (./references.bib): Missing mandatory field 'journaltitle'}
     \endentry
     \entry{Amara2022NetworksInterpretation}{article}{}
       \name{author}{10}{}{%
@@ -7526,55 +7411,6 @@
       \verb 10.3389/FMOLB.2022.841373/BIBTEX
       \endverb
       \keyw{experimental network,graph-based analysis,knowledge network,metabolic network,metabolism,systems biology,untargeted metabolomics}
-      \warn{\item Datamodel: article entry 'Amara2022NetworksInterpretation' (./references.bib): Invalid field 'publisher' for entrytype 'article'}
-    \endentry
-    \entry{dplyr}{manual}{}
-      \name{author}{5}{}{%
-        {{hash=1d0f6977ce2d043e298a59a1cd75b7ef}{%
-           family={Wickham},
-           familyi={W\bibinitperiod},
-           given={Hadley},
-           giveni={H\bibinitperiod}}}%
-        {{hash=3bd2c624a8715b2aeffcecaa24f3d017}{%
-           family={François},
-           familyi={F\bibinitperiod},
-           given={Romain},
-           giveni={R\bibinitperiod}}}%
-        {{hash=4caae9be043b32573c94b11203a4a2fe}{%
-           family={Henry},
-           familyi={H\bibinitperiod},
-           given={Lionel},
-           giveni={L\bibinitperiod}}}%
-        {{hash=1435ca4f08e53208e1c34297357afa80}{%
-           family={Müller},
-           familyi={M\bibinitperiod},
-           given={Kirill},
-           giveni={K\bibinitperiod}}}%
-        {{hash=858f3a61393526cfc73cb860925a277a}{%
-           family={Vaughan},
-           familyi={V\bibinitperiod},
-           given={Davis},
-           giveni={D\bibinitperiod}}}%
-      }
-      \strng{namehash}{e0731a35ef88164c57848ecb7ca5f8ca}
-      \strng{fullhash}{bb08bfc9d8f14760ac7a6c241486e72c}
-      \strng{bibnamehash}{bb08bfc9d8f14760ac7a6c241486e72c}
-      \strng{authorbibnamehash}{bb08bfc9d8f14760ac7a6c241486e72c}
-      \strng{authornamehash}{e0731a35ef88164c57848ecb7ca5f8ca}
-      \strng{authorfullhash}{bb08bfc9d8f14760ac7a6c241486e72c}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{note}{R package version 1.1.4, https://github.com/tidyverse/dplyr}
-      \field{title}{dplyr: A Grammar of Data Manipulation}
-      \field{year}{2023}
-      \verb{urlraw}
-      \verb https://dplyr.tidyverse.org
-      \endverb
-      \verb{url}
-      \verb https://dplyr.tidyverse.org
-      \endverb
     \endentry
     \entry{heatmaply}{article}{}
       \name{author}{8}{}{%

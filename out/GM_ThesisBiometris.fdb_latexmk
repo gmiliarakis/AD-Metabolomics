@@ -1,13 +1,18 @@
 # Fdb version 4
-["biber GM_ThesisBiometris"] 0 "GM_ThesisBiometris.bcf" "GM_ThesisBiometris.bbl" "GM_ThesisBiometris" 1705161693.79709 -1
+["biber out/GM_ThesisBiometris"] 1705411462.63933 "out/GM_ThesisBiometris.bcf" "out/GM_ThesisBiometris.bbl" "out/GM_ThesisBiometris" 1705411472.50647 0
   "./entries.bib" 1705011683.35849 1892 055e71f3f1cfcf6af3fff9557ef39255 ""
   "./references.bib" 1705140626.39994 181037 263986cbae7f666ca2e17a8078ecba4f ""
-  "GM_ThesisBiometris.bcf" 1705161693.4321 121604 ea218213783976a3fd923bb8cd1ef9e3 "pdflatex"
+  "out/GM_ThesisBiometris.bcf" 1705411472.17038 121666 64678fba5275776ada825f723b79996b "pdflatex"
   (generated)
-  "GM_ThesisBiometris.bbl"
-  "GM_ThesisBiometris.blg"
+  "out/GM_ThesisBiometris.bbl"
+  "out/GM_ThesisBiometris.blg"
   (rewritten before read)
-["pdflatex"] 1705161689.40631 "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" "GM_ThesisBiometris.pdf" "GM_ThesisBiometris" 1705161693.79756 2
+["cusdep acn acr GM_ThesisBiometris"] 0 "GM_ThesisBiometris.acn" "GM_ThesisBiometris.acr" "GM_ThesisBiometris" 1705411472.51206 -1
+  "GM_ThesisBiometris.acn" 1705407639.87863 1978 105d04f8077845641e1be01beff452ab ""
+  (generated)
+  "GM_ThesisBiometris.acr"
+  (rewritten before read)
+["pdflatex"] 1705411467.85669 "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" "out/GM_ThesisBiometris.pdf" "GM_ThesisBiometris" 1705411472.50703 2
   "/Library/Application Support/MiKTeX/texmfs/install/fonts/enc/dvips/base/8r.enc" 1705152503.01004 4993 1194fb36dfcb11d9ae9802f2b00b60a3 ""
   "/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1705152501.51402 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/cmextra/cmbsy6.tfm" 1705152501.51412 1124 14ccf5552bc7f77ca02a8a402bea8bfb ""
@@ -165,7 +170,7 @@
   "/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url/url.sty" 1705152516.57613 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xcolor/xcolor.sty" 1705152516.59835 55487 80a65caedd3722f4c20a14a69e785d8f ""
   "/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xkeyval/xkeyval.sty" 1705152516.66548 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
-  "/Users/gm/Library/Application Support/MiKTeX/texmfs/data/fonts/map/pdftex/pdftex.map" 1705154545.19964 163419 b67297245e05d047862ab3136c8e655d ""
+  "/Users/gm/Library/Application Support/MiKTeX/texmfs/data/fonts/map/pdftex/pdftex.map" 1705364129.71159 163419 b67297245e05d047862ab3136c8e655d ""
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/data/miktex/data/le/pdftex/pdflatex.fmt" 1705152609.82004 21047117 5089810e0c1232a379ce689f995da1f0 ""
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/fonts/enc/dvips/newtx/ntx-ot1-tlf-pc.enc" 1705152625.09869 2211 c42193888177bc8f86d55dca129a9358 ""
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc" 1705152625.10192 2083 60e36f8eac802fcaf19eabe2633b406e ""
@@ -232,7 +237,7 @@
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pdfescape/pdfescape.sty" 1705152659.63055 19007 15924f7228aca6c6d184b115f4baa231 ""
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/generic/uniquecounter/uniquecounter.sty" 1705152678.29996 7008 f92eaa0a3872ed622bbf538217cd2ab7 ""
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/generic/xstring/xstring.tex" 1705152636.35823 49397 a8071cbd06dd0bb15ae8acf876c73f20 ""
-  "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/latex/algorithm2e/algorithm2e.sty" 1705152684.91052 167160 d91cee26d3ef5727644d2110445741dd ""
+  "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/latex/algorithm2e/algorithm2e.sty" 1705361740.827 167166 eda33c0a12fd84d27afb51a7fafb39aa ""
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/latex/algorithmicx/algorithmicx.sty" 1114632000 26750 ce139c05a983e19ddca355b43e29c395 ""
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/latex/algorithmicx/algpseudocode.sty" 1114632120 3457 d9077efe6b74c5a094199256af8d7d9a ""
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amscls/amsart.cls" 1705140631.72286 61881 a7369c346c2922a758ae6283cc1ed014 ""
@@ -303,13 +308,9 @@
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xfor/xfor.sty" 1705152698.24264 2689 44855b72da58344b1c1d9b3087bce6ca ""
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xpatch/xpatch.sty" 1705152631.26995 8510 9829c50ab36366d4da41fdc87e7d0699 ""
   "/Users/gm/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xstring/xstring.sty" 1705152636.35848 123 a302f2c651a95033260db60e51527ae8 ""
-  "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" 1705155104.90295 46492 2a8cc9d5d522a47796d4fa6c9d74ff9a ""
-  "GM_ThesisBiometris.acr" 0 -1 0 ""
-  "GM_ThesisBiometris.aux" 1705161693.39472 37228 df59d95e05877dd5a4f825b1f58a0d22 "pdflatex"
-  "GM_ThesisBiometris.bbl" 1705161658.53504 339231 e97d8bb1331b1a89debc5e8086ea14f0 "biber GM_ThesisBiometris"
-  "GM_ThesisBiometris.out" 1705161693.428 10852 b3639f738afd5646b7148ba039e73c70 "pdflatex"
-  "GM_ThesisBiometris.tex" 1705155104.90295 46492 2a8cc9d5d522a47796d4fa6c9d74ff9a ""
-  "GM_ThesisBiometris.toc" 1705161693.43378 4845 3b1fd339a794094099565376a42058cc "pdflatex"
+  "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" 1705406939.38907 47041 2c158bb60f6b9d8c8434dd323234dd26 ""
+  "GM_ThesisBiometris.acr" 1705407635.67019 3277 8a3047ed11d9e4d479fc6ae703191437 "cusdep acn acr GM_ThesisBiometris"
+  "GM_ThesisBiometris.tex" 1705406939.38907 47041 2c158bb60f6b9d8c8434dd323234dd26 ""
   "figures/ApoE@2x.png" 1701534906.48841 664484 40377c9024d4459e700610bef58d72f9 ""
   "figures/ApoEeffects.jpg" 1702915086.68947 745630 1e53b81ff0baf68d3f2c2b49542ab35a ""
   "figures/ApoEprot.png" 1701532490.45565 328647 4e00a914b581237e5a1e34905e05cf4b ""
@@ -317,15 +318,19 @@
   "figures/biometris_logo.png" 1701169970 57717 92c170a4eba56294c04c75a18edb216e ""
   "figures/network.jpeg" 1701169970 398355 8bbcf70ded6c78cdcbadcfea95373d1b ""
   "figures/torontodeclaration.png" 1701169970 178961 32bef52b1b3e1d18c4e1b8cb03eed69a ""
-  "references.bib" 1705140626.39994 181037 263986cbae7f666ca2e17a8078ecba4f ""
+  "out/GM_ThesisBiometris.aux" 1705411472.12116 37440 1b220a3497bcbe4922111f8a18744cf3 "pdflatex"
+  "out/GM_ThesisBiometris.bbl" 1705411467.81464 316127 fe46a0cbc44fc5d3201eb77b5f970f8e "biber out/GM_ThesisBiometris"
+  "out/GM_ThesisBiometris.out" 1705411472.16639 11126 94029a9b9f52a476762e7928c61be56b "pdflatex"
+  "out/GM_ThesisBiometris.run.xml" 1705411472.17184 2539 57f218241f4514e17bee96b0c767fc66 "pdflatex"
+  "out/GM_ThesisBiometris.toc" 1705411472.17203 4953 8053046134988fe94c9ea0f0d1765941 "pdflatex"
   (generated)
-  "GM_ThesisBiometris.acn"
-  "GM_ThesisBiometris.aux"
-  "GM_ThesisBiometris.bcf"
-  "GM_ThesisBiometris.ist"
-  "GM_ThesisBiometris.log"
-  "GM_ThesisBiometris.out"
-  "GM_ThesisBiometris.pdf"
-  "GM_ThesisBiometris.run.xml"
-  "GM_ThesisBiometris.toc"
+  "out/GM_ThesisBiometris.acn"
+  "out/GM_ThesisBiometris.aux"
+  "out/GM_ThesisBiometris.bcf"
+  "out/GM_ThesisBiometris.ist"
+  "out/GM_ThesisBiometris.log"
+  "out/GM_ThesisBiometris.out"
+  "out/GM_ThesisBiometris.pdf"
+  "out/GM_ThesisBiometris.run.xml"
+  "out/GM_ThesisBiometris.toc"
   (rewritten before read)
