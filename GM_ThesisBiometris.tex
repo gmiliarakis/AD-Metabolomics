@@ -20,7 +20,7 @@
 \usepackage{graphicx}
 \usepackage{newtxtext}
 \usepackage{float}
-\usepackage{svg}
+\usepackage[inkscapeformat=png]{svg}
 
 % Packages for mathematical writing
 \usepackage{amsmath}                           % Enables the align enviroment
@@ -55,7 +55,8 @@
     backend=biber,
     style=nature, 
     maxcitenames=1,
-    mincitenames=1]
+    mincitenames=1,
+    safeinputenc]
     {biblatex}
 \addbibresource{./references.bib}
 \addbibresource{./entries.bib}
@@ -117,7 +118,7 @@
 %------------------------------------------------------------------------------
 % In this segment, enter the desired student data to be shown at the title page
 \newcommand{\thesisAuthor}{George Miliarakis}                             % State your name
-\newcommand{\thesisTitle}{Mechanistic insights into ApoE4 dose effects on serum metabolites in Alzheimer's Disease}                                      % State title thesis
+\newcommand{\thesisTitle}{Mechanistic insights in ApoE4 dose effects on serum metabolites in Alzheimer's Disease}                                      % State title thesis
 \newcommand{\thesisSubTitle}{a Data Science approach}                            % State subtitle thesis
 \newcommand{\thesisDegree}{MSc Thesis}      % Choose type
 \newcommand{\university}{Wageningen University \& Research}                % You generally don't need to touch this
@@ -219,7 +220,7 @@
 \begin{flushright}
 \emph{Supervisor} \\
 \textbf{\supervisor} \\
-\departmentSUP \\
+\departmentSUP\\
 \universitySUP
 \end{flushright}
 
@@ -338,7 +339,7 @@ Metabolism entails the repertoire of chemical reactions that keep living organis
 \subsubsection{Measured in \textit{post-mortem} brain tissue}A metabolomic profiling of brain tissue, obtained \textit{post-mortem} from AD patients and healthy controls showed  pronounced impairments in sterol and sphingolipid levels in ApoE4 carriers with AD  \cite{Bandaru2009ApoE4Brain}. However, another \textit{post-mortem} metabolomic analysis didn't reveal nuances significantly correlated with ApoE4 \cite{Novotny2023MetabolomicBrains}, although they showed trends in increased cholesterol esters, unsaturated lipids, and sphingomyelin species.
 
 \subsubsection{Measured in blood}
-Transcriptomic and lipidomic analyses in humanized ApoE mice associated ApoE4 with decreased free fatty acid levels, many increased  tricarboxylic acid (TCA) cycle metabolites, as well as changes in plasma levels of phosphatidylcholines and unsaturated fatty acids \cite{Area-Gomez2020APOE4Mice, Zhao2020AlzheimersPathways}. A recent study on 58 individuals found six downregulated plasma metabolites (including lysophospholipids and cardiolipin) in ApoE4 carriers \cite{pena-bautista2020MetabolomicsEffect}. Further, the plasma metabolome of the latter reveals a preference for aerobic glycolysis \cite{Farmer2021APO4Glycolysis}. Significant correlations of ApoE genotype and sex with metabolites were observed, i.e. several phosphatidylcholines were found in a large study of more than 1500 individuals \cite{Arnold2020SexMetabolome}
+Transcriptomic and lipidomic analyses in humanized ApoE mice associated ApoE4 with decreased free fatty acid levels, many increased  tricarboxylic acid (TCA) cycle metabolites, as well as changes in plasma levels of phosphatidylcholines and unsaturated fatty acids \cite{Area-Gomez2020APOE4Mice, Zhao2020AlzheimersPathways}. A recent study on 58 individuals found six downregulated plasma metabolites (including lysophospholipids and cardiolipin) in ApoE4 carriers \cite{pena-bautista2020MetabolomicsEffect}. Further, the plasma metabolome of the latter reveals a preference for aerobic glycolysis \cite{Farmer2021APO4Glycolysis}. Significant correlations of ApoE genotype and sex with metabolites were observed, i.e. several phosphatidylcholines were found in a large study of more than 1500 individuals \cite{Arnold2020SexMetabolome}.
 
 Perturbed serum metabolites associated with AD are aminoacids, amines \cite{deLeeuw2017Blood-basedDisease, Green2023InvestigatingDisease}, cholesteryl esters \cite{Proitsi2017AssociationAnalysis}, sphingolipids \cite{Varma2018BrainStudy,Sun2022AssociationDisease,Green2023InvestigatingDisease,Oeckl2019GlialImpairment,Barupal2019SetsPathophysiology}, fatty acids \cite{Fernandez-Calle2022APOEDiseases,deLeeuw2017Blood-basedDisease}, glycerophospholipids \cite{Varma2018BrainStudy, Jia2022ATypes,Huo2020BrainAnalysis, Weng2019TheImpairment}, phosphatidylcholines \cite{Simpson2016BloodAging} and lipid peroxidation compounds \cite{Fernandez-Calle2022APOEDiseases}. These molecules are usually identified via high-throughput metabolomic pipelines (coupled with Mass Spectrometry (MS) detectors) that trace all compounds in a sample and result in high-dimensional data \cite{Oka2023MultiomicsCohort}. The latter often require advanced statistical methods e.g. projection to latent structures \cite{Weng2019TheImpairment, Peeters2019StableData} or graphical models \cite{Peeters2022Rags2ridges:Matrices} in order to extract putatively meaningful information. 
 With such techniques, de Leeuw et al. discovered distinct serum metabolic signatures among AD patients-controls and those carrying at least one ApoE $\varepsilon_4$ allele \cite{deLeeuw2017Blood-basedDisease}, as they appear in Fig. \ref{fig2}. The different metabolic profiles, however, among ApoE4 non-carriers remain obscure. The present data science approach shows ApoE4-mediated differentially expressed metabolites, potentially unveiling distinct pathways of metabolic deregulation in AD.
@@ -376,7 +377,7 @@ The data were processed using base R and \textsf{dplyr} \cite{dplyr}.
    
 
 \subsection{Statistical Analysis}
-\subsubsection{ApoE4 dose effects on plasma metabolite levels in AD}
+\subsubsection{ApoE4 dose effects on serum metabolite levels in AD}
 A straight-forward way to test whether metabolites are distinctly expressed depending on ApoE4 dose, controlling for clinical variables, is \acrshort{anova} (Analysis of Variance) on $p$ nested linear models. The dependent variable in each model is a metabolite; the nested model, eq. \eqref{rm}, has only clinical variables, while the full model, eq. \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2) as explanatory variables. Let $m_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and D the ApoE4 dose; the nested models then are:
 \begin{align}
     & m_j = \beta_0 + \sum_{k=1}^m\beta_kx_k +\varepsilon \label{rm} \\
@@ -390,9 +391,7 @@ A more elegant alternative to multiple testing is global test \cite{Simon2004Des
 The R package \textsf{GlobalTest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage} developed by \citeauthor{Goeman2004AOutcome} originally fits a logistic regression model, using genes to predict the response $Y \in [1,..., k]$ (or $k$), representing clinical or biological group membership. This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}.
 The hypothesis test is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The tests uses the -usually- low-dimensional ($n$ × $n$) the intra-sample covariance matrix instead of the larger ($p$ × $p$) metabolite covariance matrix. Hence, this method is rather efficient. The test statistic under $H_0$ follows, asymptotically, a normal distribution. In other words, this method tests whether the metabolite levels are discriminating over the dose of ApoE4. The \texttt{gt()} function of the package was used to screen for differences in metabolite levels based on the ApoE4 dose. The \texttt{covariates()} function was used to visualise the ApoE4 dose effects on metabolite levels.
 
-Inspired by global testing, a global ANCOVA method was introduced  by \citeauthor{Mansmann2005TestingApproach} and  extended by \citeauthor{Hummel2008GlobalANCOVA:Effects}, featuring (generalised) linear model comparison based on the extra sum of squares (SS) principle \cite{Hummel2023GlobalExpression}. This method tests whether the gene expression or metabolite  levels are independent of the response variable, i.e. $H_0 : P(X|Y = 1) = P(X|Y = k)$. The high dimensionality is treated by aggregating the residual sums of squares (\acrshort{rss}) of individual models to the RSS of a global model \cite{Hummel2023GlobalExpression}. The test statistic uses the aggregated RSS and under $H_0$ follows, asymptotically, a $\chi^2$-distribution. The R package \textsf{GlobalAncova} also features a hierarchical generalised linear model comparison function, \texttt{gGlobalAncova.hierarchical()} that enables the modeling of (metabolic) pathways. This function was used to test for nuances depending on the 4-class variable ApoE4AD.
-
-\subsubsection{Machine Learning}
+\subsubsection{Multi-class Classification of ApoE4 status and/or AD}
 The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this study to find the optimal balance between the performance of a model with its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}. One needs to consider this trade-off during model and evaluation method selection, as some impose more bias or variance than others.
 
 The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl(), train() and confusionMatrix()} were used to fit and evaluate the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
@@ -411,7 +410,7 @@ Random Forests (RF) are ensemble learning methods, that bag several DTs and aver
 
 The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated (100 times) 10-fold Cross-Validation (CV). The best model's performance was then holistically assessed using repeated 10-fold CV-obtained \acrfull{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}.
 
-\subsubsection{Network analysis}
+\subsubsection{Metabolite Covariance Network analysis}
 Network science offers a unifying framework for data and system representation, applicable to any domain \cite{Barabasi2015NetworkScience}. A network, in an abstract sense, consists of nodes connected with links, also referred to as edges. In data science, a network whose nodes represent random features, whose joint probability distribution is defined by the ensemble of their edges is called \textit{graphical model} \cite{Peeters2022Rags2ridges:Matrices}. A metabolomic covariance correlation network represents the ensemble of metabolites based on their covariance, showing nuances among the samples that non-graphical statistical methods on individual metabolites may fail to detect \cite{PerezDeSouza2020Network-basedInterpretation}. It may provide insights into correlated metabolites that don't belong in the same metabolic pathway \cite{PerezDeSouza2020Network-basedInterpretation}.
 
 
@@ -435,6 +434,7 @@ In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Mat
     \item[]\textsf{GlobalAncova} \cite{Mansmann2005TestingApproach, Hummel2008GlobalANCOVA:Effects, Hummel2023GlobalExpression}
     \item[]\textsf{heatmaply} \cite{heatmaply}
     \item[]\textsf{FMradio} \cite{Peeters2019StableData}
+    \item[]\textsf{furrr}
     \item[]\textsf{nnet} \cite{nnet}
     \item[]\textsf{pROC} \cite{pROC}
     \item[]\textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices}
@@ -477,8 +477,8 @@ No $\varepsilon4$  & 1x$\varepsilon4$& 2x$\varepsilon4$\\ \midrule
 \end{tabular}
 \end{table}
 
-\subsubsection{SCD and AD}\label{Meth_target}
-In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis, a four-level feature ("ApoE4AD") was created, as shown in Table \ref{Table:target}.
+\subsubsection{SCD and AD}
+In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis of AD, a four-level feature ("ApoE4AD") was created, as shown in Table \ref{Table:target}.
 
 \begin{table}[!ht]
 \caption{Feature combining ApoE4 status and AD diagnosis.} \label{Table:target}
@@ -491,17 +491,46 @@ AD \vline  & 34& 86\\
 \subsection{RQi - Differential expression of plasma metabolites per ApoE4 dose among AD and SCD}
 \subsubsection{Global Test}
 
-\subsubsection{Hierarchical Global ANCOVA on Generalised Linear  Models}
+\begin{figure}
+  \vspace*{-1cm}
+    \includegraphics[width=\textwidth]{figures/gt1.png}
+      \caption{Covariates plot of the Global Test showing the metabolites affected by the presence of ApoE4.}
+    \label{gt1}
+  \end{figure}
+
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{figures/gt2.png}
+      \caption{Covariates plot showing the metabolites affected by the number of ApoE4 alleles}
+    \label{gt2}
+  \end{figure}
 
 \subsubsection{ANOVA on Nested Linear Models}
 
-\subsection{RQii - Classification of metabolites on ApoE4 presence}
+\subsection{RQii - Classification of metabolites on ApoE4 presence and AD}
 
-\subsubsection{Benchmark model: clinical factors only}
+\begin{figure}
+  \includesvg[width=0.8\textwidth]{figures/bench.svg}
+  \caption{ROC curves of benchmark model: Multinomial Logistic Regression fitting the clinical background features only), obtained from repeated (100 times) 10-fold CV.}
+  \label{roc:bench}
+\end{figure}
 
-\subsubsection{Fitting the full metabolomic panel, correcting for clinical factors}
+\subsubsection{Adding 230 metabolites}
 
-\subsubsection{Fitting the metabolomic ML-estimated 6-factor Latent Projection}
+\begin{figure}
+  \includesvg[width=0.8\textwidth]{figures/fullmultinom.svg}
+  \caption{ROC curves of Multinomial Logistic Regression fitting the 230 metabolites on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV}
+  \label{roc:full}
+\end{figure}
+
+\subsubsection[Fitting the 6-factor Latent Projection of the 230 metabolites]
+
+
+\begin{figure}
+  \includesvg[width=0.8\textwidth]{figures/6factor.svg}
+  \caption{ROC curves of Multinomial Logistic Regression fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV.}
+  \label{roc:6mlogit}
+\end{figure}
 
 \subsection{RQiii - Covariance Network analysis of metabolites}
 
@@ -524,10 +553,19 @@ AD \vline  & 34& 86\\
 \printbibliography
 %--------------- References -----------------------------------------
 %--------------------------------------------------------------------
-
-
-
-
+\clearpage
+\appendix
+\section{Multiclass ROC curves}
+\begin{figure}
+  \includesvg[width=.8\textwidth]{figures/tree.svg}
+  \caption{ROC curves of Decision Tree fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV}
+  \label{roc:tree}
+\end{figure}
+\begin{figure}
+  \includesvg[width=.8\textwidth]{figures/xgb.svg}
+  \caption{ROC curves of Xtreme Gradient Booster fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV}
+  \label{roc:xgb}
+  \end{figure}
 
 \end{document}
 

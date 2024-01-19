@@ -1,19 +1,19 @@
 [0] Config.pm:307> INFO - This is Biber 2.19
 [0] Config.pm:310> INFO - Logfile is 'out/GM_ThesisBiometris.blg'
-[36] biber-darwin:340> INFO - === Fri Jan 19, 2024, 20:00:40
-[44] Biber.pm:419> INFO - Reading 'out/GM_ThesisBiometris.bcf'
-[109] Biber.pm:979> INFO - Found 107 citekeys in bib section 0
-[116] Biber.pm:4419> INFO - Processing section 0
-[121] Biber.pm:4610> INFO - Looking for bibtex file './references.bib' for section 0
-[131] bibtex.pm:1713> INFO - LaTeX decoding ...
-[353] bibtex.pm:1519> INFO - Found BibTeX data source './references.bib'
+[36] biber-darwin:340> INFO - === Fri Jan 19, 2024, 22:36:02
+[45] Biber.pm:419> INFO - Reading 'out/GM_ThesisBiometris.bcf'
+[108] Biber.pm:979> INFO - Found 107 citekeys in bib section 0
+[117] Biber.pm:4419> INFO - Processing section 0
+[124] Biber.pm:4610> INFO - Looking for bibtex file './references.bib' for section 0
+[135] bibtex.pm:1713> INFO - LaTeX decoding ...
+[337] bibtex.pm:1519> INFO - Found BibTeX data source './references.bib'
 [909] Biber.pm:4610> INFO - Looking for bibtex file './entries.bib' for section 0
 [909] bibtex.pm:1713> INFO - LaTeX decoding ...
 [912] bibtex.pm:1519> INFO - Found BibTeX data source './entries.bib'
-[991] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[991] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[991] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
-[991] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
+[989] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[989] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[989] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
+[989] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
 [1035] bbl.pm:660> INFO - Writing 'out/GM_ThesisBiometris.bbl' with encoding 'UTF-8'
 [1163] bbl.pm:763> INFO - Output to out/GM_ThesisBiometris.bbl
 [1163] Biber.pm:131> WARN - ISBN '1291601912994' in entry 'Safieh2019ApoE4:Disease' is invalid - run biber with '--validate_datamodel' for details.

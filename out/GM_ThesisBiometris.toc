@@ -1,48 +1,45 @@
 \contentsline {section}{\tocsection {}{}{Foreword}}{i}{section*.1}%
 \contentsline {section}{\tocsection {}{}{Abstract}}{ii}{section*.2}%
-\contentsline {section}{\tocsection {}{}{Abbreviations}}{iii}{section*.4}%
-\contentsline {section}{\tocsection {}{1}{Introduction}}{1}{section.6}%
-\contentsline {subsection}{\tocsubsection {}{1.1}{Alzheimer^^e2^^80^^99s Disease}}{1}{subsection.7}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.1.1}{Amyloid cascade hypothesis}}{1}{subsubsection.8}%
-\contentsline {subsection}{\tocsubsection {}{1.2}{Human apolipoprotein-E gene}}{1}{subsection.9}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.2.1}{ApoE4 and Alzheimer's Disease}}{1}{subsubsection.10}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.2.2}{ApoE and ancestry in Alzheimer's Disease}}{1}{subsubsection.12}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.2.3}{ApoE and sex synergy in Alzheimer's Disease}}{2}{subsubsection.13}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.2.4}{Evolution of ApoE over time}}{2}{subsubsection.14}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.2.5}{Tissue expression}}{2}{subsubsection.15}%
-\contentsline {subsection}{\tocsubsection {}{1.3}{Apo-lipoprotein E}}{3}{subsection.16}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.3.1}{Structure and function}}{3}{subsubsection.17}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.3.2}{ApoE isoforms}}{3}{subsubsection.19}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.3.3}{Lipidation nuances of ApoE isoforms}}{3}{subsubsection.20}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.3.4}{Interplay between ApoE lipidation and Alzheimer's Disease}}{3}{subsubsection.22}%
-\contentsline {subsection}{\tocsubsection {}{1.4}{ApoE4-mediated metabolic changes in Alzheimer's Disease}}{4}{subsection.23}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.4.1}{Measured in \textit {post-mortem} brain tissue}}{5}{subsubsection.24}%
-\contentsline {subsubsection}{\tocsubsubsection {}{1.4.2}{Measured in blood}}{5}{subsubsection.25}%
-\contentsline {subsection}{\tocsubsection {}{1.5}{Research Questions}}{6}{subsection.27}%
-\contentsline {section}{\tocsection {}{2}{Data}}{7}{section.31}%
-\contentsline {section}{\tocsection {}{3}{Methodology}}{8}{section.32}%
-\contentsline {subsection}{\tocsubsection {}{3.1}{Data management}}{8}{subsection.33}%
-\contentsline {subsection}{\tocsubsection {}{3.2}{Data exploration and Visualisation}}{8}{subsection.34}%
-\contentsline {subsection}{\tocsubsection {}{3.3}{Data Wrangling and Feature Engineering}}{8}{subsection.35}%
-\contentsline {subsection}{\tocsubsection {}{3.4}{Statistical Analysis}}{8}{subsection.36}%
-\contentsline {subsubsection}{\tocsubsubsection {}{3.4.1}{ApoE4 dose effects on plasma metabolite levels in AD}}{8}{subsubsection.37}%
-\contentsline {subsubsection}{\tocsubsubsection {}{3.4.2}{Global testing}}{8}{subsubsection.40}%
-\contentsline {subsubsection}{\tocsubsubsection {}{3.4.3}{Machine Learning}}{9}{subsubsection.41}%
-\contentsline {subsubsection}{\tocsubsubsection {}{3.4.4}{Network analysis}}{10}{subsubsection.42}%
-\contentsline {subsection}{\tocsubsection {}{3.5}{R Packages}}{11}{subsection.43}%
-\contentsline {section}{\tocsection {}{4}{Results}}{12}{section.44}%
-\contentsline {subsection}{\tocsubsection {}{4.1}{Data Exploration and Visualisation}}{12}{subsection.45}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.1.1}{AD group}}{12}{subsubsection.47}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.1.2}{SCD and AD}}{12}{subsubsection.50}%
-\contentsline {subsection}{\tocsubsection {}{4.2}{RQi - Differential expression of plasma metabolites per ApoE4 dose among AD and SCD}}{12}{subsection.52}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.2.1}{Global Test}}{12}{subsubsection.53}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.2.2}{Hierarchical Global ANCOVA on Generalised Linear Models}}{12}{subsubsection.54}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.2.3}{ANOVA on Nested Linear Models}}{12}{subsubsection.55}%
-\contentsline {subsection}{\tocsubsection {}{4.3}{RQii - Classification of metabolites on ApoE4 presence}}{13}{subsection.56}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.3.1}{Benchmark model: clinical factors only}}{13}{subsubsection.57}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.3.2}{Fitting the full metabolomic panel, correcting for clinical factors}}{13}{subsubsection.58}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.3.3}{Fitting the metabolomic ML-estimated 6-factor Latent Projection}}{13}{subsubsection.59}%
-\contentsline {subsection}{\tocsubsection {}{4.4}{RQiii - Covariance Network analysis of metabolites}}{13}{subsection.60}%
-\contentsline {section}{\tocsection {}{5}{Discussion}}{14}{section.61}%
-\contentsline {section}{\tocsection {}{6}{Conclusion}}{15}{section.62}%
-\contentsline {section}{\tocsection {}{}{References}}{16}{section*.63}%
+\contentsline {section}{\tocsection {}{1}{Introduction}}{1}{section.4}%
+\contentsline {subsection}{\tocsubsection {}{1.1}{Alzheimer’s Disease}}{1}{subsection.5}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.1.1}{Amyloid cascade hypothesis}}{1}{subsubsection.6}%
+\contentsline {subsection}{\tocsubsection {}{1.2}{Human apolipoprotein-E gene}}{1}{subsection.7}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.2.1}{ApoE4 and Alzheimer's Disease}}{1}{subsubsection.8}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.2.2}{ApoE and ancestry in Alzheimer's Disease}}{1}{subsubsection.10}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.2.3}{ApoE and sex synergy in Alzheimer's Disease}}{2}{subsubsection.11}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.2.4}{Evolution of ApoE over time}}{2}{subsubsection.12}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.2.5}{Tissue expression}}{2}{subsubsection.13}%
+\contentsline {subsection}{\tocsubsection {}{1.3}{Apo-lipoprotein E}}{3}{subsection.14}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.3.1}{Structure and function}}{3}{subsubsection.15}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.3.2}{ApoE isoforms}}{3}{subsubsection.17}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.3.3}{Lipidation nuances of ApoE isoforms}}{3}{subsubsection.18}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.3.4}{Interplay between ApoE lipidation and Alzheimer's Disease}}{3}{subsubsection.20}%
+\contentsline {subsection}{\tocsubsection {}{1.4}{ApoE4-mediated metabolic changes in Alzheimer's Disease}}{4}{subsection.21}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.4.1}{Measured in \textit {post-mortem} brain tissue}}{5}{subsubsection.22}%
+\contentsline {subsubsection}{\tocsubsubsection {}{1.4.2}{Measured in blood}}{5}{subsubsection.23}%
+\contentsline {subsection}{\tocsubsection {}{1.5}{Research Questions}}{6}{subsection.25}%
+\contentsline {section}{\tocsection {}{2}{Data}}{7}{section.29}%
+\contentsline {section}{\tocsection {}{3}{Methodology}}{8}{section.30}%
+\contentsline {subsection}{\tocsubsection {}{3.1}{Data management}}{8}{subsection.31}%
+\contentsline {subsection}{\tocsubsection {}{3.2}{Data exploration and Visualisation}}{8}{subsection.32}%
+\contentsline {subsection}{\tocsubsection {}{3.3}{Data Wrangling and Feature Engineering}}{8}{subsection.33}%
+\contentsline {subsection}{\tocsubsection {}{3.4}{Statistical Analysis}}{8}{subsection.34}%
+\contentsline {subsubsection}{\tocsubsubsection {}{3.4.1}{ApoE4 dose effects on serum metabolite levels in AD}}{8}{subsubsection.35}%
+\contentsline {subsubsection}{\tocsubsubsection {}{3.4.2}{Global testing}}{8}{subsubsection.38}%
+\contentsline {subsubsection}{\tocsubsubsection {}{3.4.3}{Multi-class Classification of ApoE4 status and/or AD}}{9}{subsubsection.39}%
+\contentsline {subsubsection}{\tocsubsubsection {}{3.4.4}{Metabolite Covariance Network analysis}}{9}{subsubsection.40}%
+\contentsline {subsection}{\tocsubsection {}{3.5}{R Packages}}{11}{subsection.41}%
+\contentsline {section}{\tocsection {}{4}{Results}}{12}{section.42}%
+\contentsline {subsection}{\tocsubsection {}{4.1}{Data Exploration and Visualisation}}{12}{subsection.43}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.1.1}{AD group}}{12}{subsubsection.45}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.1.2}{SCD and AD}}{12}{subsubsection.48}%
+\contentsline {subsection}{\tocsubsection {}{4.2}{RQi - Differential expression of plasma metabolites per ApoE4 dose among AD and SCD}}{12}{subsection.50}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.2.1}{Global Test}}{12}{figure.53}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.2.2}{ANOVA on Nested Linear Models}}{12}{subsubsection.54}%
+\contentsline {subsection}{\tocsubsection {}{4.3}{RQii - Classification of metabolites on ApoE4 presence and AD}}{12}{figure.56}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.3.1}{Adding 230 metabolites}}{12}{figure.58}%
+\contentsline {subsection}{\tocsubsection {}{4.4}{RQiii - Covariance Network analysis of metabolites}}{12}{subsection.60}%
+\contentsline {section}{\tocsection {}{5}{Discussion}}{17}{section.61}%
+\contentsline {section}{\tocsection {}{6}{Conclusion}}{18}{section.62}%
+\contentsline {section}{\tocsection {}{}{References}}{19}{section*.63}%
+\contentsline {section}{\tocsection {Appendix}{A}{Multiclass ROC curves}}{24}{appendix.64}%
