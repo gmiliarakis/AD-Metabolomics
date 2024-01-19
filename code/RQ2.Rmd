@@ -1,0 +1,211 @@
+---
+title: "RQii - Classification of metabolites on ApoE class"
+output:
+  html_document: 
+    toc: yes
+    toc_depth: 4
+    tufte::tufte_handout: default
+    tufte::tufte_html: default
+    highlight: pygments
+  pdf_document:
+    toc: yes
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r, include = FALSE}
+require(caret)
+require(dplyr)
+require(e1071)
+require(FMradio)
+require(pROC)
+require(xgboost)
+require(rpart)
+require(DMwR2)
+require(nnet)
+require(ggplot2)
+require(ggthemes)
+```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  comment = NA, warning = FALSE
+)
+```
+```{r multifit}
+multifit <- function(X,
+                     y,
+                     model,
+                     ctrl = NULL,
+                     grid = NULL,
+                     seed = 87654, ...) {
+  set.seed(seed)
+  # Merge X and y into df
+  df <- cbind.data.frame(X, y)
+  # Train the model
+  mdl <- caret::train(df[, 1:ncol(X)], df$y,
+    method = model,
+    tuneGrid = grid,
+    trControl = ctrl,
+    metric = "logLoss",
+    ...
+  )
+  # Create a confusion matrix and get performance metrics from caret
+  obs <- mdl$pred$obs
+  preds <- mdl$pred$pred
+  cm <- confusionMatrix(reference = obs, data = preds, mode = "everything")
+  # Get the multi-class ROC curves
+  ys <- as.numeric(obs) - 1
+  yhats <- as.numeric(preds) - 1
+  roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T, legacy.axes = T)
+  out <- list("cm" = cm, "roc" = roc, "model" = mdl)
+  return(out)
+}
+
+evaluate <- function(model){
+print(model$roc$auc)
+print(model$cm)
+names(model$roc$rocs) <- c("ADE4-AD", "ADE4-SCDE4", "ADE4-SCD", "AD-SCDE4", "AD-SCD", "SCDE4-SCD")
+ggroc(model$roc$rocs, legacy.axes=T) + scale_color_tableau() + theme_tufte()  + guides(color = guide_legend(title = "ROC curves")) 
+}
+```
+
+### Preparation
+```{r multi_preparation}
+load("data/data.Rdata")
+X <- scale(df[, 1:230])
+y <- df$target
+
+Xclin = cbind.data.frame(X, clin_dummy)
+
+
+ctrl <- trainControl(
+  method = "repeatedcv",
+  number = 10,
+  repeats = 10,
+  savePredictions = "final",
+  classProbs = T,
+  summaryFunction = multiClassSummary,
+  selectionFunction = best,
+  search = "random",
+  sampling = "smote"
+)
+```
+
+### Fitting a benchmark model: clinical characteristics only
+
+```{r mlogit}
+benchmark <- multifit(
+  X = clin_dummy,
+  y = y,
+  model = "multinom",
+  ctrl = ctrl,
+  grid = expand.grid(decay = 0),
+  trace = F
+)
+
+evaluate(benchmark)
+```
+
+### Regularized Multinomial Regression adding 230 metabolites
+
+```{r}
+mlr <- multifit(
+  X = Xclin,
+  y = y,
+  model = "multinom",
+  ctrl = ctrl,
+  grid = expand.grid(decay = 10),
+  trace = F
+)
+
+evaluate(mlr)
+```
+
+### Projection to Latent Factors
+
+```{r get_thomson}
+project <- function(X, m, seed) {
+  set.seed(seed)
+  X <- scale(as.matrix(df[,1:230]))
+  cov <- cor(X)
+
+  # Find redundant features
+  filter <- RF(cov)
+
+  # Filter out redundant features
+  filtered <- subSet(X, filter)
+
+  # Regularized correlation matrix estimation
+  M <- regcor(filtered)
+
+  # Get the regularized correlation matrix of the filtered dataset
+  R <- M$optCor
+
+  mlfa <- mlFA(R, m = 6)
+  thomson <- facScore(filtered, mlfa$Loadings, mlfa$Uniqueness)
+  return(thomson)
+}
+```
+
+```{r}
+thomson <- project(X, 6, seed = 1234)
+X <- cbind(clin_dummy, thomson)
+```
+
+#### Multinomial Logistic Regression adding 6 factors
+```{r }
+mlrf <- multifit(
+  X = X,
+  y = y,
+  model = "multinom",
+  ctrl = ctrl,
+  trace = FALSE,
+  grid = expand.grid(decay = 0)
+)
+
+evaluate(mlrf)
+```
+
+#### Decision Tree
+
+```{r multi_tree}
+tree <- multifit(
+  X = X,
+  y = y,
+  model = "rpart2",
+  ctrl = ctrl,
+  grid = expand.grid(maxdepth=3)
+)
+
+evaluate(tree)
+```
+
+#### XGBoost Forest
+
+```{r }
+xgb <- multifit(
+  X = X,
+  y = y,
+  model = "xgbTree",
+  ctrl = ctrl,
+  grid = xgb.grid
+)
+
+evaluate(xgb)
+```
+## Model Comparison
+Observations:
+
+
+1. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models.  
+
+
+2. Fitting 6 ML-estimated factors obtained by the FMradio package (cummulatively explaining 30% of variace) yields increased classification performance, serving as a valuable dimension reduction technique for high-dimensional data.
+
+
+3. Looking at the confusion matrix and individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/AD-E4 and SCD+E4/SCD-E4).
+
+```{r}
+aucs <- c(MLR0 = benchmark$roc$auc, MLR1 = mlr$roc$auc, MLR2 = mlrf$roc$auc, TREE = tree$roc$auc, XGB = xgb$roc$auc)
+knitr::kable(t(aucs))
+```

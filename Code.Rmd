@@ -107,7 +107,7 @@ nested <- function(Y, x, ...) {
   p_values <- data.frame(p_values, row.names = colnames(Y))
 
   # Calculate the FDR-adjusted p-values
-  p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
+  p_values$p_adj <- p.adjust(p_values[, ], method = "fdr", n=230 )
   
   # Filter out the non-significant (a=0.05) FDR-adjusted p-values
   sig <- as.data.frame(dplyr::filter(p_values, p_values < 0.05))
@@ -130,7 +130,7 @@ nested <- function(Y, x, ...) {
 }
 ```
 ### SCD and AD
-The  metabolites most affected by ApoE4 dose are D-L-3-aminoisobutyric.acid, histamine, L-serine, cerebroside D18.1.24.0, lysophosphatidyl-choline 18.1, phosphatidyl-choline 34.4, 36.6 and 40.4, sphingomyelin 22 and 24, LpH.PGE2, cLpH.PGA2, HpH.LPA.C20.5 and taurine.
+The  metabolites most affected by ApoE4 dose are D-L-3-aminoisobutyric.acid, histamine, L-serine, ceramide d18:1/24:0, lysophosphatidylcholine 18:1, phosphatidylcholine 34:4, 36:6 and 40:4, sphingomyelin d18:1/22:0 and d18:1/24:0, LpH.PGE2, cLpH.PGA2, Lyso-phosphatidic acid 20:5 and taurine.
 ```{r}
 Y <- df[, 1:230]
 df$E4dose <- as.numeric(df$E4dose) -1
@@ -197,14 +197,14 @@ multifit <- function(X,
   out <- list("cm" = cm, "roc" = roc, "model" = mdl)
   return(out)
 }
-
+httpgd::hgd()
 evaluate <- function(model){
 print(model$roc$auc)
 cat("\n")
 print(model$cm)
 names(model$roc$rocs) <- c("ADE4-AD", "ADE4-SCDE4", "ADE4-SCD", "AD-SCDE4", "AD-SCD", "SCDE4-SCD")
-g <- ggroc(model$roc$rocs, legacy.axes = T) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
-ggplotly(g)
+ggroc(model$roc$rocs, legacy.axes = T) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
+# ggplotly(g)
 }
 ```
 

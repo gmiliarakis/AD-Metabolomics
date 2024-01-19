@@ -1,0 +1,112 @@
+---
+title: "ApoE4 dose effects on serum metabolites"
+output:
+    tufte::tufte_html: default
+    toc: yes
+    toc_depth: 4
+    highlight: pygments
+editor_options:
+  chunk_output_type: inline
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  comment = NA, warning = FALSE, message = FALSE, echo=FALSE
+)
+```
+```{r, include = FALSE}
+require(globaltest)
+require(GlobalAncova)
+load("data/data.Rdata")
+load("data/clinical.Rdata")
+clinical$V_MMSE <- NULL
+df[, 1:230] <- scale(df[, 1:230])
+AD <- subset(df, Diagnosis == "Probable AD")
+AD$sex <- as.numeric(AD$sex) -1
+```
+
+Metabolite-level models to test for ApoE4 dose effects.
+```{r}
+nested <- function(Y, x, ...) {
+  ### Analysis of Variance (ANOVA)
+  x <- as.factor(x)
+  df <- cbind(Y, x, ...)
+  ncol <- ncol(Y)
+  covariates <- names(...)
+  F_tests <- purrr::map(df[, 1:ncol], ~ {
+    frm <- as.formula(paste0(".x ~", paste(covariates, collapse = "+")))
+    rm <- lm(frm, data = df)
+    ffm <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
+    fm <- lm(ffm, data = df)
+    anova(rm, fm)
+  })
+  # Correction for Multiple Testing
+  # Create a list to store the p-values
+  p_values <- list(1:ncol)
+  # Extract the p-values of the F-tests from the anova summaries list and store them in p_values
+  for (i in 1:ncol) {
+    p_values[[i]] <- F_tests[[i]][["Pr(>F)"]][[2]]
+  }
+  # Coerce p_values to dataframe and transpose it
+  p_values <- t(data.frame(p_values))
+
+  # Set as row names the metabolites
+  p_values <- data.frame(p_values, row.names = colnames(Y))
+
+  # Calculate the FDR-adjusted p-values
+  p_values$p_adj <- p.adjust(p_values[, ], method = "fdr")
+  
+  # Filter out the non-significant (a=0.05) FDR-adjusted p-values
+  sig <- as.data.frame(dplyr::filter(p_values, p_values < 0.05))
+  sig <- sig[order(sig$p_adj), ]
+
+  cat("Significant F-tests: \n")
+  print(sig)
+  cat("\nDose effects on metabolites:")
+  knitr::kable(sig)
+  summaries <- purrr::map(df[, rownames(sig)], ~ {
+    f <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
+    mdl <- lm(f, data = df)
+    plot(mdl)
+    summary(mdl)$coefficients[1:length(table(x)), ]
+  })
+  summaries <- lapply(summaries, function(x) {
+    x <- x[, -c(2, 3)]
+    x <- t(x)
+  })
+  summaries <- plyr::ldply(summaries, id = 1:2)
+  return(knitr::kable(summaries, table.attr = "style='width:30%;'"))
+}
+```
+### SCD and AD
+```{r}
+Y <- df[, 1:230]
+df$E4dose <- as.numeric(df$E4dose) -1
+df$E4dose[df$E4dose == 0] <- "No ApoE4"
+df$E4dose[df$E4dose == 1] <- "1 ApoE4"
+df$E4dose[df$E4dose == 2] <- "2 ApoE4"
+E4dose <- df$E4dose <- as.factor(df$E4dose)
+## Testing for effects of ApoE4 dose
+nested(Y, relevel(E4dose, ref= 3L), clinical)
+```
+
+### AD group only
+```{r}
+AD <- subset(df, Diagnosis == "Probable AD")
+ADY <- AD[, 1:230]
+ADE4dose <- AD$E4dose
+ADclinical <- clinical[df$Diagnosis == "Probable AD",]
+
+## Testing for effects of ApoE4 dose
+nested(ADY, relevel(ADE4dose, ref= "No ApoE4"), ADclinical)
+```
+
+### SCD group only
+```{r}
+SCD <- df[df$Diagnosis == "Subjectieve klachten",]
+SCDY <- SCD[, 1:230]
+SCDE4dose <- SCD$E4dose
+SCDclinical <- clinical[df$Diagnosis == "Subjectieve klachten",]
+
+## Testing for effects of ApoE4 dose
+nested(SCDY, relevel(SCDE4dose, ref= 3L), SCDclinical)
+```

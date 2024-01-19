@@ -6666,135 +6666,6 @@
       \field{title}{{The Global Test and the globaltest R package}}
       \field{year}{2023}
     \endentry
-    \entry{Mansmann2005TestingApproach}{article}{}
-      \name{author}{2}{}{%
-        {{hash=64c1794d77dfe5b32acda4f4d5bd47c0}{%
-           family={Mansmann},
-           familyi={M\bibinitperiod},
-           given={Ulrich},
-           giveni={U\bibinitperiod}}}%
-        {{hash=2318331f10fbefbd137339c08f848ae6}{%
-           family={Meister},
-           familyi={M\bibinitperiod},
-           given={R.},
-           giveni={R\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {Schattauer GmbH}%
-      }
-      \strng{namehash}{cb6e3863de8250f188ef6a2fabaa1c42}
-      \strng{fullhash}{0a092346fec271b59d7afba2825a2e54}
-      \strng{bibnamehash}{0a092346fec271b59d7afba2825a2e54}
-      \strng{authorbibnamehash}{0a092346fec271b59d7afba2825a2e54}
-      \strng{authornamehash}{cb6e3863de8250f188ef6a2fabaa1c42}
-      \strng{authorfullhash}{0a092346fec271b59d7afba2825a2e54}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{issn}{00261270}
-      \field{journaltitle}{Methods of Information in Medicine}
-      \field{number}{3}
-      \field{title}{{Testing differential gene expression in functional groups: Goeman's global test versus an ANCOVA approach}}
-      \field{volume}{44}
-      \field{year}{2005}
-      \field{pages}{449\bibrangedash 453}
-      \range{pages}{5}
-      \verb{doi}
-      \verb 10.1055/S-0038-1633992/ID/JR1633992-15/BIB
-      \endverb
-      \verb{urlraw}
-      \verb http://www.thieme-connect.com/products/ejournals/html/10.1055/s-0038-1633992 http://www.thieme-connect.de/DOI/DOI?10.1055/s-0038-1633992
-      \endverb
-      \verb{url}
-      \verb http://www.thieme-connect.com/products/ejournals/html/10.1055/s-0038-1633992%20http://www.thieme-connect.de/DOI/DOI?10.1055/s-0038-1633992
-      \endverb
-      \keyw{ANCOVA,Global test,Microarrays,Permutation test}
-    \endentry
-    \entry{Hummel2008GlobalANCOVA:Effects}{article}{}
-      \name{author}{3}{}{%
-        {{hash=22544cb7889064710aada03dabdfd0ff}{%
-           family={Hummel},
-           familyi={H\bibinitperiod},
-           given={Manuela},
-           giveni={M\bibinitperiod}}}%
-        {{hash=384c80e0cf847080e98599f8d2627a4a}{%
-           family={Meister},
-           familyi={M\bibinitperiod},
-           given={Reinhard},
-           giveni={R\bibinitperiod}}}%
-        {{hash=64c1794d77dfe5b32acda4f4d5bd47c0}{%
-           family={Mansmann},
-           familyi={M\bibinitperiod},
-           given={Ulrich},
-           giveni={U\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {Bioinformatics}%
-      }
-      \strng{namehash}{4e2427e9740e227d8673816f79f4cbbc}
-      \strng{fullhash}{91f653d885e3cbfc8401d1fcde7c4105}
-      \strng{bibnamehash}{91f653d885e3cbfc8401d1fcde7c4105}
-      \strng{authorbibnamehash}{91f653d885e3cbfc8401d1fcde7c4105}
-      \strng{authornamehash}{4e2427e9740e227d8673816f79f4cbbc}
-      \strng{authorfullhash}{91f653d885e3cbfc8401d1fcde7c4105}
-      \field{extraname}{1}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{issn}{1367-4811}
-      \field{journaltitle}{Bioinformatics (Oxford, England)}
-      \field{month}{1}
-      \field{number}{1}
-      \field{title}{{GlobalANCOVA: exploration and assessment of gene group effects}}
-      \field{volume}{24}
-      \field{year}{2008}
-      \field{pages}{78\bibrangedash 85}
-      \range{pages}{8}
-      \verb{doi}
-      \verb 10.1093/BIOINFORMATICS/BTM531
-      \endverb
-      \verb{urlraw}
-      \verb https://pubmed.ncbi.nlm.nih.gov/18024976/
-      \endverb
-      \verb{url}
-      \verb https://pubmed.ncbi.nlm.nih.gov/18024976/
-      \endverb
-      \keyw{Algorithms*,Biological*,Computer Simulation,Gene Expression Profiling / methods*,MEDLINE,Manuela Hummel,Models,Multigene Family / physiology*,NCBI,NIH,NLM,National Center for Biotechnology Information,National Institutes of Health,National Library of Medicine,Non-U.S. Gov't,Proteome / metabolism*,PubMed Abstract,Reinhard Meister,Research Support,Signal Transduction / physiology,Software*,Ulrich Mansmann,User-Computer Interface*,doi:10.1093/bioinformatics/btm531,pmid:18024976}
-    \endentry
-    \entry{Hummel2023GlobalExpression}{article}{}
-      \name{author}{3}{}{%
-        {{hash=22544cb7889064710aada03dabdfd0ff}{%
-           family={Hummel},
-           familyi={H\bibinitperiod},
-           given={Manuela},
-           giveni={M\bibinitperiod}}}%
-        {{hash=384c80e0cf847080e98599f8d2627a4a}{%
-           family={Meister},
-           familyi={M\bibinitperiod},
-           given={Reinhard},
-           giveni={R\bibinitperiod}}}%
-        {{hash=64c1794d77dfe5b32acda4f4d5bd47c0}{%
-           family={Mansmann},
-           familyi={M\bibinitperiod},
-           given={Ulrich},
-           giveni={U\bibinitperiod}}}%
-      }
-      \strng{namehash}{4e2427e9740e227d8673816f79f4cbbc}
-      \strng{fullhash}{91f653d885e3cbfc8401d1fcde7c4105}
-      \strng{bibnamehash}{91f653d885e3cbfc8401d1fcde7c4105}
-      \strng{authorbibnamehash}{91f653d885e3cbfc8401d1fcde7c4105}
-      \strng{authornamehash}{4e2427e9740e227d8673816f79f4cbbc}
-      \strng{authorfullhash}{91f653d885e3cbfc8401d1fcde7c4105}
-      \field{extraname}{2}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{{Global testing of dierential gene expression}}
-      \field{year}{2023}
-    \endentry
     \entry{Elshawi2019OnHypertension}{article}{}
       \name{author}{3}{}{%
         {{hash=ab485215bc9299482265e2ee520f7d10}{%
@@ -6822,8 +6693,8 @@
       \strng{authorbibnamehash}{7829504b5300fa16ec3f1e8d7496eabc}
       \strng{authornamehash}{a33be71416a322268204e4e8ea8e816b}
       \strng{authorfullhash}{7829504b5300fa16ec3f1e8d7496eabc}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{14726947}
@@ -7411,6 +7282,135 @@
       \verb 10.3389/FMOLB.2022.841373/BIBTEX
       \endverb
       \keyw{experimental network,graph-based analysis,knowledge network,metabolic network,metabolism,systems biology,untargeted metabolomics}
+    \endentry
+    \entry{Mansmann2005TestingApproach}{article}{}
+      \name{author}{2}{}{%
+        {{hash=64c1794d77dfe5b32acda4f4d5bd47c0}{%
+           family={Mansmann},
+           familyi={M\bibinitperiod},
+           given={Ulrich},
+           giveni={U\bibinitperiod}}}%
+        {{hash=2318331f10fbefbd137339c08f848ae6}{%
+           family={Meister},
+           familyi={M\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Schattauer GmbH}%
+      }
+      \strng{namehash}{cb6e3863de8250f188ef6a2fabaa1c42}
+      \strng{fullhash}{0a092346fec271b59d7afba2825a2e54}
+      \strng{bibnamehash}{0a092346fec271b59d7afba2825a2e54}
+      \strng{authorbibnamehash}{0a092346fec271b59d7afba2825a2e54}
+      \strng{authornamehash}{cb6e3863de8250f188ef6a2fabaa1c42}
+      \strng{authorfullhash}{0a092346fec271b59d7afba2825a2e54}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{00261270}
+      \field{journaltitle}{Methods of Information in Medicine}
+      \field{number}{3}
+      \field{title}{{Testing differential gene expression in functional groups: Goeman's global test versus an ANCOVA approach}}
+      \field{volume}{44}
+      \field{year}{2005}
+      \field{pages}{449\bibrangedash 453}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1055/S-0038-1633992/ID/JR1633992-15/BIB
+      \endverb
+      \verb{urlraw}
+      \verb http://www.thieme-connect.com/products/ejournals/html/10.1055/s-0038-1633992 http://www.thieme-connect.de/DOI/DOI?10.1055/s-0038-1633992
+      \endverb
+      \verb{url}
+      \verb http://www.thieme-connect.com/products/ejournals/html/10.1055/s-0038-1633992%20http://www.thieme-connect.de/DOI/DOI?10.1055/s-0038-1633992
+      \endverb
+      \keyw{ANCOVA,Global test,Microarrays,Permutation test}
+    \endentry
+    \entry{Hummel2008GlobalANCOVA:Effects}{article}{}
+      \name{author}{3}{}{%
+        {{hash=22544cb7889064710aada03dabdfd0ff}{%
+           family={Hummel},
+           familyi={H\bibinitperiod},
+           given={Manuela},
+           giveni={M\bibinitperiod}}}%
+        {{hash=384c80e0cf847080e98599f8d2627a4a}{%
+           family={Meister},
+           familyi={M\bibinitperiod},
+           given={Reinhard},
+           giveni={R\bibinitperiod}}}%
+        {{hash=64c1794d77dfe5b32acda4f4d5bd47c0}{%
+           family={Mansmann},
+           familyi={M\bibinitperiod},
+           given={Ulrich},
+           giveni={U\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Bioinformatics}%
+      }
+      \strng{namehash}{4e2427e9740e227d8673816f79f4cbbc}
+      \strng{fullhash}{91f653d885e3cbfc8401d1fcde7c4105}
+      \strng{bibnamehash}{91f653d885e3cbfc8401d1fcde7c4105}
+      \strng{authorbibnamehash}{91f653d885e3cbfc8401d1fcde7c4105}
+      \strng{authornamehash}{4e2427e9740e227d8673816f79f4cbbc}
+      \strng{authorfullhash}{91f653d885e3cbfc8401d1fcde7c4105}
+      \field{extraname}{1}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1367-4811}
+      \field{journaltitle}{Bioinformatics (Oxford, England)}
+      \field{month}{1}
+      \field{number}{1}
+      \field{title}{{GlobalANCOVA: exploration and assessment of gene group effects}}
+      \field{volume}{24}
+      \field{year}{2008}
+      \field{pages}{78\bibrangedash 85}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1093/BIOINFORMATICS/BTM531
+      \endverb
+      \verb{urlraw}
+      \verb https://pubmed.ncbi.nlm.nih.gov/18024976/
+      \endverb
+      \verb{url}
+      \verb https://pubmed.ncbi.nlm.nih.gov/18024976/
+      \endverb
+      \keyw{Algorithms*,Biological*,Computer Simulation,Gene Expression Profiling / methods*,MEDLINE,Manuela Hummel,Models,Multigene Family / physiology*,NCBI,NIH,NLM,National Center for Biotechnology Information,National Institutes of Health,National Library of Medicine,Non-U.S. Gov't,Proteome / metabolism*,PubMed Abstract,Reinhard Meister,Research Support,Signal Transduction / physiology,Software*,Ulrich Mansmann,User-Computer Interface*,doi:10.1093/bioinformatics/btm531,pmid:18024976}
+    \endentry
+    \entry{Hummel2023GlobalExpression}{article}{}
+      \name{author}{3}{}{%
+        {{hash=22544cb7889064710aada03dabdfd0ff}{%
+           family={Hummel},
+           familyi={H\bibinitperiod},
+           given={Manuela},
+           giveni={M\bibinitperiod}}}%
+        {{hash=384c80e0cf847080e98599f8d2627a4a}{%
+           family={Meister},
+           familyi={M\bibinitperiod},
+           given={Reinhard},
+           giveni={R\bibinitperiod}}}%
+        {{hash=64c1794d77dfe5b32acda4f4d5bd47c0}{%
+           family={Mansmann},
+           familyi={M\bibinitperiod},
+           given={Ulrich},
+           giveni={U\bibinitperiod}}}%
+      }
+      \strng{namehash}{4e2427e9740e227d8673816f79f4cbbc}
+      \strng{fullhash}{91f653d885e3cbfc8401d1fcde7c4105}
+      \strng{bibnamehash}{91f653d885e3cbfc8401d1fcde7c4105}
+      \strng{authorbibnamehash}{91f653d885e3cbfc8401d1fcde7c4105}
+      \strng{authornamehash}{4e2427e9740e227d8673816f79f4cbbc}
+      \strng{authorfullhash}{91f653d885e3cbfc8401d1fcde7c4105}
+      \field{extraname}{2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Global testing of dierential gene expression}}
+      \field{year}{2023}
     \endentry
     \entry{heatmaply}{article}{}
       \name{author}{8}{}{%

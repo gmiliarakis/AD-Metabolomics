@@ -37,6 +37,7 @@
             "name": "latexmk",
             "command": "latexmk",
             "args": [
+                "-shell-escape",
                 "-synctex=1",
                 "-interaction=nonstopmode",
                 "-file-line-error",
@@ -162,7 +163,7 @@
         "*.pdf": "latex-workshop-pdf-hook",
         "*.Rdata": "default"
     ,
-    "workbench.colorTheme": "GitHub Light Default",
+    "workbench.colorTheme": "GitHub Dark Default",
     "workbench.settings.openDefaultKeybindings": true,
     "r.dependencyChecks": true,
     "r.linting.doubleQuotes": false,

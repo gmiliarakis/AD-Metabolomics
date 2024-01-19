@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="httpgd" width="660.00" height="480.00" viewBox="0 0 660.00 480.00">
+<defs>
+  <style type='text/css'><![CDATA[
+    .httpgd line, .httpgd polyline, .httpgd polygon, .httpgd path, .httpgd rect, .httpgd circle {
+      fill: none;
+      stroke: #000000;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10.00;
+    }
+  ]]></style>
+<clipPath id="c0"><rect x="0.00" y="0.00" width="660.00" height="480.00"/></clipPath>
+<clipPath id="c1"><rect x="38.22" y="5.48" width="519.34" height="443.95"/></clipPath>
+<clipPath id="c2"><rect x="0.00" y="0.00" width="660.00" height="480.00"/></clipPath>
+</defs>
+<rect width="100%" height="100%" style="stroke: none;fill: #FFFFFF;"/>
+<g clip-path="url(#c0)">
+</g><g clip-path="url(#c1)">
+<polyline points="61.83,429.25 66.99,412.16 73.30,386.64 256.88,274.94 533.95,25.66" style="stroke-width: 1.07;stroke: #4E79A7;stroke-linecap: butt;"/>
+<polyline points="61.83,429.25 66.99,233.71 73.30,32.12 256.88,26.06 533.95,25.66" style="stroke-width: 1.07;stroke: #F28E2B;stroke-linecap: butt;"/>
+<polyline points="61.83,429.25 66.99,190.99 73.30,39.25 256.88,29.88 533.95,25.66" style="stroke-width: 1.07;stroke: #E15759;stroke-linecap: butt;"/>
+<polyline points="61.83,429.25 81.82,233.71 111.68,32.12 242.35,26.06 533.95,25.66" style="stroke-width: 1.07;stroke: #76B7B2;stroke-linecap: butt;"/>
+<polyline points="61.83,429.25 81.82,190.99 111.68,39.25 242.35,29.88 533.95,25.66" style="stroke-width: 1.07;stroke: #59A14F;stroke-linecap: butt;"/>
+<polyline points="61.83,429.25 290.57,190.99 526.40,39.25 533.48,29.88 533.95,25.66" style="stroke-width: 1.07;stroke: #EDC948;stroke-linecap: butt;"/>
+</g><g clip-path="url(#c2)">
+<g><text x="33.29" y="432.17" text-anchor="end" style="font-family: Times;font-size: 8.80px;fill: #4D4D4D;" textLength="15.39px" lengthAdjust="spacingAndGlyphs">0.00</text></g>
+<g><text x="33.29" y="331.27" text-anchor="end" style="font-family: Times;font-size: 8.80px;fill: #4D4D4D;" textLength="15.39px" lengthAdjust="spacingAndGlyphs">0.25</text></g>
+<g><text x="33.29" y="230.37" text-anchor="end" style="font-family: Times;font-size: 8.80px;fill: #4D4D4D;" textLength="15.39px" lengthAdjust="spacingAndGlyphs">0.50</text></g>
+<g><text x="33.29" y="129.47" text-anchor="end" style="font-family: Times;font-size: 8.80px;fill: #4D4D4D;" textLength="15.39px" lengthAdjust="spacingAndGlyphs">0.75</text></g>
+<g><text x="33.29" y="28.57" text-anchor="end" style="font-family: Times;font-size: 8.80px;fill: #4D4D4D;" textLength="15.39px" lengthAdjust="spacingAndGlyphs">1.00</text></g>
+<polyline points="35.48,429.25 38.22,429.25" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="35.48,328.35 38.22,328.35" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="35.48,227.46 38.22,227.46" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="35.48,126.56 38.22,126.56" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="35.48,25.66 38.22,25.66" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="61.83,452.17 61.83,449.43" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="179.86,452.17 179.86,449.43" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="297.89,452.17 297.89,449.43" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="415.92,452.17 415.92,449.43" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<polyline points="533.95,452.17 533.95,449.43" style="stroke-width: 1.07;stroke: #333333;stroke-linecap: butt;"/>
+<g><text x="61.83" y="460.19" text-anchor="middle" style="font-family: Times;font-size: 8.80px;fill: #4D4D4D;" textLength="15.39px" lengthAdjust="spacingAndGlyphs">0.00</text></g>
+<g><text x="179.86" y="460.19" text-anchor="middle" style="font-family: Times;font-size: 8.80px;fill: #4D4D4D;" textLength="15.39px" lengthAdjust="spacingAndGlyphs">0.25</text></g>
+<g><text x="297.89" y="460.19" text-anchor="middle" style="font-family: Times;font-size: 8.80px;fill: #4D4D4D;" textLength="15.39px" lengthAdjust="spacingAndGlyphs">0.50</text></g>
+<g><text x="415.92" y="460.19" text-anchor="middle" style="font-family: Times;font-size: 8.80px;fill: #4D4D4D;" textLength="15.39px" lengthAdjust="spacingAndGlyphs">0.75</text></g>
+<g><text x="533.95" y="460.19" text-anchor="middle" style="font-family: Times;font-size: 8.80px;fill: #4D4D4D;" textLength="15.39px" lengthAdjust="spacingAndGlyphs">1.00</text></g>
+<g><text x="297.89" y="472.12" text-anchor="middle" style="font-family: Times;font-size: 11.00px;" textLength="54.97px" lengthAdjust="spacingAndGlyphs">1-specificity</text></g>
+<g><text transform="translate(12.76,227.46) rotate(-90.00)" text-anchor="middle" style="font-family: Times;font-size: 11.00px;" textLength="45.22px" lengthAdjust="spacingAndGlyphs">sensitivity</text></g>
+<g><text x="574.00" y="176.52" style="font-family: Times;font-size: 11.00px;" textLength="54.08px" lengthAdjust="spacingAndGlyphs">ROC curves</text></g>
+<line x1="575.72" y1="191.83" x2="589.55" y2="191.83" style="stroke-width: 1.07;stroke: #4E79A7;stroke-linecap: butt;"/>
+<line x1="575.72" y1="209.11" x2="589.55" y2="209.11" style="stroke-width: 1.07;stroke: #F28E2B;stroke-linecap: butt;"/>
+<line x1="575.72" y1="226.39" x2="589.55" y2="226.39" style="stroke-width: 1.07;stroke: #E15759;stroke-linecap: butt;"/>
+<line x1="575.72" y1="243.67" x2="589.55" y2="243.67" style="stroke-width: 1.07;stroke: #76B7B2;stroke-linecap: butt;"/>
+<line x1="575.72" y1="260.95" x2="589.55" y2="260.95" style="stroke-width: 1.07;stroke: #59A14F;stroke-linecap: butt;"/>
+<line x1="575.72" y1="278.23" x2="589.55" y2="278.23" style="stroke-width: 1.07;stroke: #EDC948;stroke-linecap: butt;"/>
+<g><text x="596.75" y="194.75" style="font-family: Times;font-size: 8.80px;" textLength="38.10px" lengthAdjust="spacingAndGlyphs">ADE4-AD</text></g>
+<g><text x="596.75" y="212.03" style="font-family: Times;font-size: 8.80px;" textLength="52.29px" lengthAdjust="spacingAndGlyphs">ADE4-SCDE4</text></g>
+<g><text x="596.75" y="229.31" style="font-family: Times;font-size: 8.80px;" textLength="42.52px" lengthAdjust="spacingAndGlyphs">ADE4-SCD</text></g>
+<g><text x="596.75" y="246.59" style="font-family: Times;font-size: 8.80px;" textLength="42.52px" lengthAdjust="spacingAndGlyphs">AD-SCDE4</text></g>
+<g><text x="596.75" y="263.87" style="font-family: Times;font-size: 8.80px;" textLength="32.75px" lengthAdjust="spacingAndGlyphs">AD-SCD</text></g>
+<g><text x="596.75" y="281.15" style="font-family: Times;font-size: 8.80px;" textLength="46.93px" lengthAdjust="spacingAndGlyphs">SCDE4-SCD</text></g>
+</g>
+</svg>
