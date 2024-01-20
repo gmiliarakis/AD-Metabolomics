@@ -42,7 +42,7 @@
                 "-interaction=nonstopmode",
                 "-file-line-error",
                 "-pdf",
-                "-output-directory=out"
+                "-output-directory=out",
                 "%DOC%"
             ],
             "env": {}
@@ -55,7 +55,7 @@
                 "-interaction=nonstopmode",
                 "-file-line-error",
                 "-lualatex",
-                "-output-directory=out"
+                "-output-directory=out",
                 "%DOC%"
             ],
             "env": {}
@@ -197,9 +197,9 @@
     "terminal.integrated.inheritEnv": true,
     "editor.fontLigatures": true,
     "r.plot.useHttpgd": true,
-    "r.rpath.mac": "",
+    "r.rpath.mac": "/usr/local/bin/R",
     "r.rpath.windows": "",
-    "r.rterm.mac": "/Library/Frameworks/Python.framework/Versions/3.12/bin/radian",
+    "r.rterm.mac": "/usr/local/bin/radian",
     "r.rterm.windows": "",
     "latex-workshop.latex.recipes": [
     
