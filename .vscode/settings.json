@@ -199,7 +199,7 @@
     "r.plot.useHttpgd": true,
     "r.rpath.mac": "/usr/local/bin/R",
     "r.rpath.windows": "",
-    "r.rterm.mac": "/usr/local/bin/radian",
+    "r.rterm.mac": "/Users/gm/anaconda3/bin/radian",
     "r.rterm.windows": "",
     "latex-workshop.latex.recipes": [
     
