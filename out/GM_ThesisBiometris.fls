@@ -1818,12 +1818,6 @@ INPUT /usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf-pc.en
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/vf/public/newtx/ntx-Regular-tlf-ot1.vf
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/newtx/txmiaX.tfm
 INPUT /usr/local/texlive/2023/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-ot1r.tfm
-INPUT out/GM_ThesisBiometris.acr
-INPUT out/GM_ThesisBiometris.acr
-INPUT out/GM_ThesisBiometris.acr
-INPUT out/GM_ThesisBiometris.acr
-INPUT out/GM_ThesisBiometris.acr
-INPUT out/GM_ThesisBiometris.acr
 INPUT out/GM_ThesisBiometris.toc
 INPUT out/GM_ThesisBiometris.toc
 INPUT out/GM_ThesisBiometris.toc

@@ -6666,6 +6666,61 @@
       \field{title}{{The Global Test and the globaltest R package}}
       \field{year}{2023}
     \endentry
+    \entry{Drummond2010}{inbook}{}
+      \name{author}{1}{}{%
+        {{hash=cfe90807bb047011818affb278de6f61}{%
+           family={Drummond},
+           familyi={D\bibinitperiod},
+           given={Chris},
+           giveni={C\bibinitperiod}}}%
+      }
+      \name{editor}{2}{}{%
+        {{hash=e94495f7b9c258a3a6722a976198d15b}{%
+           family={Sammut},
+           familyi={S\bibinitperiod},
+           given={Claude},
+           giveni={C\bibinitperiod}}}%
+        {{hash=021b501817a8d003c9b230aaed364b70}{%
+           family={Webb},
+           familyi={W\bibinitperiod},
+           given={Geoffrey\bibnamedelima I.},
+           giveni={G\bibinitperiod\bibinitdelim I\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Boston, MA}%
+      }
+      \list{publisher}{1}{%
+        {Springer US}%
+      }
+      \strng{namehash}{cfe90807bb047011818affb278de6f61}
+      \strng{fullhash}{cfe90807bb047011818affb278de6f61}
+      \strng{bibnamehash}{cfe90807bb047011818affb278de6f61}
+      \strng{authorbibnamehash}{cfe90807bb047011818affb278de6f61}
+      \strng{authornamehash}{cfe90807bb047011818affb278de6f61}
+      \strng{authorfullhash}{cfe90807bb047011818affb278de6f61}
+      \strng{editorbibnamehash}{e7ced06e01b6a1273dcf5a7a3f56d1e4}
+      \strng{editornamehash}{439dd77798c181e6ee7f5ce3501a6ca7}
+      \strng{editorfullhash}{e7ced06e01b6a1273dcf5a7a3f56d1e4}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Encyclopedia of Machine Learning}
+      \field{isbn}{978-0-387-30164-8}
+      \field{title}{Classification}
+      \field{year}{2010}
+      \field{pages}{171\bibrangedash 171}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1007/978-0-387-30164-8_111
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/978-0-387-30164-8_111
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/978-0-387-30164-8_111
+      \endverb
+    \endentry
     \entry{Elshawi2019OnHypertension}{article}{}
       \name{author}{3}{}{%
         {{hash=ab485215bc9299482265e2ee520f7d10}{%
@@ -6693,8 +6748,8 @@
       \strng{authorbibnamehash}{7829504b5300fa16ec3f1e8d7496eabc}
       \strng{authornamehash}{a33be71416a322268204e4e8ea8e816b}
       \strng{authorfullhash}{7829504b5300fa16ec3f1e8d7496eabc}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{14726947}
@@ -7501,6 +7556,33 @@
       \verb{url}
       \verb https://www.stats.ox.ac.uk/pub/MASS4/
       \endverb
+    \endentry
+    \entry{furrr}{manual}{}
+      \name{author}{2}{}{%
+        {{hash=858f3a61393526cfc73cb860925a277a}{%
+           family={Vaughan},
+           familyi={V\bibinitperiod},
+           given={Davis},
+           giveni={D\bibinitperiod}}}%
+        {{hash=f897665e1a235bb04b3eb58c48cb4bda}{%
+           family={Dancho},
+           familyi={D\bibinitperiod},
+           given={Matt},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{cfd5152d6091689de8a2ba5f4a8dd9fd}
+      \strng{fullhash}{99ec999b89d27d6442793e119ac9308b}
+      \strng{bibnamehash}{99ec999b89d27d6442793e119ac9308b}
+      \strng{authorbibnamehash}{99ec999b89d27d6442793e119ac9308b}
+      \strng{authornamehash}{cfd5152d6091689de8a2ba5f4a8dd9fd}
+      \strng{authorfullhash}{99ec999b89d27d6442793e119ac9308b}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{https://github.com/DavisVaughan/furrr, https://furrr.futureverse.org/}
+      \field{title}{furrr: Apply Mapping Functions in Parallel using Futures}
+      \field{year}{2022}
     \endentry
   \enddatalist
 \endrefsection
