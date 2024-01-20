@@ -51,6 +51,7 @@
 %\newcommand{\LA}{\mathbf{\Lambda}}
 
 % For bibliography
+\usepackage[utf8]{inputenc}
 \usepackage[
     backend=biber,
     style=nature, 
@@ -324,7 +325,7 @@ For ApoE to exert its effects, it needs to be lipidated \cite{Husain2021APOETher
 
 Poor lipidation leads to poor ApoE recycling \cite{Yassine2020APOEDisease}. The latter favors the entrapment of ABCA1 in endosomes, away from the cell membrane, thereby pooling cholesterol in the cell membrane rather than attaching it to HDL particles \cite{Rawat2019ApoE4Astrocytes}. This increased cholesterol content in the cell membrane amplifies \acrfull{tlr4} signaling in macrophages, activating \acrshort{nfkb} and inducing an inflammatory gene response \cite{Yassine2020APOEDisease}.  ApoE4 accumulation also sequestrates insulin receptor (IR) in endosomes, impacting cellular energy preferences \cite{Zhao2017ApolipoproteinEndosomes}. This leads to a decrease in glucose utilization for \acrshort{atp} production and an increase in fatty acid oxidation \cite{Svennerholm1997ChangesSwedes}. 
 
-\begin{figure}[]
+\begin{figure}[b]
   \includegraphics[width=\textwidth]{figures/ApoEeffects.jpg}
     \caption{Schematic overview of A$\beta$-independent effects of ApoE in AD pathology. The isoform-dependent effects of ApoE are indicated. Abbreviations: apoE, apolipoprotein E; NFT, neurofibrillary tangle; BBB, blood brain barrier; IL, interleukin; TNF-$\alpha$, Tumor necrosis factor-$\alpha$; ROS, reactive oxygen species. \cite{Husain2021APOETherapeutics}}
   \label{ApoeEffects}
@@ -344,9 +345,9 @@ Transcriptomic and lipidomic analyses in humanized ApoE mice associated ApoE4 wi
 Perturbed serum metabolites associated with AD are aminoacids, amines \cite{deLeeuw2017Blood-basedDisease, Green2023InvestigatingDisease}, cholesteryl esters \cite{Proitsi2017AssociationAnalysis}, sphingolipids \cite{Varma2018BrainStudy,Sun2022AssociationDisease,Green2023InvestigatingDisease,Oeckl2019GlialImpairment,Barupal2019SetsPathophysiology}, fatty acids \cite{Fernandez-Calle2022APOEDiseases,deLeeuw2017Blood-basedDisease}, glycerophospholipids \cite{Varma2018BrainStudy, Jia2022ATypes,Huo2020BrainAnalysis, Weng2019TheImpairment}, phosphatidylcholines \cite{Simpson2016BloodAging} and lipid peroxidation compounds \cite{Fernandez-Calle2022APOEDiseases}. These molecules are usually identified via high-throughput metabolomic pipelines (coupled with Mass Spectrometry (MS) detectors) that trace all compounds in a sample and result in high-dimensional data \cite{Oka2023MultiomicsCohort}. The latter often require advanced statistical methods e.g. projection to latent structures \cite{Weng2019TheImpairment, Peeters2019StableData} or graphical models \cite{Peeters2022Rags2ridges:Matrices} in order to extract putatively meaningful information. 
 With such techniques, de Leeuw et al. discovered distinct serum metabolic signatures among AD patients-controls and those carrying at least one ApoE $\varepsilon_4$ allele \cite{deLeeuw2017Blood-basedDisease}, as they appear in Fig. \ref{fig2}. The different metabolic profiles, however, among ApoE4 non-carriers remain obscure. The present data science approach shows ApoE4-mediated differentially expressed metabolites, potentially unveiling distinct pathways of metabolic deregulation in AD.
 
-\begin{figure}
-\vspace*{-1cm}
-  \includegraphics[width=\textwidth]{figures/network.jpeg}
+\begin{figure}[h]
+\vspace*{-0.2cm}
+  \includegraphics[width=0.9\textwidth]{figures/network.jpeg}
     \caption{Mutual (left-hand panel) and distinct(right-hand panel) metabolic network topologies between ApoE $\varepsilon4$ carriers and non-carriers in AD, as published by de Leeuw et al.. Red edges represent links that are present exclusively in ApoeE $\varepsilon4$ carriers with AD. Green edges represent connections found in the SCD group. Solid edges represent positive partial correlations, while dashed edges represent negative partial correlations. Abbreviations: SCD, subjective cognitive decline }
   \label{fig3}
 \end{figure}
@@ -421,27 +422,6 @@ A \textit{Gaussian graphical model} (\acrshort{ggm}) is an undirected graph that
 In natural language, a zero value in the inverse covariance matrix (usually referred to as precision matrix $\mathbf{\Omega}$) implies that the respective random features are independent, given the rest of features, and they are not connected by an undirected edge $((i, j) \notin \mathcal{E})$ \cite{Peeters2022Rags2ridges:Matrices}.
 
 In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices} was used to generate the feature covariance matrix, as well as the precision matrix, regularise it and represent it in a GGM --as shown in Fig. \ref{fig2}. The package was designed for metabolomic GGMs.
-
-\clearpage
-\subsection{R Packages}
-\hspace{5 pt}
-\begin{multicols}{3}
-\begin{itemize}
-    \item[] \textsf{caret} \cite{Kuhn2008BuildingPackage}
-    \item[]\textsf{dplyr} \cite{dplyr}
-    \item[]\textsf{DMwR2} \cite{DMwR2}
-    \item[]\textsf{globaltest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage}
-    \item[]\textsf{GlobalAncova} \cite{Mansmann2005TestingApproach, Hummel2008GlobalANCOVA:Effects, Hummel2023GlobalExpression}
-    \item[]\textsf{heatmaply} \cite{heatmaply}
-    \item[]\textsf{FMradio} \cite{Peeters2019StableData}
-    \item[]\textsf{furrr}
-    \item[]\textsf{nnet} \cite{nnet}
-    \item[]\textsf{pROC} \cite{pROC}
-    \item[]\textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices}
-    \item[]\textsf{rpart} \cite{rpart}
-    \item[]\textsf{xgboost} \cite{Chen2016XGBoost:System}
-\end{itemize}
-\end{multicols}
 
 \clearpage
 \section{Results}
@@ -523,7 +503,7 @@ AD \vline  & 34& 86\\
   \label{roc:full}
 \end{figure}
 
-\subsubsection[Fitting the 6-factor Latent Projection of the 230 metabolites]
+\subsubsection{Fitting the 6-factor Latent Projection of the 230 metabolites}
 
 
 \begin{figure}
@@ -550,22 +530,118 @@ AD \vline  & 34& 86\\
 %--------------------------------------------------------------------
 %--------------- References -----------------------------------------
 \newpage
-\printbibliography
+\section*{References}
+\printbibliography[heading=none]
+\clearpage
 %--------------- References -----------------------------------------
 %--------------------------------------------------------------------
-\clearpage
-\appendix
+\appendix 
 \section{Multiclass ROC curves}
-\begin{figure}
-  \includesvg[width=.8\textwidth]{figures/tree.svg}
+\begin{figure}[h]
+  \includesvg[width=.75\textwidth]{figures/tree.svg}
   \caption{ROC curves of Decision Tree fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV}
   \label{roc:tree}
-\end{figure}
-\begin{figure}
-  \includesvg[width=.8\textwidth]{figures/xgb.svg}
+  \includesvg[width=.75\textwidth]{figures/xgb.svg}
   \caption{ROC curves of Xtreme Gradient Booster fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV}
   \label{roc:xgb}
   \end{figure}
+\section{R Session Information}
+
+\begin{verbatim}
+R version 4.3.2 (2023-10-31)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.2.1
+
+Matrix products: default
+BLAS:   .../vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8
+
+time zone: Europe/Amsterdam
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices datasets  utils     methods   base     
+
+other attached packages:
+ [1] rags2ridges_2.2.7       nnet_7.3-19             DMwR2_0.0.2                       
+ [4] dplyr_1.1.4             caret_6.0-94            lattice_0.21-9                    
+ [7] globaltest_5.56.0       survival_3.5-7          heatmaply_1.5.0               
+[10] xgboost_1.7.6.1         pROC_1.18.5             FMradio_1.1.1       
+[13] future_1.33.0           ggthemes_5.0.0          GlobalAncova_4.20.0 
+[16] viridisLite_0.4.2       plotly_4.10.3           ggplot2_3.4.4
+[19] rpart_4.1.21            furrr_0.3.1             viridis_0.6.4 
+[22] e1071_1.7-14            corpcor_1.6.10
+
+loaded via a namespace (and not attached):
+  [1] splines_4.3.2           bitops_1.0-7            tibble_3.2.1                              
+  [4] XML_3.99-0.16           lifecycle_1.0.4         globals_0.16.2                            
+  [7] magrittr_2.0.3          Hmisc_5.1-1             rmarkdown_2.25                        
+ [10] lubridate_1.9.3         zlibbioc_1.48.0         sfsmisc_1.1-16                                 
+ [13] RCurl_1.98-1.13         ipred_0.9-14            lava_1.7.3                               
+ [16] S4Vectors_0.40.2        listenv_0.9.0           gRbase_2.0.1                                
+ [19] codetools_0.2-19        tidyselect_1.2.0        TSP_1.2-4                                             
+ [22] jsonlite_1.8.8          Formula_1.2-5           iterators_1.0.14                     
+ [25] snowfall_1.84-6.3       Rcpp_1.0.11             glue_1.6.2                           
+ [28] tufte_0.13              TTR_0.24.4              GenomeInfoDb_1.38.2         
+ [31] fastmap_1.1.1           fansi_1.0.6             digest_0.6.33                  
+ [34] RSQLite_2.3.4           utf8_1.2.4              tidyr_1.3.0                  
+ [37] recipes_1.0.9           class_7.3-22            httr_1.4.7                      
+ [40] gtable_0.3.4            timeDate_4032.109       blob_1.2.4                     
+ [43] RBGL_1.78.0             GSEABase_1.64.0         scales_1.3.0                        
+ [46] knitr_1.45              rstudioapi_0.15.0       tzdb_0.4.0                         
+ [49] curl_5.2.0              proxy_0.4-27            cachem_1.0.8                     
+ [52] foreign_0.8-85          AnnotationDbi_1.64.1    pillar_1.9.0                        
+ [55] VGAM_1.1-9              xtable_1.8-4            cluster_2.1.4                       
+ [58] cli_3.6.2               compiler_4.3.2          rlang_1.1.2                     
+ [61] plyr_1.8.9              stringi_1.8.3           assertthat_0.2.1               
+ [64] Matrix_1.6-1.1          hms_1.1.3               bit64_4.0.5                      
+ [67] quantmod_0.4.25         bit_4.0.5               hardhat_1.3.0 
+ [70] graph_1.80.0            xts_0.13.1              MASS_7.3-60 
+ [73] dendextend_1.17.1       backports_1.4.1         yaml_2.3.8   
+ [76] DBI_1.1.3               RColorBrewer_1.1-3      expm_0.999-8   
+ [79] purrr_1.0.2             BiocGenerics_0.48.1     seriation_1.5.4 
+ [82] IRanges_2.36.0          RSpectra_0.16-1         GenomeInfoDbData_1.2.11
+ [85] annotate_1.80.0         parallelly_1.36.0       stats4_4.3.2 
+ [88] foreach_1.5.2           tools_4.3.2             snow_0.4-4
+ [91] prodlim_2023.08.28      gridExtra_2.3           xfun_0.41 
+ [94] ca_0.71.1               withr_2.5.2             BiocManager_1.30.22
+ [97] timechange_0.2.0        R6_2.5.1                colorspace_2.1-0
+[100] generics_0.1.3          renv_1.0.3              data.table_1.14.10
+[103] htmlwidgets_1.6.4       ModelMetrics_1.2.2.2    pkgconfig_2.0.3
+[106] registry_0.5-1          XVector_0.42.0          htmltools_0.5.7
+[109] Biobase_2.62.0          png_0.1-8               gower_1.0.1
+[112] reshape2_1.4.4          checkmate_2.3.1         nlme_3.1-163
+[115] zoo_1.8-12              stringr_1.5.1           parallel_4.3.2
+[118] grid_4.3.2              reshape_0.8.9           vctrs_0.6.5
+[121] htmlTable_2.4.2         evaluate_0.23           readr_2.1.4
+[124] crayon_1.5.2            future.apply_1.11.0     fdrtool_1.2.17 
+[127] munsell_0.5.0           Biostrings_2.70.1       lazyeval_0.2.2 
+[130] KEGGREST_1.42.0         igraph_1.6.0            memoise_2.0.1 
+[133] base64enc_0.1-3         webshot_0.5.5
+\end{verbatim}
+
+\section{R packages}
+\hspace{5 pt}
+\begin{multicols}{3}
+\begin{itemize}
+    \item[] \textsf{caret} \cite{Kuhn2008BuildingPackage}
+    \item[]\textsf{dplyr} \cite{dplyr}
+    \item[]\textsf{DMwR2} \cite{DMwR2}
+    \item[]\textsf{globaltest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage}
+    \item[]\textsf{GlobalAncova} \cite{Mansmann2005TestingApproach, Hummel2008GlobalANCOVA:Effects, Hummel2023GlobalExpression}
+    \item[]\textsf{heatmaply} \cite{heatmaply}
+    \item[]\textsf{FMradio} \cite{Peeters2019StableData}
+    \item[]\textsf{nnet} \cite{nnet}
+    \item[]\textsf{pROC} \cite{pROC}
+    \item[]\textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices}
+    \item[]\textsf{rpart} \cite{rpart}
+    \item[]\textsf{xgboost} \cite{Chen2016XGBoost:System}
+    \item[]\textsf{furrr} \cite{furrr}
+\end{itemize}
+\end{multicols}
 
 \end{document}
 

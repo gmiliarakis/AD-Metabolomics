@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.1.16)  19 JAN 2024 22:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.1.16)  20 JAN 2024 15:20
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -884,6 +884,10 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip88
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
+) (/usr/local/texlive/2023/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks46
+\inpenc@posthook=\toks47
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/biblatex/biblatex.sty
 Package: biblatex 2023/03/05 v3.19 programmable bibliographies (PK/MW)
  (/usr/local/texlive/2023/texmf-dist/tex/latex/logreq/logreq.sty
@@ -1125,8 +1129,8 @@ Package: blx-case-expl3 2023/03/05 v3.19 expl3 case changing code for biblatex
 Package: glossaries 2022/11/03 v4.52 (NLCT)
  (/usr/local/texlive/2023/texmf-dist/tex/latex/mfirstuc/mfirstuc.sty
 Package: mfirstuc 2022/10/14 v2.08 (NLCT)
-\@glsmfirst=\toks46
-\@glsmrest=\toks47
+\@glsmfirst=\toks48
+\@glsmrest=\toks49
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/xfor/xfor.sty
 Package: xfor 2009/02/05 v1.05 (NLCT)
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/datatool/datatool-base.sty
@@ -1172,7 +1176,7 @@ Package: fp-upn 1996/10/21
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/fp/fp-eval.sty
 Package: fp-eval 1995/04/03
 )))
-\@dtl@toks=\toks48
+\@dtl@toks=\toks50
 \@dtl@tmpcount=\count506
 \dtl@tmplength=\skip111
 \dtl@sortresult=\count507
@@ -1183,12 +1187,12 @@ Package: fp-eval 1995/04/03
 \@dtl@foreach@level=\count512
 )
 \gls@level=\count513
-\@gls@tmpb=\toks49
+\@gls@tmpb=\toks51
 \gls@tmplen=\skip112
-\glskeylisttok=\toks50
-\glslabeltok=\toks51
-\glsshorttok=\toks52
-\glslongtok=\toks53
+\glskeylisttok=\toks52
+\glslabeltok=\toks53
+\glsshorttok=\toks54
+\glslongtok=\toks55
  (/usr/local/texlive/2023/texmf-dist/tex/latex/glossaries/styles/glossary-hypernav.sty
 Package: glossary-hypernav 2022/11/03 v4.52 (NLCT)
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/glossaries/styles/glossary-list.sty
@@ -1213,7 +1217,7 @@ Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
 \LT@rows=\count516
 \c@LT@tables=\count517
 \c@LT@chunks=\count518
-\LT@p@ftn=\toks54
+\LT@p@ftn=\toks56
 )
 \glsdescwidth=\skip118
 \glspagelistwidth=\skip119
@@ -1244,72 +1248,72 @@ Package: glossary-tree 2022/11/03 v4.52 (NLCT)
 \glo@acronym@file=\write6
 \openout6 = `GM_ThesisBiometris.acn'.
 
-Package glossaries Info: Writing glossary file GM_ThesisBiometris.acn on input line 65.
-LaTeX Font Info:    Trying to load font information for OT1+ntxtlf on input line 113.
+Package glossaries Info: Writing glossary file GM_ThesisBiometris.acn on input line 66.
+LaTeX Font Info:    Trying to load font information for OT1+ntxtlf on input line 114.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/newtx/ot1ntxtlf.fd
 File: ot1ntxtlf.fd 2021/05/24 v1.0 font definition file for OT1/ntx/tlf
 )
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 10.0pt on input line 113.
-Package translations Info: No language package found. I am going to use `english' as default language. on input line 113.
+(Font)              scaled to size 10.0pt on input line 114.
+Package translations Info: No language package found. I am going to use `english' as default language. on input line 114.
 \@quotelevel=\count520
 \@quotereset=\count521
  (out/GM_ThesisBiometris.aux)
 \openout1 = `GM_ThesisBiometris.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 113.
-LaTeX Font Info:    Trying to load font information for OML+txmi on input line 113.
+LaTeX Font Info:    Checking defaults for OML/txmi/m/it on input line 114.
+LaTeX Font Info:    Trying to load font information for OML+txmi on input line 114.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/txfonts/omltxmi.fd
 File: omltxmi.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 113.
-LaTeX Font Info:    Trying to load font information for OMS+txsy on input line 113.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for OMS/txsy/m/n on input line 114.
+LaTeX Font Info:    Trying to load font information for OMS+txsy on input line 114.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/txfonts/omstxsy.fd
 File: omstxsy.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 113.
-LaTeX Font Info:    Trying to load font information for OMX+txex on input line 113.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for OMX/txex/m/n on input line 114.
+LaTeX Font Info:    Trying to load font information for OMX+txex on input line 114.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/txfonts/omxtxex.fd
 File: omxtxex.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 113.
-LaTeX Font Info:    Trying to load font information for U+txexa on input line 113.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for U/txexa/m/n on input line 114.
+LaTeX Font Info:    Trying to load font information for U+txexa on input line 114.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/txfonts/utxexa.fd
 File: utxexa.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 113.
-LaTeX Font Info:    ... okay on input line 113.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 114.
+LaTeX Font Info:    ... okay on input line 114.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 8.0pt on input line 113.
-LaTeX Font Info:    Trying to load font information for OT1+txr on input line 113.
+(Font)              scaled to size 8.0pt on input line 114.
+LaTeX Font Info:    Trying to load font information for OT1+txr on input line 114.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/txfonts/ot1txr.fd
 File: ot1txr.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    Trying to load font information for U+txsya on input line 113.
+LaTeX Font Info:    Trying to load font information for U+txsya on input line 114.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/txfonts/utxsya.fd
 File: utxsya.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    Trying to load font information for U+txsyb on input line 113.
+LaTeX Font Info:    Trying to load font information for U+txsyb on input line 114.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/txfonts/utxsyb.fd
 File: utxsyb.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    Trying to load font information for U+txmia on input line 113.
+LaTeX Font Info:    Trying to load font information for U+txmia on input line 114.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/txfonts/utxmia.fd
 File: utxmia.fd 2000/12/15 v3.1
 )
-LaTeX Font Info:    Trying to load font information for U+txsyc on input line 113.
+LaTeX Font Info:    Trying to load font information for U+txsyc on input line 114.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/txfonts/utxsyc.fd
 File: utxsyc.fd 2000/12/15 v3.1
 )
@@ -1354,12 +1358,12 @@ File: utxsyc.fd 2000/12/15 v3.1
 \scratchbox=\box139
 \nofMPsegments=\count523
 \nofMParguments=\count524
-\everyMPshowfont=\toks55
+\everyMPshowfont=\toks57
 \MPscratchCnt=\count525
 \MPscratchDim=\dimen330
 \MPnumerator=\count526
 \makeMPintoPDFobject=\count527
-\everyMPtoPDFconversion=\toks56
+\everyMPtoPDFconversion=\toks58
 ) (/usr/local/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -1368,7 +1372,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
 \c@mv@tabular=\count528
 \c@mv@boldtabular=\count529
-Package hyperref Info: Link coloring OFF on input line 113.
+Package hyperref Info: Link coloring OFF on input line 114.
  (out/GM_ThesisBiometris.out) (out/GM_ThesisBiometris.out)
 \@outlinefile=\write7
 \openout7 = `GM_ThesisBiometris.out'.
@@ -1376,7 +1380,7 @@ Package hyperref Info: Link coloring OFF on input line 113.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/translations/translations-basic-dictionary-english.trsl
 File: translations-basic-dictionary-english.trsl (english translation file `translations-basic-dictionary')
 )
-Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 113.
+Package translations Info: loading dictionary `translations-basic-dictionary' for `english'. on input line 114.
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/biblatex/lbx/english.lbx
@@ -1385,56 +1389,58 @@ File: english.lbx 2023/03/05 v3.19 biblatex localization (PK/MW)
 Package biblatex Info: Input encoding 'utf8' detected.
 Package biblatex Info: Automatic encoding selection.
 (biblatex)             Assuming data encoding 'utf8'.
+Package biblatex Info: Input encoding 'ascii' forced by
+(biblatex)             'safeinputenc' option.
 \openout4 = `GM_ThesisBiometris.bcf'.
 
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'GM_ThesisBiometris.bbl' found.
  (out/GM_ThesisBiometris.bbl)
-Package biblatex Info: Reference section=0 on input line 113.
-Package biblatex Info: Reference segment=0 on input line 113.
-<figures/WURlogo.png, id=187, 903.375pt x 501.875pt>
+Package biblatex Info: Reference section=0 on input line 114.
+Package biblatex Info: Reference segment=0 on input line 114.
+<figures/WURlogo.png, id=195, 903.375pt x 501.875pt>
 File: figures/WURlogo.png Graphic file (type png)
 <use figures/WURlogo.png>
-Package pdftex.def Info: figures/WURlogo.png  used on input line 157.
+Package pdftex.def Info: figures/WURlogo.png  used on input line 158.
 (pdftex.def)             Requested size: 192.0548pt x 106.69106pt.
-<figures/biometris_logo.png, id=188, 390.45876pt x 75.28125pt>
+<figures/biometris_logo.png, id=196, 390.45876pt x 75.28125pt>
 File: figures/biometris_logo.png Graphic file (type png)
 <use figures/biometris_logo.png>
-Package pdftex.def Info: figures/biometris_logo.png  used on input line 164.
+Package pdftex.def Info: figures/biometris_logo.png  used on input line 165.
 (pdftex.def)             Requested size: 182.45146pt x 35.17656pt.
 
-Overfull \hbox (47.30217pt too wide) in paragraph at lines 164--165
+Overfull \hbox (47.30217pt too wide) in paragraph at lines 165--166
  []| []
  []
 
-<figures/torontodeclaration.png, id=189, 1027.84pt x 876.27374pt>
+<figures/torontodeclaration.png, id=197, 1027.84pt x 876.27374pt>
 File: figures/torontodeclaration.png Graphic file (type png)
 <use figures/torontodeclaration.png>
-Package pdftex.def Info: figures/torontodeclaration.png  used on input line 175.
+Package pdftex.def Info: figures/torontodeclaration.png  used on input line 176.
 (pdftex.def)             Requested size: 213.39568pt x 181.92369pt.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 20.74pt on input line 187.
-LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
 (Font)              scaled to size 20.74pt on input line 188.
-LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 14.4pt on input line 190.
-LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 12.0pt on input line 195.
-LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 9.0pt on input line 207.
-LaTeX Font Info:    Font shape `OT1/ntxtlf/m/it' will be
-(Font)              scaled to size 9.0pt on input line 221.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
+(Font)              scaled to size 20.74pt on input line 189.
+LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
+(Font)              scaled to size 14.4pt on input line 191.
+LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
+(Font)              scaled to size 12.0pt on input line 196.
+LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
+(Font)              scaled to size 9.0pt on input line 208.
+LaTeX Font Info:    Font shape `OT1/ntxtlf/m/it' will be
 (Font)              scaled to size 9.0pt on input line 222.
+LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
+(Font)              scaled to size 9.0pt on input line 223.
 [0
 \openout5 = `GM_ThesisBiometris.ist'.
 
 
 {/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc} <./figures/WURlogo.png> <./figures/biometris_logo.png> <./figures/torontodeclaration.png>]
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/sc' will be
-(Font)              scaled to size 10.0pt on input line 240.
+(Font)              scaled to size 10.0pt on input line 241.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 7.0pt on input line 248.
+(Font)              scaled to size 7.0pt on input line 249.
  [1{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf-pc.enc}] [2] (out/GM_ThesisBiometris.acr) [3
 
 ] (out/GM_ThesisBiometris.toc
@@ -1444,168 +1450,190 @@ LaTeX Font Info:    Font shape `OT1/ntxtlf/m/it' will be
 \tf@toc=\write8
 \openout8 = `GM_ThesisBiometris.toc'.
 
- [4]
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [4] [5]
 LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
-(Font)              scaled to size 10.0pt on input line 270.
+(Font)              scaled to size 10.0pt on input line 271.
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 286.
+               Default added (so using `tbp') on input line 287.
 
-<figures/ApoE@2x.png, id=293, 1597.97pt x 845.1575pt>
+<figures/ApoE@2x.png, id=307, 1597.97pt x 845.1575pt>
 File: figures/ApoE@2x.png Graphic file (type png)
 <use figures/ApoE@2x.png>
-Package pdftex.def Info: figures/ApoE@2x.png  used on input line 287.
+Package pdftex.def Info: figures/ApoE@2x.png  used on input line 288.
 (pdftex.def)             Requested size: 298.75264pt x 158.00238pt.
 [1{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc}] [2 <./figures/ApoE@2x.png>]
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 313.
+               Default added (so using `tbp') on input line 314.
 
-<figures/ApoEprot.png, id=384, 1958.31625pt x 807.015pt>
+<figures/ApoEprot.png, id=398, 1958.31625pt x 807.015pt>
 File: figures/ApoEprot.png Graphic file (type png)
 <use figures/ApoEprot.png>
-Package pdftex.def Info: figures/ApoEprot.png  used on input line 314.
+Package pdftex.def Info: figures/ApoEprot.png  used on input line 315.
 (pdftex.def)             Requested size: 341.43437pt x 140.70023pt.
-
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 327.
-
-<figures/ApoEeffects.jpg, id=409, 469.755pt x 382.51479pt>
+<figures/ApoEeffects.jpg, id=423, 469.755pt x 382.51479pt>
 File: figures/ApoEeffects.jpg Graphic file (type jpg)
 <use figures/ApoEeffects.jpg>
-Package pdftex.def Info: figures/ApoEeffects.jpg  used on input line 328.
+Package pdftex.def Info: figures/ApoEeffects.jpg  used on input line 329.
 (pdftex.def)             Requested size: 426.79135pt x 347.52867pt.
 [3 <./figures/ApoEprot.png>] [4 <./figures/ApoEeffects.jpg>]
-<figures/network.jpeg, id=495, 1314.0pt x 742.41pt>
+<figures/network.jpeg, id=509, 1314.0pt x 742.41pt>
 File: figures/network.jpeg Graphic file (type jpg)
 <use figures/network.jpeg>
-Package pdftex.def Info: figures/network.jpeg  used on input line 349.
-(pdftex.def)             Requested size: 426.79135pt x 241.13312pt.
- [5] [6 <./figures/network.jpeg>] [7
+Package pdftex.def Info: figures/network.jpeg  used on input line 350.
+(pdftex.def)             Requested size: 384.1096pt x 217.01527pt.
+ [5 <./figures/network.jpeg>] [6] [7
 
 ]
-LaTeX Font Info:    Trying to load font information for OT1+txss on input line 373.
+LaTeX Font Info:    Trying to load font information for OT1+txss on input line 374.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/txfonts/ot1txss.fd
 File: ot1txss.fd 2000/12/15 v3.1
 )
 LaTeX Font Info:    Font shape `OT1/txss/m/n' will be
-(Font)              scaled to size 9.49997pt on input line 373.
-LaTeX Font Info:    Trying to load font information for TS1+ntxtlf on input line 392.
+(Font)              scaled to size 9.49997pt on input line 374.
+LaTeX Font Info:    Trying to load font information for TS1+ntxtlf on input line 393.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/newtx/ts1ntxtlf.fd
 File: ts1ntxtlf.fd 2015/01/18 v1.0 fd file for TS1/ntxtlf
 )
 LaTeX Font Info:    Font shape `TS1/ntxtlf/m/n' will be
-(Font)              scaled to size 10.0pt on input line 392.
-LaTeX Font Info:    Trying to load font information for OT1+txtt on input line 392.
+(Font)              scaled to size 10.0pt on input line 393.
+LaTeX Font Info:    Trying to load font information for OT1+txtt on input line 393.
  (/usr/local/texlive/2023/texmf-dist/tex/latex/txfonts/ot1txtt.fd
 File: ot1txtt.fd 2000/12/15 v3.1
 ) [8{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}]
-Overfull \hbox (32.57426pt too wide) in paragraph at lines 397--398
+Overfull \hbox (32.57426pt too wide) in paragraph at lines 398--399
 \OT1/ntxtlf/m/n/10 fer-ing broad parametriza-tion op-tions [[]91[]]. The func-tions \OT1/txtt/m/n/10 trainControl(), train() and confusionMatrix()
  []
 
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
-(Font)              scaled to size 5.0pt on input line 401.
-[9] [10] [11
-
-]
-<figures/gt1.png, id=655, 1349.04pt x 1541.76pt>
+(Font)              scaled to size 5.0pt on input line 402.
+[9] [10]
+<figures/gt1.png, id=647, 1349.04pt x 1541.76pt>
 File: figures/gt1.png Graphic file (type png)
 <use figures/gt1.png>
-Package pdftex.def Info: figures/gt1.png  used on input line 496.
+Package pdftex.def Info: figures/gt1.png  used on input line 476.
 (pdftex.def)             Requested size: 426.79135pt x 487.75073pt.
-<figures/gt2.png, id=656, 1349.04pt x 1541.76pt>
+<figures/gt2.png, id=648, 1349.04pt x 1541.76pt>
 File: figures/gt2.png Graphic file (type png)
 <use figures/gt2.png>
-Package pdftex.def Info: figures/gt2.png  used on input line 503.
+Package pdftex.def Info: figures/gt2.png  used on input line 483.
 (pdftex.def)             Requested size: 426.79135pt x 487.75073pt.
-<./svg-inkscape/bench_svg-raw.png, id=657, 496.9767pt x 361.35pt>
+<./svg-inkscape/bench_svg-raw.png, id=649, 496.9767pt x 361.35pt>
 File: ./svg-inkscape/bench_svg-raw.png Graphic file (type png)
 <use ./svg-inkscape/bench_svg-raw.png>
-Package pdftex.def Info: ./svg-inkscape/bench_svg-raw.png  used on input line 513.
+Package pdftex.def Info: ./svg-inkscape/bench_svg-raw.png  used on input line 493.
 (pdftex.def)             Requested size: 496.97548pt x 361.34912pt.
-<./svg-inkscape/fullmultinom_svg-raw.png, id=658, 496.9767pt x 361.35pt>
+<./svg-inkscape/fullmultinom_svg-raw.png, id=650, 496.9767pt x 361.35pt>
 File: ./svg-inkscape/fullmultinom_svg-raw.png Graphic file (type png)
 <use ./svg-inkscape/fullmultinom_svg-raw.png>
-Package pdftex.def Info: ./svg-inkscape/fullmultinom_svg-raw.png  used on input line 521.
+Package pdftex.def Info: ./svg-inkscape/fullmultinom_svg-raw.png  used on input line 501.
 (pdftex.def)             Requested size: 496.97548pt x 361.34912pt.
-
-Runaway argument?
-/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex:527: Paragraph ended before \@sect was complete.
-<to be read again> 
-                   \par 
-l.527 
-      
-I suspect you've forgotten a `}', causing me to apply this
-control sequence to too much text. How can we recover?
-My plan is to forget the whole thing and hope for the best.
-
-<./svg-inkscape/6factor_svg-raw.png, id=659, 496.9767pt x 361.35pt>
+<./svg-inkscape/6factor_svg-raw.png, id=651, 496.9767pt x 361.35pt>
 File: ./svg-inkscape/6factor_svg-raw.png Graphic file (type png)
 <use ./svg-inkscape/6factor_svg-raw.png>
-Package pdftex.def Info: ./svg-inkscape/6factor_svg-raw.png  used on input line 530.
+Package pdftex.def Info: ./svg-inkscape/6factor_svg-raw.png  used on input line 510.
 (pdftex.def)             Requested size: 496.97548pt x 361.34912pt.
-[12
+ [11
 
-] [13 <./figures/gt1.png>] [14 <./figures/gt2.png>] [15 <./svg-inkscape/bench_svg-raw.png> <./svg-inkscape/fullmultinom_svg-raw.png>] [16 <./svg-inkscape/6factor_svg-raw.png>] [17
+] [12 <./figures/gt1.png>] [13 <./figures/gt2.png>] [14 <./svg-inkscape/bench_svg-raw.png> <./svg-inkscape/fullmultinom_svg-raw.png>] [15 <./svg-inkscape/6factor_svg-raw.png>] [16
 
-] [18
+] [17
 
 ]
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/it' will be
-(Font)              scaled to size 8.0pt on input line 553.
+(Font)              scaled to size 8.0pt on input line 534.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
-(Font)              scaled to size 8.0pt on input line 553.
+(Font)              scaled to size 8.0pt on input line 534.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/sc' will be
-(Font)              scaled to size 8.0pt on input line 553.
+(Font)              scaled to size 8.0pt on input line 534.
 
-Overfull \hbox (9.11664pt too wide) in paragraph at lines 556--556
+Overfull \hbox (9.11664pt too wide) in paragraph at lines 534--534
 []\OT1/ntxtlf/m/n/8 2023 Alzheimer's dis-ease facts and fig-ures. \OT1/ntxtlf/m/it/8 Alzheimer's & De-men-tia \OT1/ntxtlf/b/n/8 19, \OT1/ntxtlf/m/n/8 1598{1695. \OT1/ntxtlf/m/sc/8 issn\OT1/ntxtlf/m/n/8 : 1552-5279. []$\OT1/txtt/m/n/8 https : / / onlinelibrary .
  []
 
-[19] [20] [21]
+[18] [19]
+/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex:534: Undefined control sequence.
+<argument> ...ipids with Alzheimer's disease: A\x 
+                                                  {00a0}comprehensive\x {00a...
+l.534 \printbibliography[heading=none]
+                                      
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex:556: LaTeX Error: Unicode character ℓ (U+2113)
-               not set up for use with LaTeX.
+/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex:534: Undefined control sequence.
+<argument> ... disease: A\x {00a0}comprehensive\x 
+                                                  {00a0}lipidomics analysis}
+l.534 \printbibliography[heading=none]
+                                      
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.556 \clearpage
-                
-You may provide a definition with
-\DeclareUnicodeCharacter 
+[20]
+/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex:534: Undefined control sequence.
+<argument> {rags2ridges: A One-Stop-\x 
+                                       {2113}2-Shop for Graphical Modeling o...
+l.534 \printbibliography[heading=none]
+                                      
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
 
-[22] [23]
-<./svg-inkscape/tree_svg-raw.png, id=864, 496.9767pt x 361.35pt>
+[21] [22]
+<./svg-inkscape/tree_svg-raw.png, id=860, 496.9767pt x 361.35pt>
 File: ./svg-inkscape/tree_svg-raw.png Graphic file (type png)
 <use ./svg-inkscape/tree_svg-raw.png>
-Package pdftex.def Info: ./svg-inkscape/tree_svg-raw.png  used on input line 560.
+Package pdftex.def Info: ./svg-inkscape/tree_svg-raw.png  used on input line 541.
 (pdftex.def)             Requested size: 496.97548pt x 361.34912pt.
-<./svg-inkscape/xgb_svg-raw.png, id=865, 496.9767pt x 361.35pt>
+<./svg-inkscape/xgb_svg-raw.png, id=861, 496.9767pt x 361.35pt>
 File: ./svg-inkscape/xgb_svg-raw.png Graphic file (type png)
 <use ./svg-inkscape/xgb_svg-raw.png>
-Package pdftex.def Info: ./svg-inkscape/xgb_svg-raw.png  used on input line 565.
+Package pdftex.def Info: ./svg-inkscape/xgb_svg-raw.png  used on input line 544.
 (pdftex.def)             Requested size: 496.97548pt x 361.34912pt.
- [24
+ [23
 
- <./svg-inkscape/tree_svg-raw.png>] [25 <./svg-inkscape/xgb_svg-raw.png>] (out/GM_ThesisBiometris.aux)
+ <./svg-inkscape/tree_svg-raw.png> <./svg-inkscape/xgb_svg-raw.png>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [24]
+
+LaTeX Warning: Citation 'furrr' on page 25 undefined on input line 642.
+
+[25] (out/GM_ThesisBiometris.aux)
+
+LaTeX Warning: There were undefined references.
+
 Package rerunfilecheck Info: File `GM_ThesisBiometris.out' has not changed.
-(rerunfilecheck)             Checksum: 1F2A16EDFCC3125E5BA19DC0D16D2A9C;10186.
+(rerunfilecheck)             Checksum: E7FBB57DC3D946674DD322E05738501D;10855.
+
+Package biblatex Warning: Please (re)run Biber on the file:
+(biblatex)                GM_ThesisBiometris
+(biblatex)                and rerun LaTeX afterwards.
+
 Package logreq Info: Writing requests to 'GM_ThesisBiometris.run.xml'.
 \openout1 = `GM_ThesisBiometris.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 43926 strings out of 476025
- 878335 string characters out of 5790017
+ 43963 strings out of 476025
+ 879236 string characters out of 5790017
  1885388 words of memory out of 5000000
- 63219 multiletter control sequences out of 15000+600000
+ 63250 multiletter control sequences out of 15000+600000
  576048 words of font info for 165 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
- 102i,9n,104p,2349b,2010s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 102i,9n,104p,2349b,2006s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 pdfTeX warning (dest): name{glo:ggm} has been referenced but does not exist, replaced by a fixed one
 
@@ -1676,10 +1704,10 @@ pdfTeX warning (dest): name{glo:load} has been referenced but does not exist, re
 pdfTeX warning (dest): name{glo:sad} has been referenced but does not exist, replaced by a fixed one
 
 </usr/local/texlive/2023/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/rtxb.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/rtxmi.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/txex.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/txsy.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/txsyb.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/txsyc.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/txtt.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmri8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/newtx/ztmb.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/newtx/ztmr.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/newtx/ztmri.pfb>
-Output written on out/GM_ThesisBiometris.pdf (30 pages, 3516811 bytes).
+Output written on out/GM_ThesisBiometris.pdf (31 pages, 3521366 bytes).
 PDF statistics:
- 1003 PDF objects out of 1200 (max. 8388607)
- 903 compressed objects within 10 object streams
- 227 named destinations out of 1000 (max. 500000)
- 443 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1019 PDF objects out of 1200 (max. 8388607)
+ 918 compressed objects within 10 object streams
+ 230 named destinations out of 1000 (max. 500000)
+ 459 words of extra memory for PDF output out of 10000 (max. 10000000)
 

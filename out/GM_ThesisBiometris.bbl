@@ -27,12 +27,12 @@
            given={Botond},
            giveni={B\bibinitperiod}}}%
         {{hash=e5a3d08848c6f6e1d82b2978ba9cc72a}{%
-           family={Szűcs},
+           family={Sz\H{u}cs},
            familyi={S\bibinitperiod},
-           given={Mária},
+           given={M\'{a}ria},
            giveni={M\bibinitperiod}}}%
         {{hash=6e89a2d382f6d5d06777299a88106953}{%
-           family={Bogár},
+           family={Bog\'{a}r},
            familyi={B\bibinitperiod},
            given={Ferenc},
            giveni={F\bibinitperiod}}}%
@@ -54,7 +54,7 @@
       \field{journaltitle}{International Journal of Molecular Sciences}
       \field{month}{3}
       \field{number}{6}
-      \field{title}{{New Pathways Identify Novel Drug Targets for the Prevention and Treatment of Alzheimer’s Disease}}
+      \field{title}{{New Pathways Identify Novel Drug Targets for the Prevention and Treatment of Alzheimer\textquoteright{}s Disease}}
       \field{volume}{24}
       \field{year}{2023}
       \field{pages}{5383}
@@ -68,7 +68,7 @@
       \verb{url}
       \verb https://www.mdpi.com/1422-0067/24/6/5383
       \endverb
-      \keyw{Alzheimer’s disease,A{$\beta$},amyloid clearance,drug targets,genetics,heat shock proteins,neuroinflammation,tau,toxic amyloids,vascular dysfunction}
+      \keyw{Alzheimer\textquoteright{}s disease,A{$\beta$},amyloid clearance,drug targets,genetics,heat shock proteins,neuroinflammation,tau,toxic amyloids,vascular dysfunction}
     \endentry
     \entry{20232023Figures}{article}{}
       \list{publisher}{1}{%
@@ -237,7 +237,7 @@
         {{hash=bbbd149ef0a4596309a0246b5e397f61}{%
            family={Hunot},
            familyi={H\bibinitperiod},
-           given={Stéphane},
+           given={St\'{e}phane},
            giveni={S\bibinitperiod}}}%
         {{hash=7e0d4ce5ecab98a850d08ccd7110e302}{%
            family={Joseph},
@@ -387,7 +387,7 @@
       \field{labeltitlesource}{title}
       \field{journaltitle}{Degenerative Neurological and Neuromuscular Disease}
       \field{month}{12}
-      \field{title}{{Alzheimer’s Disease – Why We Need Early Diagnosis}}
+      \field{title}{{Alzheimer\textquoteright{}s Disease -- Why We Need Early Diagnosis}}
       \field{volume}{9}
       \field{year}{2019}
       \field{pages}{123}
@@ -639,7 +639,7 @@
            given={Nikolaos\bibnamedelima K},
            giveni={N\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
         {{hash=d6aebd952e47f658b564bffd2920f18a}{%
-           family={H{ø}ilund-Carlsen},
+           family={H{\o{}}ilund-Carlsen},
            familyi={H\bibinithyphendelim C\bibinitperiod},
            given={Poul\bibnamedelima F},
            giveni={P\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
@@ -676,7 +676,7 @@
       \verb{url}
       \verb https://doi.org/10.1093/brain/awad159
       \endverb
-      \keyw{Alzheimer’s disease,aducanumab,amyloid cascade hypothesis,lecanemab,{$\beta$}-amyloid}
+      \keyw{Alzheimer\textquoteright{}s disease,aducanumab,amyloid cascade hypothesis,lecanemab,{$\beta$}-amyloid}
     \endentry
     \entry{Kurkinen2023TheThinking}{article}{}
       \name{author}{6}{}{%
@@ -686,17 +686,17 @@
            given={Markku},
            giveni={M\bibinitperiod}}}%
         {{hash=dc98571b13185acaf4a58aec55dcba00}{%
-           family={Fu{ł}ek},
+           family={Fu{\l{}}ek},
            familyi={F\bibinitperiod},
-           given={Michał},
+           given={Micha\l{}},
            giveni={M\bibinitperiod}}}%
         {{hash=9846be466e507d6745e4eb640c90aec1}{%
-           family={Fu{ł}ek},
+           family={Fu{\l{}}ek},
            familyi={F\bibinitperiod},
            given={Katarzyna},
            giveni={K\bibinitperiod}}}%
         {{hash=a56d3d6ad6eb0298fd16d4c24627179a}{%
-           family={Besz{ł}ej},
+           family={Besz{\l{}}ej},
            familyi={B\bibinitperiod},
            given={Jan\bibnamedelima Aleksander},
            giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
@@ -728,7 +728,7 @@
       \field{journaltitle}{Biomolecules 2023, Vol. 13, Page 453}
       \field{month}{3}
       \field{number}{3}
-      \field{title}{{The Amyloid Cascade Hypothesis in Alzheimer’s Disease: Should We Change Our Thinking?}}
+      \field{title}{{The Amyloid Cascade Hypothesis in Alzheimer\textquoteright{}s Disease: Should We Change Our Thinking?}}
       \field{volume}{13}
       \field{year}{2023}
       \field{pages}{453}
@@ -830,7 +830,7 @@
         {{hash=7badb694923aa44093689981a087f313}{%
            family={Plourde},
            familyi={P\bibinitperiod},
-           given={Mélanie},
+           given={M\'{e}lanie},
            giveni={M\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
@@ -849,7 +849,7 @@
       \field{issn}{1662453X}
       \field{journaltitle}{Frontiers in Neuroscience}
       \field{month}{2}
-      \field{title}{{APOE and Alzheimer’s Disease: From Lipid Transport to Physiopathology and Therapeutics}}
+      \field{title}{{APOE and Alzheimer\textquoteright{}s Disease: From Lipid Transport to Physiopathology and Therapeutics}}
       \field{volume}{15}
       \field{year}{2021}
       \field{pages}{630502}
@@ -857,7 +857,7 @@
       \verb{doi}
       \verb 10.3389/FNINS.2021.630502/BIBTEX
       \endverb
-      \keyw{APOE,APOE receptors,Alzheimer’s disease,amyloid {$\beta$},lipidation,therapeutics}
+      \keyw{APOE,APOE receptors,Alzheimer\textquoteright{}s disease,amyloid {$\beta$},lipidation,therapeutics}
     \endentry
     \entry{Yang2023ApolipoproteinDisease}{article}{}
       \name{author}{4}{}{%
@@ -1288,7 +1288,7 @@
         {{hash=b6064edaf2fdf0350c74c5ba9c0ea6a1}{%
            family={Horimoto},
            familyi={H\bibinitperiod},
-           given={Andréa\bibnamedelima R.V.R.},
+           given={Andr\'{e}a\bibnamedelima R.V.R.},
            giveni={A\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
         {{hash=ffe4b8cec4431ac014053d4e27c86d4d}{%
            family={Mukherjee},
@@ -1598,7 +1598,7 @@
         {{hash=dcc83fc2422d1fb3cdd91684bdff991c}{%
            family={Scliar},
            familyi={S\bibinitperiod},
-           given={Marília\bibnamedelima Oliveira},
+           given={Mar\'{\i}lia\bibnamedelima Oliveira},
            giveni={M\bibinitperiod\bibinitdelim O\bibinitperiod}}}%
         {{hash=ac8adc081deeee78dcaa09d8780e0961}{%
            family={Ferretti-Rebustini},
@@ -1678,7 +1678,7 @@
       \field{journaltitle}{Molecular Psychiatry 2022 27:11}
       \field{month}{9}
       \field{number}{11}
-      \field{title}{{Global and local ancestry modulate APOE association with Alzheimer’s neuropathology and cognitive outcomes in an admixed sample}}
+      \field{title}{{Global and local ancestry modulate APOE association with Alzheimer\textquoteright{}s neuropathology and cognitive outcomes in an admixed sample}}
       \field{volume}{27}
       \field{year}{2022}
       \field{pages}{4800\bibrangedash 4808}
@@ -1877,7 +1877,7 @@
       \field{journaltitle}{PLOS Genetics}
       \field{month}{7}
       \field{number}{7}
-      \field{title}{{A locus at 19q13.31 significantly reduces the ApoE {$\epsilon$}4 risk for Alzheimer’s Disease in African Ancestry}}
+      \field{title}{{A locus at 19q13.31 significantly reduces the ApoE {$\epsilon$}4 risk for Alzheimer\textquoteright{}s Disease in African Ancestry}}
       \field{volume}{18}
       \field{year}{2022}
       \field{pages}{e1009977}
@@ -2041,7 +2041,7 @@
            given={Rima},
            giveni={R\bibinitperiod}}}%
         {{hash=4be3e2b56e6608c5e404e2ee33d1fdfe}{%
-           family={Kastenmüller},
+           family={Kastenm\"{u}ller},
            familyi={K\bibinitperiod},
            given={Gabi},
            giveni={G\bibinitperiod}}}%
@@ -2063,7 +2063,7 @@
       \field{journaltitle}{Nature Communications 2020 11:1}
       \field{month}{3}
       \field{number}{1}
-      \field{title}{{Sex and APOE {$\epsilon$}4 genotype modify the Alzheimer’s disease serum metabolome}}
+      \field{title}{{Sex and APOE {$\epsilon$}4 genotype modify the Alzheimer\textquoteright{}s disease serum metabolome}}
       \field{volume}{11}
       \field{year}{2020}
       \field{pages}{1\bibrangedash 12}
@@ -2108,7 +2108,7 @@
       \field{issn}{16634365}
       \field{journaltitle}{Frontiers in Aging Neuroscience}
       \field{month}{6}
-      \field{title}{{APOE Alleles and Diet in Brain Aging and Alzheimer’s Disease}}
+      \field{title}{{APOE Alleles and Diet in Brain Aging and Alzheimer\textquoteright{}s Disease}}
       \field{volume}{12}
       \field{year}{2020}
       \field{pages}{544681}
@@ -2116,7 +2116,7 @@
       \verb{doi}
       \verb 10.3389/FNAGI.2020.00150/BIBTEX
       \endverb
-      \keyw{APOE,Alzheimer’s disease,aging,diet,genetics}
+      \keyw{APOE,Alzheimer\textquoteright{}s disease,aging,diet,genetics}
     \endentry
     \entry{Hunsberger2019TheInterventions}{article}{}
       \name{author}{5}{}{%
@@ -2552,7 +2552,7 @@
       \field{journaltitle}{Molecular Neurodegeneration}
       \field{month}{12}
       \field{number}{1}
-      \field{title}{{APOE targeting strategy in Alzheimer’s disease: lessons learned from protective variants}}
+      \field{title}{{APOE targeting strategy in Alzheimer\textquoteright{}s disease: lessons learned from protective variants}}
       \field{volume}{17}
       \field{year}{2022}
       \field{pages}{1\bibrangedash 4}
@@ -3129,7 +3129,7 @@
            given={Lars},
            giveni={L\bibinitperiod}}}%
         {{hash=435ef0446f7d061c2b217db463d08f9b}{%
-           family={Boström},
+           family={Bostr\"{o}m},
            familyi={B\bibinitperiod},
            given={Kerstin},
            giveni={K\bibinitperiod}}}%
@@ -3234,7 +3234,7 @@
       \verb{url}
       \verb https://journals.sagepub.com/doi/10.1177/1759091417719201
       \endverb
-      \keyw{Alzheimer’s disease,Apolipoprotein E4,Cerebrovasculature,Inflammation}
+      \keyw{Alzheimer\textquoteright{}s disease,Apolipoprotein E4,Cerebrovasculature,Inflammation}
     \endentry
     \entry{Teng2017ApoEInjury}{article}{}
       \name{author}{12}{}{%
@@ -3361,7 +3361,7 @@
       \field{issn}{16643224}
       \field{journaltitle}{Frontiers in Immunology}
       \field{month}{4}
-      \field{title}{{The Important Interface Between Apolipoprotein E and Neuroinflammation in Alzheimer’s Disease}}
+      \field{title}{{The Important Interface Between Apolipoprotein E and Neuroinflammation in Alzheimer\textquoteright{}s Disease}}
       \field{volume}{11}
       \field{year}{2020}
       \verb{doi}
@@ -3387,7 +3387,7 @@
            given={Marius},
            giveni={M\bibinitperiod}}}%
         {{hash=ec9b0decf2dde390b19c064593f1836b}{%
-           family={Südhof},
+           family={S\"{u}dhof},
            familyi={S\bibinitperiod},
            given={Thomas\bibnamedelima C.},
            giveni={T\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
@@ -3519,7 +3519,7 @@
       \field{journaltitle}{BMC Medicine 2019 17:1}
       \field{month}{3}
       \field{number}{1}
-      \field{title}{{ApoE4: an emerging therapeutic target for Alzheimer’s disease}}
+      \field{title}{{ApoE4: an emerging therapeutic target for Alzheimer\textquoteright{}s disease}}
       \field{volume}{17}
       \field{year}{2019}
       \field{pages}{1\bibrangedash 17}
@@ -4102,9 +4102,9 @@
     \entry{Fernandez-Calle2022APOEDiseases}{article}{}
       \name{author}{12}{}{%
         {{hash=c2abddcaedcfc99a7b9a314daad92be1}{%
-           family={Fernández-Calle},
+           family={Fern\'{a}ndez-Calle},
            familyi={F\bibinithyphendelim C\bibinitperiod},
-           given={Rosalía},
+           given={Rosal\'{\i}a},
            giveni={R\bibinitperiod}}}%
         {{hash=12d506ce82be3a97fc06bd68e6703bbe}{%
            family={Konings},
@@ -4112,19 +4112,19 @@
            given={Sabine\bibnamedelima C.},
            giveni={S\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
         {{hash=4e24cf50d8bd60cccbd5c9f3b31c1263}{%
-           family={Frontiñán-Rubio},
+           family={Fronti\~{n}\'{a}n-Rubio},
            familyi={F\bibinithyphendelim R\bibinitperiod},
            given={Javier},
            giveni={J\bibinitperiod}}}%
         {{hash=d139090fe0b019184a96fec77bb6f3bf}{%
-           family={García-Revilla},
+           family={Garc\'{\i}a-Revilla},
            familyi={G\bibinithyphendelim R\bibinitperiod},
            given={Juan},
            giveni={J\bibinitperiod}}}%
         {{hash=127bb2b021765059ddb69989cbe8a439}{%
-           family={Camprubí-Ferrer},
+           family={Camprub\'{\i}-Ferrer},
            familyi={C\bibinithyphendelim F\bibinitperiod},
-           given={Lluís},
+           given={Llu\'{\i}s},
            giveni={L\bibinitperiod}}}%
         {{hash=c13476f9e1b27fc24fb4885d46b4bade}{%
            family={Svensson},
@@ -4144,7 +4144,7 @@
         {{hash=308574b612662469348a04b96a4505d3}{%
            family={Venero},
            familyi={V\bibinitperiod},
-           given={José\bibnamedelima Luís},
+           given={Jos\'{e}\bibnamedelima Lu\'{\i}s},
            giveni={J\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
         {{hash=b57301ca2d8f10d79b81caa32dac4f49}{%
            family={Nielsen},
@@ -4179,7 +4179,7 @@
       \field{journaltitle}{Molecular Neurodegeneration 2022 17:1}
       \field{month}{9}
       \field{number}{1}
-      \field{title}{{APOE in the bullseye of neurodegenerative diseases: impact of the APOE genotype in Alzheimer’s disease pathology and brain diseases}}
+      \field{title}{{APOE in the bullseye of neurodegenerative diseases: impact of the APOE genotype in Alzheimer\textquoteright{}s disease pathology and brain diseases}}
       \field{volume}{17}
       \field{year}{2022}
       \field{pages}{1\bibrangedash 47}
@@ -4295,7 +4295,7 @@
       \field{journaltitle}{Alzheimer's {\&} Dementia}
       \field{month}{2}
       \field{number}{2}
-      \field{title}{{Association of blood lipids with Alzheimer's disease: A comprehensive lipidomics analysis}}
+      \field{title}{{Association of blood lipids with Alzheimer's disease: A\x{00a0}comprehensive\x{00a0}lipidomics analysis}}
       \field{volume}{13}
       \field{year}{2017}
       \field{pages}{140\bibrangedash 151}
@@ -4917,7 +4917,7 @@
         {{hash=a60ec074810512d391066e3ab6f5e2cd}{%
            family={Ertekin-Taner},
            familyi={E\bibinithyphendelim T\bibinitperiod},
-           given={Nilüfer},
+           given={Nil\"{u}fer},
            giveni={N\bibinitperiod}}}%
         {{hash=42c90f772745593e2d8db85f63b32277}{%
            family={Kanekiyo},
@@ -4974,7 +4974,7 @@
         {{hash=d49cc898d9bc2a3aaed7b1d998f4df4a}{%
            given={carmen},
            giveni={c\bibinitperiod},
-           prefix={peña-bautista\bibnamedelima carmen},
+           prefix={pe\~{n}a-bautista\bibnamedelima carmen},
            prefixi={p\bibinithyphendelim b\bibinitperiod\bibinitdelim c\bibinitperiod}}}%
         {{hash=4624b587ece31948e8a5129784fed66e}{%
            given={marta},
@@ -4984,7 +4984,7 @@
         {{hash=6205e30e8a27ce33f907ea99dbad8ef1}{%
            given={rogelio},
            giveni={r\bibinitperiod},
-           prefix={lópez-cuevas\bibnamedelima rogelio},
+           prefix={l\'{o}pez-cuevas\bibnamedelima rogelio},
            prefixi={l\bibinithyphendelim c\bibinitperiod\bibinitdelim r\bibinitperiod}}}%
         {{hash=f45a4a66b6ae0794bdd8a9507225c9e6}{%
            given={miguel},
@@ -4992,14 +4992,14 @@
            prefix={baquero\bibnamedelima miguel},
            prefixi={b\bibinitperiod\bibinitdelim m\bibinitperiod}}}%
         {{hash=33a7a2201912fe806de71811487b1222}{%
-           given={máximo},
+           given={m\'{a}ximo},
            giveni={m\bibinitperiod},
-           prefix={vento\bibnamedelima máximo},
+           prefix={vento\bibnamedelima m\'{a}ximo},
            prefixi={v\bibinitperiod\bibinitdelim m\bibinitperiod}}}%
         {{hash=21e4076c86ba8d7992c53e4c69278f12}{%
            given={consuelo},
            giveni={c\bibinitperiod},
-           prefix={cháfer-pericás\bibnamedelima consuelo},
+           prefix={ch\'{a}fer-peric\'{a}s\bibnamedelima consuelo},
            prefixi={c\bibinithyphendelim p\bibinitperiod\bibinitdelim c\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
@@ -5121,7 +5121,7 @@
         {{hash=818b3bdfb55ba1a9ec708d7ff2dfa15b}{%
            family={Demirkan},
            familyi={D\bibinitperiod},
-           given={Ayşe},
+           given={Ay\c{s}e},
            giveni={A\bibinitperiod}}}%
         {{hash=e83c9d33426fb0fc981dd91d818d6a23}{%
            family={Wiel},
@@ -5304,7 +5304,7 @@
       \field{journaltitle}{Alzheimer's Research and Therapy}
       \field{month}{12}
       \field{number}{1}
-      \field{title}{{Investigating associations between blood metabolites, later life brain imaging measures, and genetic risk for Alzheimer’s disease}}
+      \field{title}{{Investigating associations between blood metabolites, later life brain imaging measures, and genetic risk for Alzheimer\textquoteright{}s disease}}
       \field{volume}{15}
       \field{year}{2023}
       \field{pages}{1\bibrangedash 13}
@@ -5318,7 +5318,7 @@
       \verb{url}
       \verb https://alzres.biomedcentral.com/articles/10.1186/s13195-023-01184-y%20http://creativecommons.org/publicdomain/zero/1.0/
       \endverb
-      \keyw{Ageing,Alzheimer’s disease,Birth cohort,Brain imaging,Dementia,Metabolites,Polygenic scores,Weighted-gene coexpression network analysis}
+      \keyw{Ageing,Alzheimer\textquoteright{}s disease,Birth cohort,Brain imaging,Dementia,Metabolites,Polygenic scores,Weighted-gene coexpression network analysis}
     \endentry
     \entry{Varma2018BrainStudy}{article}{}
       \name{author}{19}{}{%
@@ -5353,7 +5353,7 @@
            given={Ryan\bibnamedelima M.},
            giveni={R\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
         {{hash=1ea7f1dab5a92c8ea9b0ac58d45fb541}{%
-           family={O’Brien},
+           family={O\textquoteright{}Brien},
            familyi={O\bibinitperiod},
            given={Richard},
            giveni={R\bibinitperiod}}}%
@@ -5871,7 +5871,7 @@
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{month}{6}
-      \field{title}{{Multiomics analysis to explore blood metabolite biomarkers in an Alzheimer’s Disease Neuroimaging Initiative cohort}}
+      \field{title}{{Multiomics analysis to explore blood metabolite biomarkers in an Alzheimer\textquoteright{}s Disease Neuroimaging Initiative cohort}}
       \field{year}{2023}
       \verb{doi}
       \verb 10.21203/RS.3.RS-2973576/V1
@@ -5891,8 +5891,8 @@
            given={Carel\bibnamedelimb F.\bibnamedelimi W.},
            giveni={C\bibinitperiod\bibinitdelim F\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
         {{hash=363269c7b0123a84ea2c04c6ce4e0d02}{%
-           family={Übelhör},
-           familyi={Ü\bibinitperiod},
+           family={\"{U}belh\"{o}r},
+           familyi={\"{U}\bibinitperiod},
            given={Caroline},
            giveni={C\bibinitperiod}}}%
         {{hash=1857d8c12415e4aa8aa9ef568397528a}{%
@@ -6012,7 +6012,7 @@
       \field{issn}{1548-7660}
       \field{journaltitle}{Journal of Statistical Software}
       \field{month}{5}
-      \field{title}{{rags2ridges: A One-Stop-ℓ2-Shop for Graphical Modeling of High-Dimensional Precision Matrices}}
+      \field{title}{{rags2ridges: A One-Stop-\x{2113}2-Shop for Graphical Modeling of High-Dimensional Precision Matrices}}
       \field{volume}{102}
       \field{year}{2022}
       \field{pages}{1\bibrangedash 32}
@@ -6145,7 +6145,7 @@
         {{hash=7a865493d8d32c6c8389526ac3db1094}{%
            family={Crosas},
            familyi={C\bibinitperiod},
-           given={Mercè},
+           given={Merc\`{e}},
            giveni={M\bibinitperiod}}}%
         {{hash=fb366b6058a04fe1ea1c863ef8c4dfad}{%
            family={Dillo},
@@ -6388,7 +6388,7 @@
            given={Hadley},
            giveni={H\bibinitperiod}}}%
         {{hash=3bd2c624a8715b2aeffcecaa24f3d017}{%
-           family={François},
+           family={Fran\c{c}ois},
            familyi={F\bibinitperiod},
            given={Romain},
            giveni={R\bibinitperiod}}}%
@@ -6398,7 +6398,7 @@
            given={Lionel},
            giveni={L\bibinitperiod}}}%
         {{hash=1435ca4f08e53208e1c34297357afa80}{%
-           family={Müller},
+           family={M\"{u}ller},
            familyi={M\bibinitperiod},
            given={Kirill},
            giveni={K\bibinitperiod}}}%
@@ -6732,7 +6732,7 @@
         {{hash=354d7f4444d2ce013f0557758d97d4da}{%
            family={Doursat},
            familyi={D\bibinitperiod},
-           given={René},
+           given={Ren\'{e}},
            giveni={R\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
@@ -7069,7 +7069,7 @@
         {{hash=7d0aaccffe7b26dc63f4dc4244e13c92}{%
            family={Lisacek},
            familyi={L\bibinitperiod},
-           given={Frédérique},
+           given={Fr\'{e}d\'{e}rique},
            giveni={F\bibinitperiod}}}%
         {{hash=8b4958618472f5d053fd537916d0069f}{%
            family={Sanchez},
@@ -7077,7 +7077,7 @@
            given={Jean-Charles},
            giveni={J\bibinithyphendelim C\bibinitperiod}}}%
         {{hash=a72c3487103e77ffaf5aed3be8bcf625}{%
-           family={Müller},
+           family={M\"{u}ller},
            familyi={M\bibinitperiod},
            given={Markus},
            giveni={M\bibinitperiod}}}%
@@ -7102,9 +7102,9 @@
     \entry{Barabasi2015NetworkScience}{book}{}
       \name{author}{1}{}{%
         {{hash=15bacd7ddfc866c5dd96976d4b0244d5}{%
-           family={Barabási},
+           family={Barab\'{a}si},
            familyi={B\bibinitperiod},
-           given={Albert-László},
+           given={Albert-L\'{a}szl\'{o}},
            giveni={A\bibinithyphendelim L\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
@@ -7214,7 +7214,7 @@
         {{hash=25722fbc162ee41b623cf98de7314b4f}{%
            family={Frainay},
            familyi={F\bibinitperiod},
-           given={Clément},
+           given={Cl\'{e}ment},
            giveni={C\bibinitperiod}}}%
         {{hash=f9b4d14bbd089468180df8ce97b4b044}{%
            family={Jourdan},
@@ -7234,7 +7234,7 @@
         {{hash=10df6d5f3195766e35287663cb999e79}{%
            family={Novoa-del-Toro},
            familyi={N\bibinithyphendelim d\bibinithyphendelim T\bibinitperiod},
-           given={Elva\bibnamedelima María},
+           given={Elva\bibnamedelima Mar\'{\i}a},
            giveni={E\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
         {{hash=bb676055ed7886f85a7404682d6078dd}{%
            family={Salek},

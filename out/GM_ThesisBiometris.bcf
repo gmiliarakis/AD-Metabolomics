@@ -4,7 +4,7 @@
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
       <bcf:key>output_encoding</bcf:key>
-      <bcf:value>utf8</bcf:value>
+      <bcf:value>ascii</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>input_encoding</bcf:key>
@@ -2541,6 +2541,7 @@
     <bcf:citekey order="129" intorder="1">Peeters2022Rags2ridges:Matrices</bcf:citekey>
     <bcf:citekey order="130" intorder="1">rpart</bcf:citekey>
     <bcf:citekey order="131" intorder="1">Chen2016XGBoost:System</bcf:citekey>
+    <bcf:citekey order="132" intorder="1">furrr</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

@@ -28,18 +28,20 @@
 \contentsline {subsubsection}{\tocsubsubsection {}{3.4.2}{Global testing}}{8}{subsubsection.38}%
 \contentsline {subsubsection}{\tocsubsubsection {}{3.4.3}{Multi-class Classification of ApoE4 status and/or AD}}{9}{subsubsection.39}%
 \contentsline {subsubsection}{\tocsubsubsection {}{3.4.4}{Metabolite Covariance Network analysis}}{9}{subsubsection.40}%
-\contentsline {subsection}{\tocsubsection {}{3.5}{R Packages}}{11}{subsection.41}%
-\contentsline {section}{\tocsection {}{4}{Results}}{12}{section.42}%
-\contentsline {subsection}{\tocsubsection {}{4.1}{Data Exploration and Visualisation}}{12}{subsection.43}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.1.1}{AD group}}{12}{subsubsection.45}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.1.2}{SCD and AD}}{12}{subsubsection.48}%
-\contentsline {subsection}{\tocsubsection {}{4.2}{RQi - Differential expression of plasma metabolites per ApoE4 dose among AD and SCD}}{12}{subsection.50}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.2.1}{Global Test}}{12}{figure.53}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.2.2}{ANOVA on Nested Linear Models}}{12}{subsubsection.54}%
-\contentsline {subsection}{\tocsubsection {}{4.3}{RQii - Classification of metabolites on ApoE4 presence and AD}}{12}{figure.56}%
-\contentsline {subsubsection}{\tocsubsubsection {}{4.3.1}{Adding 230 metabolites}}{12}{figure.58}%
+\contentsline {section}{\tocsection {}{4}{Results}}{11}{section.41}%
+\contentsline {subsection}{\tocsubsection {}{4.1}{Data Exploration and Visualisation}}{11}{subsection.42}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.1.1}{AD group}}{11}{subsubsection.44}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.1.2}{SCD and AD}}{11}{subsubsection.47}%
+\contentsline {subsection}{\tocsubsection {}{4.2}{RQi - Differential expression of plasma metabolites per ApoE4 dose among AD and SCD}}{11}{subsection.49}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.2.1}{Global Test}}{11}{figure.52}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.2.2}{ANOVA on Nested Linear Models}}{11}{subsubsection.53}%
+\contentsline {subsection}{\tocsubsection {}{4.3}{RQii - Classification of metabolites on ApoE4 presence and AD}}{11}{figure.55}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.3.1}{Adding 230 metabolites}}{12}{figure.57}%
+\contentsline {subsubsection}{\tocsubsubsection {}{4.3.2}{Fitting the 6-factor Latent Projection of the 230 metabolites}}{12}{figure.59}%
 \contentsline {subsection}{\tocsubsection {}{4.4}{RQiii - Covariance Network analysis of metabolites}}{12}{subsection.60}%
-\contentsline {section}{\tocsection {}{5}{Discussion}}{17}{section.61}%
-\contentsline {section}{\tocsection {}{6}{Conclusion}}{18}{section.62}%
-\contentsline {section}{\tocsection {}{}{References}}{19}{section*.63}%
-\contentsline {section}{\tocsection {Appendix}{A}{Multiclass ROC curves}}{24}{appendix.64}%
+\contentsline {section}{\tocsection {}{5}{Discussion}}{16}{section.61}%
+\contentsline {section}{\tocsection {}{6}{Conclusion}}{17}{section.62}%
+\contentsline {section}{\tocsection {}{}{References}}{18}{section*.63}%
+\contentsline {section}{\tocsection {Appendix}{A}{Multiclass ROC curves}}{23}{appendix.64}%
+\contentsline {section}{\tocsection {Appendix}{B}{R Session Information}}{24}{appendix.67}%
+\contentsline {section}{\tocsection {Appendix}{C}{R packages}}{25}{appendix.68}%
