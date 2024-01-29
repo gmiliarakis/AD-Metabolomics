@@ -309,8 +309,6 @@ The principal producers of ApoE are hepatocytes in the liver \cite{Mahley2016Cen
 \subsubsection{Structure and function}
 \acrshort{apoe} is a brain-specific lipid-binding glycoprotein of 299 amino-acids (34 kDa) that comprises several types of lipoproteins, i.e., chilomicra, \acrshort{idl} and \acrshort{vldl} \cite{Husain2021APOETherapeutics}. Its main function in the brain is the transport of lipids (mainly cholesterol) through membrane receptors \cite{Yang2023ApolipoproteinDisease}. Moreover, its isoforms have an effect on diverse cellular functions, e.g. synaptic integrity, glucose metabolism, A$\beta$ clearance, \acrfull{bbb} integrity and mitochondrial regulation \cite{Husain2021APOETherapeutics}. How these relate to AD pathology will be elaborated in section \ref{ApoEAD}.
 
-
-
 \begin{figure}[]
   \includegraphics[width=0.8\textwidth]{figures/ApoEprot.png}
     \caption{Linear representation of the ApoE protein. Three structural domains are highlighted: N-terminal, hinge and C-terminal domains. The different aminoacids at positions 112 and 158 are shown per common alleles and aminoacids at positions 136, 236 and 251 coded by rarer alleles. \cite{Bu2022APOEVariants}}
@@ -326,7 +324,7 @@ For ApoE to exert its effects, it needs to be lipidated \cite{Husain2021APOETher
 Poor lipidation leads to poor ApoE recycling \cite{Yassine2020APOEDisease}. The latter favors the entrapment of ABCA1 in endosomes, away from the cell membrane, thereby pooling cholesterol in the cell membrane rather than attaching it to HDL particles \cite{Rawat2019ApoE4Astrocytes}. This increased cholesterol content in the cell membrane amplifies \acrfull{tlr4} signaling in macrophages, activating \acrshort{nfkb} and inducing an inflammatory gene response \cite{Yassine2020APOEDisease}.  ApoE4 accumulation also sequestrates insulin receptor (IR) in endosomes, impacting cellular energy preferences \cite{Zhao2017ApolipoproteinEndosomes}. This leads to a decrease in glucose utilization for \acrshort{atp} production and an increase in fatty acid oxidation \cite{Svennerholm1997ChangesSwedes}. 
 
 \begin{figure}[b]
-  \includegraphics[width=\textwidth]{figures/ApoEeffects.jpg}
+  \includegraphics[width=0.9\textwidth]{figures/ApoEeffects.jpg}
     \caption{Schematic overview of A$\beta$-independent effects of ApoE in AD pathology. The isoform-dependent effects of ApoE are indicated. Abbreviations: apoE, apolipoprotein E; NFT, neurofibrillary tangle; BBB, blood brain barrier; IL, interleukin; TNF-$\alpha$, Tumor necrosis factor-$\alpha$; ROS, reactive oxygen species. \cite{Husain2021APOETherapeutics}}
   \label{ApoeEffects}
 \end{figure}
@@ -346,10 +344,10 @@ Perturbed serum metabolites associated with AD are aminoacids, amines \cite{deLe
 With such techniques, de Leeuw et al. discovered distinct serum metabolic signatures among AD patients-controls and those carrying at least one ApoE $\varepsilon_4$ allele \cite{deLeeuw2017Blood-basedDisease}, as they appear in Fig. \ref{fig2}. The different metabolic profiles, however, among ApoE4 non-carriers remain obscure. The present data science approach shows ApoE4-mediated differentially expressed metabolites, potentially unveiling distinct pathways of metabolic deregulation in AD.
 
 \begin{figure}[h]
-\vspace*{-0.2cm}
-  \includegraphics[width=0.9\textwidth]{figures/network.jpeg}
+  \includegraphics[width=0.99\textwidth]{figures/network.jpeg}
     \caption{Mutual (left-hand panel) and distinct(right-hand panel) metabolic network topologies between ApoE $\varepsilon4$ carriers and non-carriers in AD, as published by de Leeuw et al.. Red edges represent links that are present exclusively in ApoeE $\varepsilon4$ carriers with AD. Green edges represent connections found in the SCD group. Solid edges represent positive partial correlations, while dashed edges represent negative partial correlations. Abbreviations: SCD, subjective cognitive decline }
   \label{fig3}
+  \vspace*{-0.2cm}
 \end{figure}
 
 \newpage
@@ -374,9 +372,48 @@ The FAIR principles for data management and stewardship in science were publishe
 An interactive correlation heatmap was created to visualise the Pearson correlation coefficients using the package \textsf{heatmaply}. 
 
 \subsection{Data Wrangling and Feature Engineering}
-The data were processed using base R and \textsf{dplyr} \cite{dplyr}.
-   
+The ApoE allele and genotype frequencies in the population are reflected in the AD and SCD data, as shown in Table \ref{Table:ApoEgenfreq}. That is, the most abundant allele is $\varepsilon$3, followed by $\varepsilon4$ and $\varepsilon2$. The most common genotype was $\varepsilon3\varepsilon3$, followed by $\varepsilon3\varepsilon4$ and $\varepsilon4\varepsilon4$.
 
+\begin{table}[!ht]
+\caption{Individual ApoE genotype counts among SCD and AD patients.} \label{Table:ApoEgenfreq}
+\begin{tabular}{cccccc} \toprule
+$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
+2    & 18   & 7    & 106  & 85   & 29   \\ \bottomrule
+\end{tabular}
+\end{table}
+
+The genotypes are not equally represented in the data and hence, don't enable analysis without feature engineering. The following two sections describe the features created to balance the classes when studying only the AD group and both AD and SCD.
+\subsubsection{AD group}
+An obvious and "low-res" approach would be to bin the samples into two groups: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ dose effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The frequencies of $\varepsilon4$ doses are shown in Table \ref{Table:E4binAD}.
+
+\begin{table}[!ht]
+\caption{Individual ApoE genotype counts among AD patients.} \label{Table:ApoEfreqAD}
+\begin{tabular}{cccccc} \toprule
+$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
+0    & 3    & 2    & 37   & 59   & 26 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!ht]
+\caption{ApoE $\varepsilon4$ dose frequencies among AD patients.} \label{Table:E4binAD}
+\begin{tabular}{ccc} \toprule
+No $\varepsilon4$  & 1x$\varepsilon4$& 2x$\varepsilon4$\\ \midrule
+40    & 61   & 26 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{SCD and AD}
+In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis of AD, a four-level feature ("ApoE4AD") was created, as shown in Table \ref{Table:target}.
+\begin{table}[!h]
+\caption{Feature combining ApoE4 status and AD diagnosis.} \label{Table:target}
+\begin{tabular}{rcc} \toprule
+& $\geq$1 $\varepsilon4$ & no $\varepsilon4$\\ \midrule
+AD \vline  & 34& 86\\
+ SCD \vline & 87& 40\\ \bottomrule 
+\end{tabular}
+\vspace{-1cm}
+\end{table}
+\clearpage
 \subsection{Statistical Analysis}
 \subsubsection{ApoE4 dose effects on serum metabolite levels in AD}
 A straight-forward way to test whether metabolites are distinctly expressed depending on ApoE4 dose, controlling for clinical variables, is \acrshort{anova} (Analysis of Variance) on $p$ nested linear models. The dependent variable in each model is a metabolite; the nested model, eq. \eqref{rm}, has only clinical variables, while the full model, eq. \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2) as explanatory variables. Let $m_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and D the ApoE4 dose; the nested models then are:
@@ -425,67 +462,42 @@ In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Mat
 
 \clearpage
 \section{Results}
-
-\subsection{Data Exploration and Visualisation}
-The ApoE allele and genotype frequencies in the population are reflected in the AD and SCD data, as shown in Table \ref{Table:ApoEgenfreq}. That is, the most abundant allele is $\varepsilon$3, followed by $\varepsilon4$ and $\varepsilon2$. The most common genotype was $\varepsilon3\varepsilon3$, followed by $\varepsilon3\varepsilon4$ and $\varepsilon4\varepsilon4$.
-
-\begin{table}[!ht]
-\caption{Individual ApoE genotype counts among SCD and AD patients.} \label{Table:ApoEgenfreq}
-\begin{tabular}{cccccc} \toprule
-$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
-2    & 18   & 7    & 106  & 85   & 29   \\ \bottomrule
-\end{tabular}
-\end{table}
-
-The genotypes are not equally represented in the data and hence, don't enable analysis without feature engineering. The following two sections describe the features created to balance the classes when studying only the AD group and both AD and SCD.
-\subsubsection{AD group}
-An obvious and "low-res" approach would be to bin the samples into two groups: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ dose effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The frequencies of $\varepsilon4$ doses are shown in Table \ref{Table:E4binAD}.
-
-\begin{table}[!ht]
-\caption{Individual ApoE genotype counts among AD patients.} \label{Table:ApoEfreqAD}
-\begin{tabular}{cccccc} \toprule
-$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
-0    & 3    & 2    & 37   & 59   & 26 \\ \bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!ht]
-\caption{ApoE $\varepsilon4$ dose frequencies among AD patients.} \label{Table:E4binAD}
-\begin{tabular}{ccc} \toprule
-No $\varepsilon4$  & 1x$\varepsilon4$& 2x$\varepsilon4$\\ \midrule
-40    & 61   & 26 \\ \bottomrule
-\end{tabular}
-\end{table}
-
-\subsubsection{SCD and AD}
-In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis of AD, a four-level feature ("ApoE4AD") was created, as shown in Table \ref{Table:target}.
-
-\begin{table}[!ht]
-\caption{Feature combining ApoE4 status and AD diagnosis.} \label{Table:target}
-\begin{tabular}{rcc} \toprule
-& $\geq$1 $\varepsilon4$ & no $\varepsilon4$\\ \midrule
-AD \vline  & 34& 86\\
- SCD \vline & 87& 40\\ \bottomrule 
-\end{tabular}
-\end{table}
-\subsection{RQi - Differential expression of plasma metabolites per ApoE4 dose among AD and SCD}
+\subsection{RQi - Differential expression of plasma metabolites per ApoE4 dose among AD patients}
 \subsubsection{Global Test}
 
-\begin{figure}
-  \vspace*{-1cm}
-    \includegraphics[width=\textwidth]{figures/gt1.png}
+\begin{figure}[h]
+    \includegraphics[width=0.8\textwidth]{figures/gt1.png}
       \caption{Covariates plot of the Global Test showing the metabolites affected by the presence of ApoE4.}
     \label{gt1}
   \end{figure}
 
 
-\begin{figure}
-    \includegraphics[width=\textwidth]{figures/gt2.png}
+\begin{figure}[htpb]
+    \includegraphics[width=0.8\textwidth]{figures/gt2.png}
       \caption{Covariates plot showing the metabolites affected by the number of ApoE4 alleles}
     \label{gt2}
   \end{figure}
 
 \subsubsection{ANOVA on Nested Linear Models}
+
+
+\begin{table}
+    \centering
+    \begin{tabular}{cccc}
+         &  &  & \\
+         &  &  & \\
+         &  &  & \\
+         &  &  & \\
+         &  &  & \\
+         &  &  & \\
+         &  &  & \\
+         &  &  & \\
+         &  &  & \\
+         &  &  & \\
+    \end{tabular}
+    \caption{Caption}
+    \label{tab:my_label}
+\end{table}
 
 \subsection{RQii - Classification of metabolites on ApoE4 presence and AD}
 
