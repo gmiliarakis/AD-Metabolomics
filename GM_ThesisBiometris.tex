@@ -6,7 +6,7 @@
 
 
 \documentclass{amsart}
-
+\usepackage[utf8]{inputenc}
 \usepackage{booktabs}
 \usepackage{lipsum}
 \usepackage{multicol}
@@ -29,7 +29,7 @@
 \usepackage{dsfont} 	                         % For \mathds{1} blackboard bold 1
 \usepackage{bm}                                % For roman (upright) bold latin letters
 \usepackage{mathtools}                         % Better math
-\usepackage[hypertexnames=false]{hyperref}     % For urls and hyperlinks
+    % For urls and hyperlinks
 \usepackage[scientific-notation=true]{siunitx} % For scientific notation
 \usepackage{euscript}[mathcal]
 \usepackage{txfonts}
@@ -39,25 +39,24 @@
 \usepackage{colortbl}
 
 
-% For theorems, remarks, lemmas etc.
-\usepackage{amsthm}
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}%[section]
-%% >> Define your newtheorems here
-
-% For algorithms
-\usepackage[ruled,vlined]{algorithm2e}
-\usepackage{algpseudocode}
-\renewcommand{\algorithmicrequire}{\textbf{Input:}}
-\renewcommand{\algorithmicensure}{\textbf{Output:}}
+% % For algorithms
+% \usepackage[ruled,vlined]{algorithm2e}
+% \usepackage{algpseudocode}
+% \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+% \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
 % Often used math operators:
 % You can define these yourself using \DeclareMathOperator and \newcommand
 %\DeclareMathOperator*{\argmax}{arg\,max}    % maxmizing argument
 %\newcommand{\LA}{\mathbf{\Lambda}}
-
+% \DeclareUnicodeCharacter{2113}{\ell}
 % For bibliography
-\usepackage[utf8]{inputenc}
+\usepackage[
+  hypertexnames=false,
+  colorlinks= true,
+  linkcolor=.,
+  citecolor={blue},
+  urlcolor={violet}]{hyperref} 
 \usepackage[
     backend=biber,
     style=nature, 
@@ -68,7 +67,7 @@
 \addbibresource{./references.bib}
 \addbibresource{./entries.bib}
 \def\bibfont{\footnotesize}
-\usepackage[acronym, nomain]{glossaries}
+\usepackage[toc, acronym, nomain]{glossaries}
 \makeglossaries
 
 \newacronym{ad}{AD}{Alzheimer's Disease}
@@ -101,8 +100,7 @@
 \newacronym{roc}{ROC}{Receiver-Operator Characteristics curve}
 \newacronym{auc}{AUC}{Area Under the ROC curve}
 \newacronym{ggm}{GGM}{Gaussian graphical model}
-\renewcommand*{\glossarymark}[1]{}
-\setcounter{tocdepth}{3}
+\renewcommand{\glossarymark}[1]{}
 \makeatletter
 \renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
             {-2.5ex\@plus -1ex \@minus -.25ex}%
@@ -296,7 +294,7 @@ LOAD is consistently shown associated with the gene that encodes apolipoprotein-
 \subsubsection{ApoE4 and Alzheimer's Disease}
 Humans present three variants of the ApoE gene: $\varepsilon_2$, $\varepsilon_3$ and $\varepsilon_4$ \cite{Husain2021APOETherapeutics, Yang2023ApolipoproteinDisease}, resulting in six genotypes [Fig. \ref{fig1}]. In caucasian populations, the most abundant allele is ApoE3 (rs7412 C/rs429358 T), with a frequency of 78\%, and is considered neutral regarding the risk of AD \cite{Liu2013ApolipoproteinTherapy}. ApoE4 (rs7412 C/rs429358 C) has a frequency of 14\% and represents the strongest genetic risk factor for LOAD, with gene dose effects \cite{Strittmatter1993ApolipoproteinDisease}. Conversely, ApoE2 (rs7412 T/rs429358 T) is found in 8\% of Caucasian populations, and carriers of this allele exhibit a reduced risk of LOAD \cite{Liu2013ApolipoproteinTherapy}. The various ApoE alleles are strongly linked to the primary pathological features of LOAD, namely amyloid-A$\beta$ and phosphorylated tau \cite{Deming2017Genome-wideModifiers}. While the association between ApoE alleles and LOAD risk or protection is observed across diverse ancestral backgrounds, the strength of this association varies \cite{Belloy2019AForward, Farrer1997EffectsMeta-analysis}, see section 1.2.2.
 
-\begin{figure}[]
+\begin{figure}[H]
   \includegraphics[width=0.7\textwidth]{figures/ApoE@2x.png}
     \caption{Sankey chart showing the allele distribution among the 6 ApoE genotypes.}
   \label{fig1}
@@ -323,7 +321,7 @@ The principal producers of ApoE are hepatocytes in the liver \cite{Mahley2016Cen
 
 
 
-\begin{figure}[]
+\begin{figure}[htb]
   \includegraphics[width=0.8\textwidth]{figures/ApoEprot.png}
     \caption{Linear representation of the ApoE protein. Three structural domains are highlighted: N-terminal, hinge and C-terminal domains. The different aminoacids at positions 112 and 158 are shown per common alleles and aminoacids at positions 136, 236 and 251 coded by rarer alleles. \cite{Bu2022APOEVariants}}
   \label{fig2}
@@ -357,7 +355,7 @@ Transcriptomic and lipidomic analyses in humanized ApoE mice associated ApoE4 wi
 Perturbed serum metabolites associated with AD are aminoacids, amines \cite{deLeeuw2017Blood-basedDisease, Green2023InvestigatingDisease}, cholesteryl esters \cite{Proitsi2017AssociationAnalysis}, sphingolipids \cite{Varma2018BrainStudy,Sun2022AssociationDisease,Green2023InvestigatingDisease,Oeckl2019GlialImpairment,Barupal2019SetsPathophysiology}, fatty acids \cite{Fernandez-Calle2022APOEDiseases,deLeeuw2017Blood-basedDisease}, glycerophospholipids \cite{Varma2018BrainStudy, Jia2022ATypes,Huo2020BrainAnalysis, Weng2019TheImpairment}, phosphatidylcholines \cite{Simpson2016BloodAging} and lipid peroxidation compounds \cite{Fernandez-Calle2022APOEDiseases}. These molecules are usually identified via high-throughput metabolomic pipelines (coupled with Mass Spectrometry (MS) detectors) that trace all compounds in a sample and result in high-dimensional data \cite{Oka2023MultiomicsCohort}. The latter often require advanced statistical methods e.g. projection to latent structures \cite{Weng2019TheImpairment, Peeters2019StableData} or graphical models \cite{Peeters2022Rags2ridges:Matrices} in order to extract putatively meaningful information. 
 With such techniques, de Leeuw et al. discovered distinct serum metabolic signatures among AD patients-controls and those carrying at least one ApoE $\varepsilon_4$ allele \cite{deLeeuw2017Blood-basedDisease}, as they appear in Fig. \ref{fig2}. The different metabolic profiles, however, among ApoE4 non-carriers remain obscure. The present data science approach shows ApoE4-mediated differentially expressed metabolites, potentially unveiling distinct pathways of metabolic deregulation in AD.
 
-\begin{figure}[h]
+\begin{figure}[htb]
 \vspace*{-0.2cm}
   \includegraphics[width=0.9\textwidth]{figures/network.jpeg}
     \caption{Mutual (left-hand panel) and distinct(right-hand panel) metabolic network topologies between ApoE $\varepsilon4$ carriers and non-carriers in AD, as published by de Leeuw et al.. Red edges represent links that are present exclusively in ApoeE $\varepsilon4$ carriers with AD. Green edges represent connections found in the SCD group. Solid edges represent positive partial correlations, while dashed edges represent negative partial correlations. Abbreviations: SCD, subjective cognitive decline }
@@ -379,9 +377,9 @@ Are there mechanistic links between ApoE4 dose and serum metabolome in AD?
 \section{Methods}
 
 \subsection{Subjects}
-The data were collected from 127 AD patients and 120 SCD ($n$ = 247) individuals in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depressants, mean arterial pressure (MAP) and body mass index (BMI) (see Table \ref{tab:clin}. The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data set is high-dimensional, in the sense that it contains more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
+The data were collected from 127 AD patients and 120 SCD ($n$ = 247) individuals in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depressants, mean arterial pressure (MAP) and body mass index (BMI) (see Table \ref{tab:clin}). The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data set is high-dimensional, in the sense that it contains more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
 
-\begin{table}[h]
+\begin{table}[htb]
 \caption{Clinical background characteristics used as control variables of ApoE4 (dose) effects}
 \label{tab:clin}
 \begin{tabular}{clllll} \toprule
@@ -403,7 +401,7 @@ CSF                             & A$\beta_{42}$                 & Numeric       
 \end{table}
 
 \subsection{Data management}
-The FAIR principles for data management and stewardship in science were published by  ~\citeauthor{Wilkinson2016TheStewardship} in 2016 \cite{Wilkinson2016TheStewardship}. FAIR stands for Findable, Accessible, Interactive, and Reusable data; the intention is to create and use data that are well-documented and reproducible. These principles were considered at every step of the study and implemented when applicable. All analysis was performed in R (version 4.3.2), and the current report was written in \LaTeX (Tex Live version 2023). All files are stored in a private Github repository --with git as \acrfull{vcs}.
+The FAIR principles for data management and stewardship in science were published by  ~\citeauthor{Wilkinson2016TheStewardship} in 2016 \cite{Wilkinson2016TheStewardship}. FAIR stands for Findable, Accessible, Interactive, and Reusable data; the intention is to create and use data that are well-documented and reproducible. These principles were considered at every step of the study and implemented when applicable. All analysis was performed in R (version 4.3.2), and the current report was written in \LaTeX (Tex Live version 2023). All files are committed to a private Github repository --with git as \acrfull{vcs}.
 
 \subsection{Data Visualisation}
 An interactive correlation heatmap was created to visualise the Pearson correlation coefficients between the serum metabolites using the package \textsf{heatmaply}. 
@@ -411,7 +409,7 @@ An interactive correlation heatmap was created to visualise the Pearson correlat
 \subsection{Data Wrangling and Feature Engineering}
 The ApoE allele and genotype frequencies in the population are reflected in the AD and SCD data, as shown in Table \ref{tab:ApoEfreq}. That is, the most abundant allele is $\varepsilon$3, followed by $\varepsilon4$ and $\varepsilon2$. The most common genotype was $\varepsilon3\varepsilon3$, followed by $\varepsilon3\varepsilon4$ and $\varepsilon4\varepsilon4$.
 
-\begin{table}[h]
+\begin{table}[htb]
 \caption{ApoE genotype counts (top part) ApoE4 counts: features created to balance the genotype counts (bottom part)}
 \label{tab:ApoEfreq}
 \begin{tabular}{rrccc}
@@ -516,7 +514,7 @@ In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Mat
 \subsection{ApoE4 dose effects on serum metabolite levels in AD}
 \subsubsection{Global Test}
 Two global tests were performed on the AD group, first testing for distinct metabolites among ApoE4 carriers and non-carriers and then among distinct ApoE4 "doses". The first test showed significant (p= 0.03) global effect on serum metabolites among ApoE4 carriers and non-carriers. Metabolites positively correlated with ApoE4 were mostly triglycerides (TG) and diglycerides (DG) (Fig \ref{gt1}). The second test revealed ApoE4 dose effects (p= 0.02) on metabolite levels  -mostly TG and DG (Fig \ref{gt2}).
-\begin{figure}[h]
+\begin{figure}[htb]
   % \vspace*{-1cm}
     \includegraphics[width=0.9\textwidth]{figures/gt1.png}
       \caption{Covariates plot of the Global Test showing the metabolites affected by the presence of ApoE4.}
@@ -524,19 +522,19 @@ Two global tests were performed on the AD group, first testing for distinct meta
   \end{figure}
 
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \includegraphics[width=0.9\textwidth]{figures/gt2.png}
       \caption{Covariates plot showing the metabolites affected by the number of ApoE4 alleles}
     \label{gt2}
   \end{figure}
   
 \subsubsection{Nested Linear Models}
-Several metabolites from all classes were affected by ApoE4 dose, both in AD and SCD. Among AD patients, ApoE4 dose seems to have an effect on several triglycerides, diglycerides, L-glutamic acid, L-lysine, 2- and 3-hydroxybutyric acid, glutamic acid, 3-phosphoglyceric acid, phosphatidylcholin, sphyngomyelin, HpH.PAF.C17, phosphoethanolamine, imino-diacetate (Table \ref{tab:nestedSCD}). Among individuals with SCD, lipid metabolites were not affected as much as in the AD group, with only LPC and PC showing a difference. Aminoacids (glycine, taurine, L-serine, serotonine, L-glutamic acid, L-glutamic acid, phosphoethanolamine) and oxidative stress compounds were mostly affected in this group (Table \ref{tab:nestedF}). However, after correcting for multiple testing with FDR, none of the p-values were significant at $\alpha=0.05$.
+Several metabolites from all classes were affected by ApoE4 dose, both in AD and SCD. Among AD patients, ApoE4 dose seems to have an effect on several triglycerides, diglycerides, L-glutamic acid, L-lysine, 2- and 3-hydroxybutyric acid, glutamic acid, 3-phosphoglyceric acid, phosphatidylcholin, sphyngomyelin, HpH.PAF.C17, phosphoethanolamine, imino-diacetate (Table \ref{tab:nestedF}). Among individuals with SCD, lipid metabolites were not affected as much as in the AD group, with only LPC and PC showing a difference. Aminoacids (glycine, taurine, L-serine, serotonine, L-glutamic acid, L-glutamic acid, phosphoethanolamine) and oxidative stress compounds were mostly affected in this group (Table \ref{tab:nestedF}). However, after correcting for multiple testing with FDR, none of the p-values were significant at $\alpha=0.05$.
 \begin{table}[H]
 \caption{ApoE4 dose effects on metabolites in AD and SCD: significant F tests ($\alpha=0.05$) from nested linear model comparison. Reduced model: \eqref{rm}, Full model: \eqref{fm}}
 \label{tab:nestedF}
 \begin{tabular}{clll} \toprule
-&                           & P(\textgreater{}F) & FDR-adjusted \\ \midrule
+&                           & P($>$F) & FDR-adjusted \\ \midrule
 \multirow{29}{*}{AD} & Am.L.Glutamic.acid        & 0.011              & 0.314        \\
 & Am.L.Lysine                & 0.029              & 0.314        \\
 & Am.O.Phosphoethanolamine      & 0.044              & 0.361        \\
@@ -591,7 +589,7 @@ Several metabolites from all classes were affected by ApoE4 dose, both in AD and
 \centering
 \begin{tabular}{clrrrrrr} \toprule
 \multicolumn{1}{l}{}  &                                & \multicolumn{2}{c}{No ApoE4}                               & \multicolumn{2}{c}{1x ApoE4}                               & \multicolumn{2}{c}{2x ApoE4}                                \\
-\multicolumn{1}{l}{}  & \multicolumn{1}{c}{Metabolite} & \multicolumn{1}{c}{Coefficient} & \multicolumn{1}{c}{P(\textgreater{}t)} & \multicolumn{1}{c}{Coefficient} & \multicolumn{1}{c}{P(\textgreater{}t)} & \multicolumn{1}{c}{Coefficient} & \multicolumn{1}{c}{P(\textgreater{}t)} \\ \midrule
+\multicolumn{1}{l}{}  & \multicolumn{1}{c}{Metabolite} & \multicolumn{1}{c}{Coefficient} & \multicolumn{1}{c}{P($>$t)} & \multicolumn{1}{c}{Coefficient} & \multicolumn{1}{c}{P($>$t)} & \multicolumn{1}{c}{Coefficient} & \multicolumn{1}{c}{P($>$t)} \\ \midrule
 \multirow{14}{0.056\linewidth}{\hspace{0pt}\Centering{}AD} & Am.L.Glutamic.acid & {\cellcolor[rgb]{0.749,0.855,0.675}}1.16 & 0.71 & {\cellcolor[rgb]{0.761,0.863,0.69}}1.10 & 0.00 & {\cellcolor[rgb]{0.863,0.922,0.824}}0.63 & 0.14 \\
  & Am.L.Lysine & {\cellcolor[rgb]{0.882,0.933,0.851}}0.54 & 0.85 & {\cellcolor[rgb]{0.992,0.973,0.973}}-0.35 & 0.25 & {\cellcolor[rgb]{0.855,0.918,0.816}}0.67 & 0.08 \\
  & Lip.DG.36.3. & {\cellcolor[rgb]{0.984,0.992,0.976}}0.08 & 0.98 & {\cellcolor[rgb]{0.757,0.859,0.682}}1.13 & 0.00 & {\cellcolor[rgb]{0.78,0.875,0.714}}1.02 & 0.03 \\
@@ -634,16 +632,16 @@ Looking at individual ROC curves, all models were able to discriminate better am
 \caption{Performance metrics of multi-class classification of ApoE4 and AD status, obtained from 10-fold CV repeated 100 times. NIR: No Information Rate, AUC: Area Under the (ROC) Curve}
 \label{tab:class_results}
 \begin{tabular}{lllll} \toprule
-                                     & NIR & Accuracy (95/\% CI)     & P(NIR \textless Accuracy) & AUC   \\ \midrule
-Clinical features only & \multirow{5}{*}{0.3522} & 0.4807 (0.4744, 0.4869) & \textless 2.2e-16 & 0.814 \\
-Clinical features + 230 metabolites  &     & 0.5751 (0.5689, 0.5813) & \textless 2.2e-16         & 0.834 \\
-Clinical features + 6 latent factors &     & 0.5313 (0.525, 0.5375)  & \textless 2.2e-16         & 0.818 \\
-Decision Tree                        &     & 0.5082 (0.502, 0.5145)  & \textless 2.2e-16         & 0.818 \\
-XGBoost                              &     & 0.5944 (0.5882, 0.6005) & \textless 2.2e-16         & 0.836 \\ \bottomrule
+                                     & NIR & Accuracy (95/\% CI)     & P(NIR  Accuracy) & AUC   \\ \midrule
+Clinical features only & \multirow{5}{*}{0.3522} & 0.4807 (0.4744, 0.4869) & $<$ 2.2e-16 & 0.814 \\
+Clinical features + 230 metabolites  &     & 0.5751 (0.5689, 0.5813) & $<$ 2.2e-16         & 0.834 \\
+Clinical features + 6 latent factors &     & 0.5313 (0.525, 0.5375)  & $<$ 2.2e-16         & 0.818 \\
+Decision Tree                        &     & 0.5082 (0.502, 0.5145)  & $<$ 2.2e-16         & 0.818 \\
+XGBoost                              &     & 0.5944 (0.5882, 0.6005) & $<$ 2.2e-16         & 0.836 \\ \bottomrule
 \end{tabular}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure}[htb]
   \includesvg[width=0.8\textwidth]{figures/bench.svg}
   \caption{ROC curves of benchmark model: Multinomial Logistic Regression fitting the clinical background features only), obtained from repeated (100 times) 10-fold CV.}
   \label{roc:bench}
@@ -687,7 +685,7 @@ XGBoost                              &     & 0.5944 (0.5882, 0.6005) & \textless
 %--------------------------------------------------------------------
 \appendix 
 \section{Multiclass ROC curves}
-\begin{figure}[h]
+\begin{figure}[htb]
   \includesvg[width=.75\textwidth]{figures/tree.svg}
   \caption{ROC curves of Decision Tree fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV}
   \label{roc:tree}

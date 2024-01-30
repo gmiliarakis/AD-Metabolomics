@@ -4295,7 +4295,7 @@
       \field{journaltitle}{Alzheimer's {\&} Dementia}
       \field{month}{2}
       \field{number}{2}
-      \field{title}{{Association of blood lipids with Alzheimer's disease: A\x{00a0}comprehensive\x{00a0}lipidomics analysis}}
+      \field{title}{{Association of blood lipids with Alzheimer's disease: A comprehensive lipidomics analysis}}
       \field{volume}{13}
       \field{year}{2017}
       \field{pages}{140\bibrangedash 151}
@@ -5626,10 +5626,10 @@
       \verb 10.1002/ALZ.12484
       \endverb
       \verb{urlraw}
-      \verb https://onlinelibrary.wiley.com/doi/full/10.1002/alz.12484 https://onlinelibrary.wiley.com/doi/abs/10.1002/alz.12484 https://alz-journals.onlinelibrary.wiley.com/doi/10.1002/alz.12484
+      \verb https://onlinelibrary.wiley.com/doi/full/10.1002/alz.12484
       \endverb
       \verb{url}
-      \verb https://onlinelibrary.wiley.com/doi/full/10.1002/alz.12484%20https://onlinelibrary.wiley.com/doi/abs/10.1002/alz.12484%20https://alz-journals.onlinelibrary.wiley.com/doi/10.1002/alz.12484
+      \verb https://onlinelibrary.wiley.com/doi/full/10.1002/alz.12484
       \endverb
       \keyw{Alzheimer's disease,dementia,diagnostic model,metabolite,neurodegenerative disease}
     \endentry
@@ -6012,7 +6012,7 @@
       \field{issn}{1548-7660}
       \field{journaltitle}{Journal of Statistical Software}
       \field{month}{5}
-      \field{title}{{rags2ridges: A One-Stop-\x{2113}2-Shop for Graphical Modeling of High-Dimensional Precision Matrices}}
+      \field{title}{{rags2ridges: A One-Stop-$\ell$2-Shop for Graphical Modeling of High-Dimensional Precision Matrices}}
       \field{volume}{102}
       \field{year}{2022}
       \field{pages}{1\bibrangedash 32}
@@ -6428,6 +6428,33 @@
       \verb https://dplyr.tidyverse.org
       \endverb
     \endentry
+    \entry{furrr}{manual}{}
+      \name{author}{2}{}{%
+        {{hash=858f3a61393526cfc73cb860925a277a}{%
+           family={Vaughan},
+           familyi={V\bibinitperiod},
+           given={Davis},
+           giveni={D\bibinitperiod}}}%
+        {{hash=f897665e1a235bb04b3eb58c48cb4bda}{%
+           family={Dancho},
+           familyi={D\bibinitperiod},
+           given={Matt},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{cfd5152d6091689de8a2ba5f4a8dd9fd}
+      \strng{fullhash}{99ec999b89d27d6442793e119ac9308b}
+      \strng{bibnamehash}{99ec999b89d27d6442793e119ac9308b}
+      \strng{authorbibnamehash}{99ec999b89d27d6442793e119ac9308b}
+      \strng{authornamehash}{cfd5152d6091689de8a2ba5f4a8dd9fd}
+      \strng{authorfullhash}{99ec999b89d27d6442793e119ac9308b}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{https://github.com/DavisVaughan/furrr, https://furrr.futureverse.org/}
+      \field{title}{furrr: Apply Mapping Functions in Parallel using Futures}
+      \field{year}{2022}
+    \endentry
     \entry{Benjamini1995ControllingTesting}{article}{}
       \name{author}{2}{}{%
         {{hash=2bf06df9b6fb1b6a6811f2965ef58db2}{%
@@ -6570,7 +6597,7 @@
       \verb{url}
       \verb https://pubmed.ncbi.nlm.nih.gov/14693814/
       \endverb
-      \keyw{Algorithms,Cluster Analysis,Comparative Study,Computer-Assisted / methods*,Diagnosis,Evaluation Study,Feasibility Studies,Gene Expression Profiling / methods*,Genetic Predisposition to Disease / genetics*,Genetic Testing / methods*,Genetic*,Hans C van Houwelingen,Humans,Jelle J Goeman,Leukemia / diagnosis,Leukemia / genetics,MEDLINE,Models,NCBI,NIH,NLM,National Center for Biotechnology Information,National Institutes of Health,National Library of Medicine,Oligonucleotide Array Sequence Analysis / methods*,PubMed Abstract,Reproducibility of Results,Sample Size,Sara A van de Geer,Sensitivity and Specificity,Statistical*,Statistics as Topic*,Validation Study,doi:10.1093/bioinformatics/btg382,pmid:14693814}
+      \keyw{Algorithms,Cluster Analysis,Comparative Study,Computer-Assisted / methods*,Diagnosis,Evaluation Study,Feasibility Studies,Gene Expression Profiling / methods*,Genetic Predisposition to Disease / genetics*,Genetic Testing / methods*,Genetic*,Hans C van Houwelingen,Humans,Jelle J Goeman,Leukemia / diagnosis,Leukemia / genetics,MEDLINE,Models,NCBI,NIH,NLM,National Center for Biotechnology Information,National Institutes of Health,National Library of Medicine,Oligonucleotide Array Sequence Analysis / methods*,PubMed Abstract,Reproducibility of Results,Sample Size,Sara A van de Geer,Sensitivity and Specificity,Statistical*,Statistics as Topic*,Validation Study}
     \endentry
     \entry{Goeman2006TestingAlternative}{article}{}
       \name{author}{3}{}{%
@@ -6617,10 +6644,10 @@
       \verb 10.1111/J.1467-9868.2006.00551.X
       \endverb
       \verb{urlraw}
-      \verb https://onlinelibrary.wiley.com/doi/full/10.1111/j.1467-9868.2006.00551.x https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9868.2006.00551.x https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2006.00551.x
+      \verb https://onlinelibrary.wiley.com/doi/full/10.1111/j.1467-9868.2006.00551.x
       \endverb
       \verb{url}
-      \verb https://onlinelibrary.wiley.com/doi/full/10.1111/j.1467-9868.2006.00551.x%20https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1467-9868.2006.00551.x%20https://rss.onlinelibrary.wiley.com/doi/10.1111/j.1467-9868.2006.00551.x
+      \verb https://onlinelibrary.wiley.com/doi/full/10.1111/j.1467-9868.2006.00551.x
       \endverb
       \keyw{Empirical Bayes modelling,F,High dimensional data,Hypothesis testing,Locally most powerful test,Power,Score test,test}
     \endentry
@@ -6701,8 +6728,8 @@
       \strng{editorbibnamehash}{e7ced06e01b6a1273dcf5a7a3f56d1e4}
       \strng{editornamehash}{439dd77798c181e6ee7f5ce3501a6ca7}
       \strng{editorfullhash}{e7ced06e01b6a1273dcf5a7a3f56d1e4}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Encyclopedia of Machine Learning}
@@ -7556,33 +7583,6 @@
       \verb{url}
       \verb https://www.stats.ox.ac.uk/pub/MASS4/
       \endverb
-    \endentry
-    \entry{furrr}{manual}{}
-      \name{author}{2}{}{%
-        {{hash=858f3a61393526cfc73cb860925a277a}{%
-           family={Vaughan},
-           familyi={V\bibinitperiod},
-           given={Davis},
-           giveni={D\bibinitperiod}}}%
-        {{hash=f897665e1a235bb04b3eb58c48cb4bda}{%
-           family={Dancho},
-           familyi={D\bibinitperiod},
-           given={Matt},
-           giveni={M\bibinitperiod}}}%
-      }
-      \strng{namehash}{cfd5152d6091689de8a2ba5f4a8dd9fd}
-      \strng{fullhash}{99ec999b89d27d6442793e119ac9308b}
-      \strng{bibnamehash}{99ec999b89d27d6442793e119ac9308b}
-      \strng{authorbibnamehash}{99ec999b89d27d6442793e119ac9308b}
-      \strng{authornamehash}{cfd5152d6091689de8a2ba5f4a8dd9fd}
-      \strng{authorfullhash}{99ec999b89d27d6442793e119ac9308b}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{note}{https://github.com/DavisVaughan/furrr, https://furrr.futureverse.org/}
-      \field{title}{furrr: Apply Mapping Functions in Parallel using Futures}
-      \field{year}{2022}
     \endentry
   \enddatalist
 \endrefsection
