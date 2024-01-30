@@ -54,8 +54,8 @@
 \usepackage[
   hypertexnames=false,
   colorlinks= true,
-  linkcolor=.,
-  citecolor={blue},
+  linkcolor={blue},
+  citecolor={teal},
   urlcolor={violet}]{hyperref} 
 \usepackage[
     backend=biber,
@@ -67,7 +67,7 @@
 \addbibresource{./references.bib}
 \addbibresource{./entries.bib}
 \def\bibfont{\footnotesize}
-\usepackage[toc, acronym, nomain]{glossaries}
+\usepackage[ acronym, nomain, nohypertypes={acronym}]{glossaries}
 \makeglossaries
 
 \newacronym{ad}{AD}{Alzheimer's Disease}

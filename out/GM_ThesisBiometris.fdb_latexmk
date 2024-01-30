@@ -1,19 +1,18 @@
 # Fdb version 4
-["biber out/GM_ThesisBiometris"] 1706649419.11299 "out/GM_ThesisBiometris.bcf" "out/GM_ThesisBiometris.bbl" "out/GM_ThesisBiometris" 1706650793.11889 0
-  "./entries.bib" 1706540792.04687 2484 7c80be5c6df44f1713c90b29779f7a2c ""
-  "./references.bib" 1706649421.40899 180664 572fe0fe798fe49782be18027b2402ae ""
-  "out/GM_ThesisBiometris.bcf" 1706650792.95657 121661 4a531d1a09554d4ae1a56c64a7dd1d5a "pdflatex"
+["biber out/GM_ThesisBiometris"] 1706690382.24959 "out/GM_ThesisBiometris.bcf" "out/GM_ThesisBiometris.bbl" "out/GM_ThesisBiometris" 1706690564.66715 0
+  "./references.bib" 1706690337.1048 183133 cbe84d41033b62638c143d23db19d29d ""
+  "out/GM_ThesisBiometris.bcf" 1706690564.39617 121661 4a531d1a09554d4ae1a56c64a7dd1d5a "pdflatex"
   (generated)
   "out/GM_ThesisBiometris.bbl"
   "out/GM_ThesisBiometris.blg"
   (rewritten before read)
-["cusdep acn acr out/GM_ThesisBiometris"] 1706649428.09314 "out/GM_ThesisBiometris.acn" "out/GM_ThesisBiometris.acr" "out/GM_ThesisBiometris" 1706650793.11929 2
-  "out/GM_ThesisBiometris.acn" 1706650792.95745 1900 7f9cdfc1193dbdc52c4504eac9930b5a "pdflatex"
+["cusdep acn acr out/GM_ThesisBiometris"] 1706690405.10989 "out/GM_ThesisBiometris.acn" "out/GM_ThesisBiometris.acr" "out/GM_ThesisBiometris" 1706690564.66756 2
+  "out/GM_ThesisBiometris.acn" 1706690564.39708 1900 7f9cdfc1193dbdc52c4504eac9930b5a "pdflatex"
   (generated)
   "out/GM_ThesisBiometris.acr"
   (rewritten before read)
-["pdflatex"] 1706650787.9549 "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" "out/GM_ThesisBiometris.pdf" "GM_ThesisBiometris" 1706650793.11935 0
-  "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" 1706650478.77897 67905 ba32f072d61087ddeb43ed968c84358b ""
+["pdflatex"] 1706690559.255 "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" "out/GM_ThesisBiometris.pdf" "GM_ThesisBiometris" 1706690564.66763 0
+  "/Users/gm/Library/CloudStorage/OneDrive-WageningenUniversity&Research/Documents/Thesis/GM_ThesisBiometris.tex" 1706690548.37527 67930 a9eb67d65264c90df227b224930b1806 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf-pc.enc" 1600636029 2211 c42193888177bc8f86d55dca129a9358 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc" 1422827479 2083 60e36f8eac802fcaf19eabe2633b406e ""
@@ -311,7 +310,7 @@
   "/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1706572452.36936 4993097 9a4fc1f062d9d0f055c7bc5a5f93f223 ""
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1706572495 8211145 0f836554c6daa310c7deedeec521c9c0 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
-  "GM_ThesisBiometris.tex" 1706650478.77897 67905 ba32f072d61087ddeb43ed968c84358b ""
+  "GM_ThesisBiometris.tex" 1706690548.37527 67930 a9eb67d65264c90df227b224930b1806 ""
   "figures/6factor.svg" 1706540792.047 6860 68472b91b29014f5253be48c806e70e0 ""
   "figures/ApoE@2x.png" 1706540792.04896 664484 40377c9024d4459e700610bef58d72f9 ""
   "figures/ApoEeffects.jpg" 1706540792.05114 745630 1e53b81ff0baf68d3f2c2b49542ab35a ""
@@ -327,11 +326,11 @@
   "figures/tree.svg" 1706540792.05461 6860 68472b91b29014f5253be48c806e70e0 ""
   "figures/xgb.svg" 1706540792.05469 6860 4c97db4844003c2934ce958c85cfabea ""
   "out/GM_ThesisBiometris.acr" 1706645774.96363 3118 91be54a713ab7ae9ba897fc72e82c527 "cusdep acn acr out/GM_ThesisBiometris"
-  "out/GM_ThesisBiometris.aux" 1706650792.91725 41383 f2a4518b7ac772cf223fafe2a81f5717 "pdflatex"
-  "out/GM_ThesisBiometris.bbl" 1706649422.56635 319160 0f5c352a9323d1b2b22376f121b3a72c "biber out/GM_ThesisBiometris"
-  "out/GM_ThesisBiometris.out" 1706650792.95359 4639 7c0b839ca2068065df5cdf8a0b971fea "pdflatex"
-  "out/GM_ThesisBiometris.run.xml" 1706650792.95737 2539 691b25c8b1b2806ce0c6bf2bb3857eb9 "pdflatex"
-  "out/GM_ThesisBiometris.toc" 1706650792.95747 4846 8936152a2a7feffde3669fe3115e2ea0 "pdflatex"
+  "out/GM_ThesisBiometris.aux" 1706690564.35486 41282 571c4dd04619ec0d0a8c4128e64df34f "pdflatex"
+  "out/GM_ThesisBiometris.bbl" 1706690385.63339 319160 0f5c352a9323d1b2b22376f121b3a72c "biber out/GM_ThesisBiometris"
+  "out/GM_ThesisBiometris.out" 1706690564.3927 4529 235381bddeb4c937133f398b84524df0 "pdflatex"
+  "out/GM_ThesisBiometris.run.xml" 1706690564.397 2539 691b25c8b1b2806ce0c6bf2bb3857eb9 "pdflatex"
+  "out/GM_ThesisBiometris.toc" 1706690564.39711 4789 74426518650fc07b6499824f7ba94a1d "pdflatex"
   "svg-inkscape/6factor_svg-raw.png" 1706540792.19233 160747 809b93eadff6fd63decaecb7cc4ec67d ""
   "svg-inkscape/bench_svg-raw.png" 1706540792.19303 164397 e74f700c650b5b91dfb73b0c90f11cb9 ""
   "svg-inkscape/fullmultinom_svg-raw.png" 1706540792.19413 176790 7c6926cb39b63e6930640df1ecd5a96e ""

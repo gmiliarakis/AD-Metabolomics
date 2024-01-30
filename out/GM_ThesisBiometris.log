@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.1.30)  30 JAN 2024 22:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.1.30)  31 JAN 2024 09:42
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1373,12 +1373,12 @@ Package biblatex Info: ... file 'GM_ThesisBiometris.bbl' found.
  (out/GM_ThesisBiometris.bbl)
 Package biblatex Info: Reference section=0 on input line 124.
 Package biblatex Info: Reference segment=0 on input line 124.
-<figures/WURlogo.png, id=111, 903.375pt x 501.875pt>
+<figures/WURlogo.png, id=107, 903.375pt x 501.875pt>
 File: figures/WURlogo.png Graphic file (type png)
 <use figures/WURlogo.png>
 Package pdftex.def Info: figures/WURlogo.png  used on input line 168.
 (pdftex.def)             Requested size: 192.0548pt x 106.69106pt.
-<figures/biometris_logo.png, id=112, 390.45876pt x 75.28125pt>
+<figures/biometris_logo.png, id=108, 390.45876pt x 75.28125pt>
 File: figures/biometris_logo.png Graphic file (type png)
 <use figures/biometris_logo.png>
 Package pdftex.def Info: figures/biometris_logo.png  used on input line 175.
@@ -1388,7 +1388,7 @@ Overfull \hbox (47.30217pt too wide) in paragraph at lines 175--176
  []| []
  []
 
-<figures/torontodeclaration.png, id=113, 1027.84pt x 876.27374pt>
+<figures/torontodeclaration.png, id=109, 1027.84pt x 876.27374pt>
 File: figures/torontodeclaration.png Graphic file (type png)
 <use figures/torontodeclaration.png>
 Package pdftex.def Info: figures/torontodeclaration.png  used on input line 186.
@@ -1428,7 +1428,7 @@ LaTeX Font Info:    Font shape `OT1/ntxtlf/b/n' will be
  [4]
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/it' will be
 (Font)              scaled to size 10.0pt on input line 289.
-<figures/ApoE@2x.png, id=249, 1597.97pt x 845.1575pt>
+<figures/ApoE@2x.png, id=242, 1597.97pt x 845.1575pt>
 File: figures/ApoE@2x.png Graphic file (type png)
 <use figures/ApoE@2x.png>
 Package pdftex.def Info: figures/ApoE@2x.png  used on input line 298.
@@ -1437,18 +1437,18 @@ Package pdftex.def Info: figures/ApoE@2x.png  used on input line 298.
 Underfull \vbox (badness 4479) has occurred while \output is active []
 
  [1{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/base/8r.enc}] [2 <./figures/ApoE@2x.png>]
-<figures/ApoEprot.png, id=340, 1958.31625pt x 807.015pt>
+<figures/ApoEprot.png, id=328, 1958.31625pt x 807.015pt>
 File: figures/ApoEprot.png Graphic file (type png)
 <use figures/ApoEprot.png>
 Package pdftex.def Info: figures/ApoEprot.png  used on input line 325.
 (pdftex.def)             Requested size: 341.43437pt x 140.70023pt.
-<figures/ApoEeffects.jpg, id=365, 469.755pt x 382.51479pt>
+<figures/ApoEeffects.jpg, id=348, 469.755pt x 382.51479pt>
 File: figures/ApoEeffects.jpg Graphic file (type jpg)
 <use figures/ApoEeffects.jpg>
 Package pdftex.def Info: figures/ApoEeffects.jpg  used on input line 339.
 (pdftex.def)             Requested size: 426.79135pt x 347.52867pt.
  [3 <./figures/ApoEprot.png>] [4 <./figures/ApoEeffects.jpg>]
-<figures/network.jpeg, id=442, 1314.0pt x 742.41pt>
+<figures/network.jpeg, id=423, 1314.0pt x 742.41pt>
 File: figures/network.jpeg Graphic file (type jpg)
 <use figures/network.jpeg>
 Package pdftex.def Info: figures/network.jpeg  used on input line 360.
@@ -1474,12 +1474,12 @@ File: ot1txtt.fd 2000/12/15 v3.1
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
 (Font)              scaled to size 5.0pt on input line 466.
  [9{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}] [10] [11]
-<figures/gt1.png, id=617, 1349.04pt x 1541.76pt>
+<figures/gt1.png, id=588, 1349.04pt x 1541.76pt>
 File: figures/gt1.png Graphic file (type png)
 <use figures/gt1.png>
 Package pdftex.def Info: figures/gt1.png  used on input line 519.
 (pdftex.def)             Requested size: 384.1096pt x 438.98271pt.
-<figures/gt2.png, id=618, 1349.04pt x 1541.76pt>
+<figures/gt2.png, id=589, 1349.04pt x 1541.76pt>
 File: figures/gt2.png Graphic file (type png)
 <use figures/gt2.png>
 Package pdftex.def Info: figures/gt2.png  used on input line 526.
@@ -1495,17 +1495,17 @@ Overfull \hbox (19.24869pt too wide) in paragraph at lines 590--625
  []
 
 [15]
-<./svg-inkscape/bench_svg-raw.png, id=650, 496.9767pt x 361.35pt>
+<./svg-inkscape/bench_svg-raw.png, id=622, 496.9767pt x 361.35pt>
 File: ./svg-inkscape/bench_svg-raw.png Graphic file (type png)
 <use ./svg-inkscape/bench_svg-raw.png>
 Package pdftex.def Info: ./svg-inkscape/bench_svg-raw.png  used on input line 645.
 (pdftex.def)             Requested size: 496.97548pt x 361.34912pt.
-<./svg-inkscape/fullmultinom_svg-raw.png, id=651, 496.9767pt x 361.35pt>
+<./svg-inkscape/fullmultinom_svg-raw.png, id=623, 496.9767pt x 361.35pt>
 File: ./svg-inkscape/fullmultinom_svg-raw.png Graphic file (type png)
 <use ./svg-inkscape/fullmultinom_svg-raw.png>
 Package pdftex.def Info: ./svg-inkscape/fullmultinom_svg-raw.png  used on input line 651.
 (pdftex.def)             Requested size: 496.97548pt x 361.34912pt.
-<./svg-inkscape/6factor_svg-raw.png, id=652, 496.9767pt x 361.35pt>
+<./svg-inkscape/6factor_svg-raw.png, id=624, 496.9767pt x 361.35pt>
 File: ./svg-inkscape/6factor_svg-raw.png Graphic file (type png)
 <use ./svg-inkscape/6factor_svg-raw.png>
 Package pdftex.def Info: ./svg-inkscape/6factor_svg-raw.png  used on input line 658.
@@ -1531,12 +1531,12 @@ Overfull \hbox (9.11664pt too wide) in paragraph at lines 682--682
  []
 
 [21] [22] [23] [24] [25]
-<./svg-inkscape/tree_svg-raw.png, id=836, 496.9767pt x 361.35pt>
+<./svg-inkscape/tree_svg-raw.png, id=807, 496.9767pt x 361.35pt>
 File: ./svg-inkscape/tree_svg-raw.png Graphic file (type png)
 <use ./svg-inkscape/tree_svg-raw.png>
 Package pdftex.def Info: ./svg-inkscape/tree_svg-raw.png  used on input line 689.
 (pdftex.def)             Requested size: 496.97548pt x 361.34912pt.
-<./svg-inkscape/xgb_svg-raw.png, id=837, 496.9767pt x 361.35pt>
+<./svg-inkscape/xgb_svg-raw.png, id=808, 496.9767pt x 361.35pt>
 File: ./svg-inkscape/xgb_svg-raw.png Graphic file (type png)
 <use ./svg-inkscape/xgb_svg-raw.png>
 Package pdftex.def Info: ./svg-inkscape/xgb_svg-raw.png  used on input line 692.
@@ -1552,24 +1552,24 @@ LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2020/03/25>
  ***********
 Package rerunfilecheck Info: File `GM_ThesisBiometris.out' has not changed.
-(rerunfilecheck)             Checksum: 7C0B839CA2068065DF5CDF8A0B971FEA;4639.
+(rerunfilecheck)             Checksum: 235381BDDEB4C937133F398B84524DF0;4529.
 Package logreq Info: Writing requests to 'GM_ThesisBiometris.run.xml'.
 \openout1 = `GM_ThesisBiometris.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 42855 strings out of 474228
- 858577 string characters out of 5746458
+ 42854 strings out of 474228
+ 858565 string characters out of 5746458
  1958975 words of memory out of 5000000
- 63970 multiletter control sequences out of 15000+600000
+ 63969 multiletter control sequences out of 15000+600000
  621895 words of font info for 169 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
  102i,12n,107p,2439b,2168s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/rtxb.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/rtxmi.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/txex.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/txsy.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/txsyb.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/txsyc.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/txfonts/txtt.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/urw/times/utmri8a.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/newtx/ztmb.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/newtx/ztmr.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/newtx/ztmri.pfb>
-Output written on out/GM_ThesisBiometris.pdf (33 pages, 3531196 bytes).
+Output written on out/GM_ThesisBiometris.pdf (33 pages, 3530071 bytes).
 PDF statistics:
- 981 PDF objects out of 1000 (max. 8388607)
- 879 compressed objects within 9 object streams
+ 953 PDF objects out of 1000 (max. 8388607)
+ 851 compressed objects within 9 object streams
  238 named destinations out of 1000 (max. 500000)
- 291 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 283 words of extra memory for PDF output out of 10000 (max. 10000000)
 
