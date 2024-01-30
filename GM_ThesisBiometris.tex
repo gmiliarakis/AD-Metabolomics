@@ -10,6 +10,7 @@
 \usepackage{booktabs}
 \usepackage{lipsum}
 \usepackage{multicol}
+\usepackage{multirow}
 
 % Setting margins
 \usepackage[a4paper, left=3cm,right=3cm]{geometry}
@@ -97,6 +98,12 @@
 \newacronym{ggm}{GGM}{Gaussian graphical model}
 \renewcommand*{\glossarymark}[1]{}
 \setcounter{tocdepth}{3}
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+            {-2.5ex\@plus -1ex \@minus -.25ex}%
+            {1.25ex \@plus .25ex}%
+            {\normalfont\normalsize\bfseries}}
+\makeatother
 
 
 %--------------------------------------------------------------------
@@ -362,23 +369,76 @@ Are there mechanistic links between ApoE4 dose and serum metabolome in AD?
     \item How discriminatory are serum metabolites of ApoE4 status and/or AD?
     \item How do the covariance network topologies of metabolites differ between ApoE4 carriers and non-carriers?
 \end{enumerate}
-\clearpage
-\section{Data}
-The data were collected from 127 AD patients and 120 SCD ($n$ = 247) individuals in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depressants, mean arterial pressure (MAP) and body mass index (BMI). The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data set is high-dimensional, in the sense that it contains more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
+
 \newpage
-\section{Methodology}
+\section{Methods}
+
+\subsection{Subjects}
+The data were collected from 127 AD patients and 120 SCD ($n$ = 247) individuals in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depressants, mean arterial pressure (MAP) and body mass index (BMI) (see Table \ref{tab:clin}. The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data set is high-dimensional, in the sense that it contains more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
+
+\begin{table}[h]
+\caption{Clinical background characteristics used as control variables of ApoE4 (dose) effects}
+\label{tab:clin}
+\begin{tabular}{clllll} \toprule
+                                & \textbf{Clinical feature}   & \textbf{Type} \\ \midrule
+CSF                             & A$\beta_{42}$                 & Numeric       \\
+                                & tau                         & Numeric       \\
+                                & p-tau                       & Numeric       \\
+\multirow{2}{*}{Anthropometric} & Age                         & Discrete      \\
+                                & Sex                         & Binary        \\
+\multirow{2}{*}{Intoxications}  & Smoking (past, current, no) & Nominal       \\
+                                & Alcohol                     & Binary        \\
+\multirow{3}{*}{Commorbidities} & Hypertension                & Binary        \\
+                                & Diabetes mellitus           & Binary        \\
+                                & Hypercholesterolemia        & Binary        \\
+\multirow{3}{*}{Medication}     & Cholesterol lowering        & Numeric       \\
+                                & Antidepressants             & Binary        \\
+                                & Antiplatelet                & Binary        \\ \bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Data management}
 The FAIR principles for data management and stewardship in science were published by  ~\citeauthor{Wilkinson2016TheStewardship} in 2016 \cite{Wilkinson2016TheStewardship}. FAIR stands for Findable, Accessible, Interactive, and Reusable data; the intention is to create and use data that are well-documented and reproducible. These principles were considered at every step of the study and implemented when applicable. All analysis was performed in R (version 4.3.2), and the current report was written in \LaTeX (Tex Live version 2023). All files are committed to a private Github repository --with git as \acrfull{vcs}.
 
-\subsection{Data exploration and Visualisation}
-An interactive correlation heatmap was created to visualise the Pearson correlation coefficients using the package \textsf{heatmaply}. 
+\subsection{Data Visualisation}
+An interactive correlation heatmap was created to visualise the Pearson correlation coefficients between the serum metabolites using the package \textsf{heatmaply}. 
 
 \subsection{Data Wrangling and Feature Engineering}
-The data were processed using base R and \textsf{dplyr} \cite{dplyr}. The package \textsf{furrr} was used to enable multi-core processing whenever applicable.
-   
+The ApoE allele and genotype frequencies in the population are reflected in the AD and SCD data, as shown in Table \ref{tab:ApoEfreq}. That is, the most abundant allele is $\varepsilon$3, followed by $\varepsilon4$ and $\varepsilon2$. The most common genotype was $\varepsilon3\varepsilon3$, followed by $\varepsilon3\varepsilon4$ and $\varepsilon4\varepsilon4$.
+
+\begin{table}[h]
+\caption{ApoE genotype counts (top part) ApoE4 counts: features created to balance the genotype counts (bottom part)}
+\label{tab:ApoEfreq}
+\begin{tabular}{rrccc}
+\toprule
+\multicolumn{1}{l}{}             & \multicolumn{1}{l}{}       & AD & SCD & Total \\ \midrule
+\multirow{6}{*}{ApoE genotypes} & $\varepsilon2\varepsilon$2 & 2  & 0   & 2     \\
+                                 & $\varepsilon2\varepsilon3$ & 15 & 3   & 18    \\
+                                 & $\varepsilon2\varepsilon4$ & 5  & 2   & 7     \\
+                                 & $\varepsilon3\varepsilon3$ & 69 & 37  & 106   \\
+                                 & $\varepsilon3\varepsilon4$ & 26 & 59  & 85    \\
+                                 & $\varepsilon4\varepsilon4$ & 3  & 26  & 29    \\ \midrule
+\multirow{4}{*}{ApoE4 alleles}           & 1x                         & 31 & 61  & 124   \\
+                                 & 2x                         & 3  & 36  & 29    \\
+                                 & $\geq$ 1x                & 34 & 87  & 121   \\
+                                 & No                         & 86 & 40  & 126  \\ \bottomrule
+\end{tabular}
+\end{table}
+
+
+The genotypes are not equally represented in the data and hence, don't enable analysis without feature engineering. The following two sections describe the features created to balance the classes when studying only the AD group and both AD and SCD.
+
+\subsubsection{AD group}
+An obvious and "low-res" approach would be to bin the samples into two groups: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ \textit{dose} effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The counts of ApoE4 allele doses are shown in the bottom part of Table \ref{tab:ApoEfreq}.
+
+\subsubsection{SCD and AD}
+In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis of AD, a four-level feature (AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4, "ApoE4AD") was created, as shown in the last two rows of Table \ref{tab:ApoEfreq}.
+
+The data were processed using base R functions and \textsf{dplyr} \cite{dplyr}. The package \textsf{furrr} was used to enable multi-core processing whenever applicable.
 
 \subsection{Statistical Analysis}
 \subsubsection{ApoE4 dose effects on serum metabolite levels in AD}
+\paragraph{Nested linear regression models}
 A straight-forward way to test whether metabolites are distinctly expressed depending on ApoE4 dose, controlling for clinical variables, is \acrshort{anova} (Analysis of Variance) on $p$ nested linear models. The dependent variable in each model is a metabolite; the nested model, eq. \eqref{rm}, has only clinical variables, while the full model, eq. \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2) as explanatory variables. Let $m_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and D the ApoE4 dose; the nested models then are:
 \begin{align}
     & m_j = \beta_0 + \sum_{k=1}^m\beta_kx_k +\varepsilon \label{rm} \\
@@ -386,22 +446,17 @@ A straight-forward way to test whether metabolites are distinctly expressed depe
 \end{align}
 Then, for every $j$ = 1,...,$p$ the hypothesis test is H$_0$: $\beta_{m+1} = 0 $ vs H$_\alpha$: $\beta_{m+1} \neq 0$. Under H$_0$ the test statistic, $F$ follows an $F_{1, n-(m+2)}$ distribution. This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected hypotheses, globally e.g. at an $\alpha$ of .05. The caveat of this approach is that minor changes in metabolite levels may not be identified. The next section introduces the concept of a \textit{global test} to deal with this issue.
 
-\paragraph{Global testing}\\
-
-A more elegant alternative to multiple testing is global test \cite{Simon2004DesignHealth}. The concept was first introduced by \citeauthor{Simon2004DesignHealth}, and proposed an approach based on permutations to cater to the high dimensionality of gene expression data.
+\paragraph{Global Test}A more elegant alternative to multiple testing is global test \cite{Simon2004DesignHealth}. The concept was first introduced by \citeauthor{Simon2004DesignHealth}, and proposed an approach based on permutations to cater to the high dimensionality of gene expression data.
 
 The R package \textsf{GlobalTest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage} developed by \citeauthor{Goeman2004AOutcome} originally fits a logistic regression model, using genes to predict the response $Y \in [1,..., k]$ (or $k$), representing clinical or biological group membership. This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}.
 The hypothesis test is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The tests uses the -usually- low-dimensional ($n$ × $n$) the intra-sample covariance matrix instead of the larger ($p$ × $p$) metabolite covariance matrix. Hence, this method is rather efficient. The test statistic under $H_0$ follows, asymptotically, a normal distribution. In other words, this method tests whether the metabolite levels are discriminating over the dose of ApoE4. The \texttt{gt()} function of the package was used to screen for differences in metabolite levels based on the ApoE4 dose. The \texttt{covariates()} function was used to visualise the ApoE4 dose effects on metabolite levels.
 
-\subsubsection{Multi-class Classification of ApoE4 status and/or AD}
-In machine learning, a class denotes a group of objects that share common characteristics, such as having AD or ApoE4 \cite*{Drummond2010}. Classification, in this context, denotes training a (supervised) learning algorithm on labeled data (containing their class). The classifier learns patterns in the data and is then able to assign a class to unlabeled data.
+\subsubsection{Classification of ApoE4 status and/or AD}
+In machine learning, a class denotes a group of objects that share common characteristics, such as having AD or ApoE4 \cite*{Drummond2010}. Classification, in this context, denotes training a (supervised) learning algorithm on labeled data (containing their class) \cite*{Drummond2010}. The classifier learns patterns in the data and is then able to predict class membership for unknown data \cite*{Drummond2010}.
 
-In this study, the metabolites on top of background clinical characteristics where fitted in several models to predict having AD and/or at least one ApoE4. First, a benchmark model was fitted with the clinical characteristics only. Then the full metabolomics panel was fitted on top of the clinical characteristics
+\paragraph{Bias-Variance trade-off}The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this study to find the optimal balance between the performance of a model with its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}. One needs to consider this trade-off during model and evaluation method selection, as some impose more bias or variance than others.
 
-
-The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this study to find the optimal balance between the performance of a model with its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}. One needs to consider this trade-off during model and evaluation method selection, as some impose more bias or variance than others.
-
-The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl(), train() and confusionMatrix()} were used to fit and evaluate the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
+\paragraph{Multi-class classification models}The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl()} and \texttt{train()} were used to fit the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
 
 Considering interpretability, Multinomial Logistic Regression (\acrshort{mnl}) is inherently interpretable. Let $y = k$, with $k \in N, [1,4]$ representing the k-th class of ApoE4AD and $\beta_{kj}$ its set of coefficients,  $\beta_{lj}$ the coefficients of the rest of classes for $j$-th metabolite, then a MNL model calculated the probability
 
@@ -415,7 +470,9 @@ Decision Trees (DT) are inherently interpretable, non-parametric models, that fi
 
 Random Forests (RF) are ensemble learning methods, that bag several DTs and average their decisions with a majority vote. Despite RFs tend to outperform DTs, they often operate as a \textit{black box} and are poorly interpretable. The state-of-the-art ensemble learner \texttt{xgbTree} of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used.
 
-The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated (100 times) 10-fold Cross-Validation (CV). The best model's performance was then holistically assessed using repeated 10-fold CV-obtained \acrfull{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}.
+\paragraph{Implementation and Evaluation}First, a benchmark model was created using only the clinical background data in a penalised MNL model. Second, the 230 metabolite levels panel were fitted on top of the clinical background data in a penalised MNL model. Then the metabolomic data matrix was projected into 6 latent factors, explaining around 30\% of their variance. The 6-factor metabolite projection was then fit on top of the clinical data in a penalised MNL, a DT and an XGBoost model.
+
+The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated (100 times) 10-fold Cross-Validation (CV). Model performance was then holistically assessed and compared using repeated 10-fold CV-obtained ROC curves and their respective Area Under the Curve \acrshort{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}'s \texttt{confusionMatrix()}.
 
 \subsubsection{Metabolite Covariance Network analysis}
 Network science offers a unifying framework for data and system representation, applicable to any domain \cite{Barabasi2015NetworkScience}. A network, in an abstract sense, consists of nodes connected with links, also referred to as edges. In data science, a network whose nodes represent random features, whose joint probability distribution is defined by the ensemble of their edges is called \textit{graphical model} \cite{Peeters2022Rags2ridges:Matrices}. A metabolomic covariance correlation network represents the ensemble of metabolites based on their covariance, showing nuances among the samples that non-graphical statistical methods on individual metabolites may fail to detect \cite{PerezDeSouza2020Network-basedInterpretation}. It may provide insights into correlated metabolites that don't belong in the same metabolic pathway \cite{PerezDeSouza2020Network-basedInterpretation}.
@@ -429,79 +486,130 @@ In natural language, a zero value in the inverse covariance matrix (usually refe
 
 In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices} was used to generate the feature covariance matrix, as well as the precision matrix, regularise it and represent it in a GGM --as shown in Fig. \ref{fig2}. The package was designed for metabolomic GGMs.
 
+\subsection{R packages}
+\hspace{5 pt}
+\begin{multicols}{3}
+\begin{itemize}
+    \item[] \textsf{caret} \cite{Kuhn2008BuildingPackage}
+    \item[]\textsf{dplyr} \cite{dplyr}
+    \item[]\textsf{DMwR2} \cite{DMwR2}
+    \item[]\textsf{globaltest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage}
+    \item[]\textsf{GlobalAncova} \cite{Mansmann2005TestingApproach, Hummel2008GlobalANCOVA:Effects, Hummel2023GlobalExpression}
+    \item[]\textsf{heatmaply} \cite{heatmaply}
+    \item[]\textsf{FMradio} \cite{Peeters2019StableData}
+    \item[]\textsf{nnet} \cite{nnet}
+    \item[]\textsf{pROC} \cite{pROC}
+    \item[]\textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices}
+    \item[]\textsf{rpart} \cite{rpart}
+    \item[]\textsf{xgboost} \cite{Chen2016XGBoost:System}
+    \item[]\textsf{furrr} \cite{furrr}
+\end{itemize}
+\end{multicols}
+
 \clearpage
 \section{Results}
-
-\subsection{Data Exploration and Visualisation}
-The ApoE allele and genotype frequencies in the population are reflected in the AD and SCD data, as shown in Table \ref{Table:ApoEgenfreq}. That is, the most abundant allele is $\varepsilon$3, followed by $\varepsilon4$ and $\varepsilon2$. The most common genotype was $\varepsilon3\varepsilon3$, followed by $\varepsilon3\varepsilon4$ and $\varepsilon4\varepsilon4$.
-
-\begin{table}[!ht]
-\caption{Individual ApoE genotype counts among SCD and AD patients.} \label{Table:ApoEgenfreq}
-\begin{tabular}{cccccc} \toprule
-$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
-2    & 18   & 7    & 106  & 85   & 29   \\ \bottomrule
-\end{tabular}
-\end{table}
-
-The genotypes are not equally represented in the data and hence, don't enable analysis without feature engineering. The following two sections describe the features created to balance the classes when studying only the AD group and both AD and SCD.
-\subsubsection{AD group}
-An obvious and "low-res" approach would be to bin the samples into two groups: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ dose effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The frequencies of $\varepsilon4$ doses are shown in Table \ref{Table:E4binAD}.
-
-\begin{table}[!ht]
-\caption{Individual ApoE genotype counts among AD patients.} \label{Table:ApoEfreqAD}
-\begin{tabular}{cccccc} \toprule
-$\varepsilon2\varepsilon$2 & $\varepsilon2\varepsilon3$ & $\varepsilon2\varepsilon4$ & $\varepsilon3\varepsilon3$ & $\varepsilon3\varepsilon4$ & $\varepsilon4\varepsilon4$ \\ \midrule
-0    & 3    & 2    & 37   & 59   & 26 \\ \bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[!ht]
-\caption{ApoE $\varepsilon4$ dose frequencies among AD patients.} \label{Table:E4binAD}
-\begin{tabular}{ccc} \toprule
-No $\varepsilon4$  & 1x$\varepsilon4$& 2x$\varepsilon4$\\ \midrule
-40    & 61   & 26 \\ \bottomrule
-\end{tabular}
-\end{table}
-
-\subsubsection{SCD and AD}
-In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis of AD, a four-level feature ("ApoE4AD") was created, as shown in Table \ref{Table:target}.
-
-\begin{table}[!ht]
-\caption{Feature combining ApoE4 status and AD diagnosis.} \label{Table:target}
-\begin{tabular}{rcc} \toprule
-& $\geq$1 $\varepsilon4$ & no $\varepsilon4$\\ \midrule
-AD \vline  & 34& 86\\
- SCD \vline & 87& 40\\ \bottomrule 
-\end{tabular}
-\end{table}
-\subsection{RQi - Differential expression of plasma metabolites per ApoE4 dose among AD and SCD}
+\subsection{RQi - Differential levels of serum metabolites per ApoE4 dose among AD and SCD}
 \subsubsection{Global Test}
-
-\begin{figure}
-  \vspace*{-1cm}
-    \includegraphics[width=\textwidth]{figures/gt1.png}
+Two global tests were performed on the AD group, first testing for distinct metabolites among ApoE4 carriers and non-carriers and then among distinct ApoE4 "doses". The first test showed significant (p= 0.03) global effect on serum metabolites among ApoE4 carriers and non-carriers. Metabolites positively correlated with ApoE4 were mostly triglycerides (TG) and diglycerides (DG) (Fig \ref{gt1}). The second test revealed ApoE4 dose effects (p= 0.02) on metabolite levels  -mostly TG and DF (Fig \ref{gt2}).
+\begin{figure}[h]
+  % \vspace*{-1cm}
+    \includegraphics[width=0.9\textwidth]{figures/gt1.png}
       \caption{Covariates plot of the Global Test showing the metabolites affected by the presence of ApoE4.}
     \label{gt1}
   \end{figure}
 
 
-\begin{figure}
-    \includegraphics[width=\textwidth]{figures/gt2.png}
+\begin{figure}[h]
+    \includegraphics[width=0.9\textwidth]{figures/gt2.png}
       \caption{Covariates plot showing the metabolites affected by the number of ApoE4 alleles}
     \label{gt2}
   \end{figure}
+  
+\subsubsection{Nested Linear Models}
+Several metabolites from all classes were affected by ApoE4 dose, both in AD and SCD. Among AD patients, ApoE4 dose seems to have an effect on several triglycerides, diglycerides, L-glutamic acid, L-lysine, 2- and 3-hydroxybutyric acid, glutamic acid, 3-phosphoglyceric acid, phosphatidylcholin, sphyngomyelin, HpH.PAF.C17, phosphoethanolamine, imino-diacetate (Table \ref{tab:nestedSCD}). Among individuals with SCD, lipid metabolites were not affected as much as in the AD group, with only LPC and PC showing a difference. Aminoacids (glycine, taurine, L-serine, serotonine, L-glutamic acid, L-glutamic acid, phosphoethanolamine) and oxidative stress compounds were mostly affected in this group (Table \ref{tab:nestedSCD}). However, after correcting for multiple testing with FDR, none of the p-values were significant at $\alpha=0.05$.
+\begin{table}[H]
+\caption{ApoE4 dose effects on metabolites: significant F tests ($\alpha=0.05$) from nested linear model comparison in AD. Reduced model: clinical data only, Full model: clinical data + ApoE4 dose}
+\label{tab:nestedAD}
+\begin{tabular}{llll} \toprule
+                          & Effect & P(\textgreater{}F) & FDR-adjusted \\ \midrule
+Am.L.Glutamic.acid        & +      & 0.011              & 0.314        \\
+Am.L.Lysine               & +/-    & 0.029              & 0.314        \\
+Am.O.Phosphoethanolamine  & +      & 0.044              & 0.361        \\
+Lip.Cer.d18.1.24.0.       & +      & 0.028              & 0.314        \\
+Lip.DG.36.3.              & +      & 0.009              & 0.285        \\
+Lip.PC.O.34.3.            & -      & 0.021              & 0.314        \\
+Lip.SM.d18.1.22.0.        & +      & 0.037              & 0.345        \\
+Lip.TG.50.1.              & +      & 0.036              & 0.345        \\
+Lip.TG.50.2.              & +      & 0.027              & 0.314        \\
+Lip.TG.50.3.              & +      & 0.024              & 0.314        \\
+Lip.TG.51.3.              & +      & 0.031              & 0.326        \\
+Lip.TG.52.2.              & +      & 0.023              & 0.314        \\
+Lip.TG.52.3.              & +      & 0.002              & 0.250        \\
+Lip.TG.52.4.              & +      & 0.003              & 0.250        \\
+Lip.TG.52.5.              & +      & 0.022              & 0.314        \\
+Lip.TG.54.3.              & +      & 0.042              & 0.355        \\
+Lip.TG.54.4.              & +      & 0.008              & 0.285        \\
+Lip.TG.54.5.              & +      & 0.005              & 0.250        \\
+Lip.TG.54.6.              & +      & 0.005              & 0.250        \\
+Lip.TG.56.6.              & +      & 0.003              & 0.250        \\
+Lip.TG.56.7.              & +      & 0.017              & 0.314        \\
+Lip.TG.56.8.              & +      & 0.024              & 0.314        \\
+OA.2.hydroxybutyric.acid  & +      & 0.021              & 0.314        \\
+OA.Glutamic.Acid          & +      & 0.025              & 0.314        \\
+OA.3.Hydroxybutyric.acid  & +      & 0.039              & 0.348        \\
+OA.3.Phosphoglyceric.acid & +      & 0.025              & 0.314        \\
+OA.Iminodiacetate         & +      & 0.047              & 0.375        \\
+OS.HpH.LPA.C18.3          & -      & 0.015              & 0.314        \\
+OS.HpH.PAF.C16.0          & +      & 0.038              & 0.345       \\ \bottomrule
+\end{tabular}
+\end{table}
 
-\subsubsection{ANOVA on Nested Linear Models}
-
+\begin{table}[]
+\caption{ApoE4 dose effects on metabolites: significant F tests ($\alpha=0.05$) from nested linear model comparison in SCD. Reduced model: clinical data only, Full model: clinical data + ApoE4 dose}
+\label{tab:nestedSCD}
+\begin{tabular}{lllll} \toprule
+                         & 1x ApoE4 & 2x ApoE4 & P(\textgreater{}F) & FDR-adjusted \\ \midrule
+Am.Ethanolamine          & +        & -        & 0.014              & 0.444        \\
+Am.Glycine               & +        & -        & 0.004              & 0.347        \\
+Am.L.Aspartic.acid       & +        & -        & 0.049              & 0.641        \\
+Am.L.Glutamic.acid       & +        & -        & 0.038              & 0.617        \\
+Am.L.Serine              & +        & -        & 0.017              & 0.458        \\
+Am.O.Phosphoethanolamine & +        & -        & 0.022              & 0.504        \\
+Am.Serotonine            & +        & -        & 0.018              & 0.458        \\
+Am.Taurine               & +        & -        & 0.003              & 0.347        \\
+Lip.LPC.18.1.            & +        & -        & 0.035              & 0.617        \\
+Lip.PC.36.3.             & +        & -        & 0.045              & 0.641        \\
+OA.OA11…Succinic.acid    & +        & -        & 0.013              & 0.444        \\
+OS.cHpH.aLPA.C16.1       & +        & -        & 0.008              & 0.366        \\
+OS.cLpH.PGA2             & +        & -        & 0.005              & 0.347        \\
+OS.cLpH.PGF2a            & +        & -        & 0.024              & 0.512        \\
+OS.HpH.LPA.C18.1         & -        & -        & 0.006              & 0.347        \\
+OS.HpH.S.1.P.C18.1       & +        & -        & 0.040              & 0.620        \\
+OS.LpH.PGE2              & +        & -        & 0.029              & 0.552       \\ \bottomrule
+\end{tabular}
+\end{table}
+\clearpage
 \subsection{RQii - Classification of metabolites on ApoE4 presence and AD}
+Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models.
+Looking at individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/AD-E4 and SCD+E4/SCD-E4).
+\begin{table}[H]
+\caption{Performance metrics of multi-class classification of ApoE4 and AD status, obtained from 10-fold CV repeated 100 times. NIR: No Information Rate, AUC: Area Under the (ROC) Curve}
+\label{tab:class_results}
+\begin{tabular}{lllll} \toprule
+                                     & NIR & Accuracy (95/\% CI)     & P(NIR \textless Accuracy) & AUC   \\ \midrule
+Clinical features only & \multirow{5}{*}{0.3522} & 0.4807 (0.4744, 0.4869) & \textless 2.2e-16 & 0.814 \\
+Clinical features + 230 metabolites  &     & 0.5751 (0.5689, 0.5813) & \textless 2.2e-16         & 0.834 \\
+Clinical features + 6 latent factors &     & 0.5313 (0.525, 0.5375)  & \textless 2.2e-16         & 0.818 \\
+Decision Tree                        &     & 0.5082 (0.502, 0.5145)  & \textless 2.2e-16         & 0.818 \\
+XGBoost                              &     & 0.5944 (0.5882, 0.6005) & \textless 2.2e-16         & 0.836 \\ \bottomrule
+\end{tabular}
+\end{table}
 
-\begin{figure}
+\begin{figure}[h]
   \includesvg[width=0.8\textwidth]{figures/bench.svg}
   \caption{ROC curves of benchmark model: Multinomial Logistic Regression fitting the clinical background features only), obtained from repeated (100 times) 10-fold CV.}
   \label{roc:bench}
 \end{figure}
-
-\subsubsection{Adding 230 metabolites}
 
 \begin{figure}
   \includesvg[width=0.8\textwidth]{figures/fullmultinom.svg}
@@ -509,15 +617,13 @@ AD \vline  & 34& 86\\
   \label{roc:full}
 \end{figure}
 
-\subsubsection{Fitting the 6-factor Latent Projection of the 230 metabolites}
-
 
 \begin{figure}
   \includesvg[width=0.8\textwidth]{figures/6factor.svg}
   \caption{ROC curves of Multinomial Logistic Regression fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV.}
   \label{roc:6mlogit}
 \end{figure}
-
+\clearpage
 \subsection{RQiii - Covariance Network analysis of metabolites}
 
 \clearpage
@@ -629,25 +735,7 @@ loaded via a namespace (and not attached):
 [133] base64enc_0.1-3         webshot_0.5.5
 \end{verbatim}
 
-\section{R packages}
-\hspace{5 pt}
-\begin{multicols}{3}
-\begin{itemize}
-    \item[] \textsf{caret} \cite{Kuhn2008BuildingPackage}
-    \item[]\textsf{dplyr} \cite{dplyr}
-    \item[]\textsf{DMwR2} \cite{DMwR2}
-    \item[]\textsf{globaltest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage}
-    \item[]\textsf{GlobalAncova} \cite{Mansmann2005TestingApproach, Hummel2008GlobalANCOVA:Effects, Hummel2023GlobalExpression}
-    \item[]\textsf{heatmaply} \cite{heatmaply}
-    \item[]\textsf{FMradio} \cite{Peeters2019StableData}
-    \item[]\textsf{nnet} \cite{nnet}
-    \item[]\textsf{pROC} \cite{pROC}
-    \item[]\textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices}
-    \item[]\textsf{rpart} \cite{rpart}
-    \item[]\textsf{xgboost} \cite{Chen2016XGBoost:System}
-    \item[]\textsf{furrr} \cite{furrr}
-\end{itemize}
-\end{multicols}
+
 
 \end{document}
 
