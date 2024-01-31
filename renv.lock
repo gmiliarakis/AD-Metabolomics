@@ -2864,6 +2864,19 @@
       ],
       "Hash": "5ac22900ae0f386e54f1c307eca7d843"
     },
+    "tufte": {
+      "Package": "tufte",
+      "Version": "0.13",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "htmltools",
+        "knitr",
+        "rmarkdown",
+        "xfun"
+      ],
+      "Hash": "efcde6054a0796aec89329b1eca7f886"
+    },
     "tzdb": {
       "Package": "tzdb",
       "Version": "0.4.0",

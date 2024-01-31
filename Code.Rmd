@@ -14,7 +14,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  comment = "", warning = FALSE, message = FALSE, echo = FALSE
+  comment = "", warning = FALSE, message = FALSE
 )
 ```
 
@@ -197,14 +197,14 @@ multifit <- function(X,
   out <- list("cm" = cm, "roc" = roc, "model" = mdl)
   return(out)
 }
-httpgd::hgd()
+# httpgd::hgd()
 evaluate <- function(model){
 print(model$roc$auc)
 cat("\n")
 print(model$cm)
 names(model$roc$rocs) <- c("ADE4-AD", "ADE4-SCDE4", "ADE4-SCD", "AD-SCDE4", "AD-SCD", "SCDE4-SCD")
-ggroc(model$roc$rocs, legacy.axes = T) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
-# ggplotly(g)
+g <- ggroc(model$roc$rocs, legacy.axes = T) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
+ggplotly(g)
 }
 ```
 
