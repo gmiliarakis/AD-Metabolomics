@@ -6,11 +6,15 @@
 
 
 \documentclass{amsart}
+%  Font & Formatting
+\usepackage{lmodern}
+\usepackage[x11names]{xcolor}
+
+%  Text encoding
 \usepackage[utf8]{inputenc}
 \usepackage{booktabs}
 \usepackage{lipsum}
-\usepackage{multicol}
-\usepackage{multirow}
+\setcounter{tocdepth}{3}
 
 % Setting margins
 \usepackage[a4paper, left=3cm,right=3cm]{geometry}
@@ -23,40 +27,32 @@
 \usepackage{float}
 \usepackage[inkscapeformat=png]{svg}
 
+% Packages for tables
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{colortbl}
+
 % Packages for mathematical writing
 \usepackage{amsmath}                           % Enables the align enviroment
 \usepackage{amssymb}                           % Math symbols (e.g. \mathbb{})
 \usepackage{dsfont} 	                         % For \mathds{1} blackboard bold 1
 \usepackage{bm}                                % For roman (upright) bold latin letters
 \usepackage{mathtools}                         % Better math
-    % For urls and hyperlinks
+
+% For urls and hyperlinks
 \usepackage[scientific-notation=true]{siunitx} % For scientific notation
 \usepackage{euscript}[mathcal]
 \usepackage{txfonts}
-\usepackage{array}
-\usepackage{ragged2e}
-\usepackage{multirow}
-\usepackage{colortbl}
-
-
-% % For algorithms
-% \usepackage[ruled,vlined]{algorithm2e}
-% \usepackage{algpseudocode}
-% \renewcommand{\algorithmicrequire}{\textbf{Input:}}
-% \renewcommand{\algorithmicensure}{\textbf{Output:}}
-
-% Often used math operators:
-% You can define these yourself using \DeclareMathOperator and \newcommand
-%\DeclareMathOperator*{\argmax}{arg\,max}    % maxmizing argument
-%\newcommand{\LA}{\mathbf{\Lambda}}
-% \DeclareUnicodeCharacter{2113}{\ell}
-% For bibliography
 \usepackage[
   hypertexnames=false,
   colorlinks= true,
   linkcolor=.,
-  citecolor={teal},
-  urlcolor={violet}]{hyperref} 
+  citecolor={Turquoise4},
+  urlcolor={PaleTurquoise4}]{hyperref} 
+
+% For bibliography
 \usepackage[
     backend=biber,
     style=nature, 
@@ -66,9 +62,10 @@
     {biblatex}
 \addbibresource{literature/references.bib}
 \def\bibfont{\footnotesize}
-\usepackage[ acronym, nomain, nohypertypes={acronym}]{glossaries}
-\makeglossaries
 
+% Abbreviations
+\usepackage[acronym, nomain, nohypertypes={acronym}]{glossaries}
+\makeglossaries
 \newacronym{ad}{AD}{Alzheimer's Disease}
 \newacronym{scd}{SCD}{Subjective Cognitive Decline}
 \newacronym{mci}{MCI}{Mild Cognitive Impairment}
@@ -90,7 +87,7 @@
 \newacronym{gsk}{GSK-3$\beta$}{Glycogen synthase kinase-3$\beta$}
 \newacronym{csf}{CSF}{cerebrospinal fluid}
 \newacronym{rss}{RSS}{Residual Sum of Squares}
-\newacronym{anova}{ANOVA}{Analysis of Variance}
+\newacronym{ancova}{ANCOVA}{Analysis of Covariance}
 \newacronym{smote}{SMOTE}{Synthetic Minority Over-Sampling Technique}
 \newacronym{ml}{ML}{Maximum Likelihood}
 \newacronym{fa}{FA}{Factor Analysis}
@@ -106,12 +103,6 @@
 \newacronym{ros}{ROS}{reactive oxygen spieces}
 \newacronym{tnf}{TNF-$\alpha$}{tumor necrosis factor $\alpha$}
 \renewcommand{\glossarymark}[1]{}
-\makeatletter
-\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
-            {-2.5ex\@plus -1ex \@minus -.25ex}%
-            {1.25ex \@plus .25ex}%
-            {\normalfont\normalsize\bfseries}}
-\makeatother
 
 
 %--------------------------------------------------------------------
@@ -342,7 +333,7 @@ Poor lipidation leads to poor ApoE recycling \cite{Yassine2020APOEDisease}. The 
 
 \begin{figure}[t]
   \includegraphics[width=0.8\textwidth]{figures/ApoEeffectsB.jpg}
-    \caption{Effects of ApoE isoforms on the metabolism and removal of A$\beta$. A$\beta$ is primarily cleaved from \acrfull{app}. In the brain, ApoE, mainly expressed in astrocytes and microglia, undergoes lipidation by \acrfull{abca1} to create lipoprotein particles. ApoE increases the accumulation and buildup of A$\beta$, or promotes cellular uptake of A$\beta$ by astrocytes or microglia via endocytosis of the lipidated ApoE-A$\beta$ in an isoform-specific manner. This process involves several receptors, such as \acrfull{ldlr} and \acrfull{lrp}. ApoE also facilitates isoform-specific breakdown of A$\beta$ outside the cells. At the \acrlong{bbb}, soluble A$\beta$ is predominantly transported into the bloodstream from the \acrfull{isf} via LRP1 and P-glycoprotein. Additionally, ApoE plays a role in the perivascular drainage of A$\beta$. Insufficient clearance of A$\beta$ can lead to its accumulation in the brain tissue, contributing to the formation of A$\beta$ oligomers and amyloid plaques. Source: \citetitle{Husain2021APOETherapeutics}, \Citeauthor{Husain2021APOETherapeutics} (\citeyear{Husain2021APOETherapeutics}) \cite{Husain2021APOETherapeutics}}
+    \caption{Effects of ApoE isoforms on the metabolism and removal of A$\beta$. A$\beta$ is primarily cleaved from \acrfull{app}. In the brain, ApoE, mainly expressed in astrocytes and microglia, undergoes lipidation by \acrfull{abca1} to create lipoprotein particles. ApoE increases the accumulation and buildup of A$\beta$, or promotes cellular uptake of A$\beta$ by astrocytes or microglia via endocytosis of the lipidated ApoE-A$\beta$ in an isoform-specific manner. This process involves several receptors, such as \acrfull{ldlr} and \acrfull{lrp}. ApoE also facilitates isoform-specific breakdown of A$\beta$ outside the cells. At the \acrlong{bbb}, soluble A$\beta$ is predominantly transported from the \acrfull{isf} into the bloodstream via LRP1 and P-glycoproteins. Additionally, ApoE plays a role in the peri-vascular drainage of A$\beta$. Insufficient clearance of A$\beta$ can lead to its accumulation in the brain tissue, contributing to the formation of A$\beta$ oligomers and amyloid plaques. Source: \citetitle{Husain2021APOETherapeutics}, \Citeauthor{Husain2021APOETherapeutics} (\citeyear{Husain2021APOETherapeutics}) \cite{Husain2021APOETherapeutics}}
   \label{ApoeEffectsA}
 \end{figure}
 
@@ -454,7 +445,7 @@ The ApoE allele and genotype frequencies in the population are reflected in the 
 The genotypes are not equally represented in the data and hence, don't enable analysis without feature engineering. The following two sections describe the features created to balance the classes when studying only the AD group and both AD and SCD.
 
 \subsubsection{AD group}
-An obvious and "low-res" approach would be to bin the samples into two groups: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ \textit{dose} effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The counts of ApoE4 allele doses are shown in the bottom part of Table \ref{tab:ApoEfreq}.
+A "low-res" approach would be to bin the samples into two groups: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ \textit{dose} effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The counts of ApoE4 allele doses are shown in the bottom part of Table \ref{tab:ApoEfreq}.
 
 \subsubsection{SCD and AD}
 In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis of AD, a four-level feature (AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4, "ApoE4AD") was created, as shown in the last two rows of Table \ref{tab:ApoEfreq}.
@@ -462,16 +453,16 @@ In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis
 The data were processed using base R functions and \textsf{dplyr} \cite{dplyr}. The package \textsf{furrr} \cite{furrr} was used to enable multi-core processing whenever applicable.
 
 \subsection{Statistical Analysis} \label{stats}
-\subsubsection{ApoE4 dose effects on serum metabolite levels in AD}\label{rq1}
-\paragraph{Nested linear regression models}
-A straight-forward way to test whether metabolites are distinctly expressed depending on ApoE4 dose, controlling for clinical variables, is \acrshort{anova} (Analysis of Variance) on $p$ nested linear models. The dependent variable in each model is a metabolite; the nested model, eq. \eqref{rm}, has only clinical variables, while the full model, eq. \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2) as explanatory variables. Let $m_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon4}$ the ApoE4 dose; the nested models then are:
+\subsubsection{ApoE4 dose effects on serum metabolite levels in AD} \label{rq1}
+\leavevmode\newline \textbf{Nested linear regression models}\hspace{.25cm}
+A straight-forward way to test whether metabolites are distinctly expressed depending on ApoE4 dose, controlling for clinical variables, is \acrfull{ancova} on $p$ nested linear models. The dependent variable in each model is a metabolite; the nested model, eq. \eqref{rm}, has only clinical variables, while the full model, eq. \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2) as explanatory variables. Let $m_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon4}$ the ApoE4 dose; the nested models then are:
 \begin{align}
     & m_j = \beta_0 + \sum_{k=1}^m\beta_kx_k +\varepsilon \label{rm} \\
     & m_j = \beta_0 + \sum_{k=1}^m\beta_kx_k + \beta_{m+1}D_{\varepsilon4} + \varepsilon \label{fm}
 \end{align}
 Then, for every $j$ = 1,...,$p$ the hypothesis test is H$_0$: $\beta_{m+1} = 0 $ vs H$_\alpha$: $\beta_{m+1} \neq 0$. Under H$_0$ the test statistic, $F$ follows an $F_{1, n-(m+2)}$ distribution. This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected hypotheses, globally e.g. at an $\alpha$ of .05. The caveat of this approach is that minor changes in metabolite levels may not be identified. The next section introduces the concept of a \textit{global test} to deal with this issue.
 
-\paragraph{Global Test}A more elegant alternative to multiple testing is global test \cite{Simon2004DesignHealth}. The concept was first introduced by \citeauthor{Simon2004DesignHealth}, and proposed an approach based on permutations to cater to the high dimensionality of gene expression data.
+\leavevmode\newline\textbf{Global Test}\hspace{.25cm}An alternative to multiple testing is global test \cite{Simon2004DesignHealth}. The concept was first introduced by \citeauthor{Simon2004DesignHealth}, and proposed an approach based on permutations to cater to the high dimensionality of gene expression data.
 
 The R package \textsf{GlobalTest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage} developed by \citeauthor{Goeman2004AOutcome} originally fits a logistic regression model, using genes to predict the response $Y \in [1,..., k]$ (or $k$), representing clinical or biological group membership. This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}.
 The hypothesis test is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The tests uses the -usually- low-dimensional ($n$ × $n$) the intra-sample covariance matrix instead of the larger ($p$ × $p$) metabolite covariance matrix. Hence, this method is rather efficient. The test statistic under $H_0$ follows, asymptotically, a normal distribution. In other words, this method tests whether the metabolite levels are discriminating over the dose of ApoE4. The \texttt{gt()} function of the package was used to screen for differences in metabolite levels based on the ApoE4 dose. The \texttt{covariates()} function was used to visualise the ApoE4 dose effects on metabolite levels.
@@ -479,9 +470,9 @@ The hypothesis test is that metabolite levels are independent of the ApoE4 dose 
 \subsubsection{Classification of ApoE4 status and/or AD}\label{rq2}
 In machine learning, a class denotes a group of objects that share common characteristics, such as having AD or ApoE4 \cite*{Drummond2010}. Classification, in this context, denotes training a (supervised) learning algorithm on labeled data (containing their class) \cite*{Drummond2010}. The classifier learns patterns in the data and is then able to predict class membership for unknown data \cite*{Drummond2010}.
 
-\paragraph*{Bias-Variance trade-off}The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this study to find the optimal balance between the performance of a model with its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}. One needs to consider this trade-off during model and evaluation method selection, as some impose more bias or variance than others.
+\leavevmode\newline \textbf{Bias-Variance trade-off}\hspace{.25cm}The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this study to find the optimal balance between the performance of a model with its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}. One needs to consider this trade-off during model and evaluation method selection, as some impose more bias or variance than others.
 
-\paragraph*{Multi-class classification models}The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl()} and \texttt{train()} were used to fit the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
+\leavevmode\newline \textbf{Multi-class classification models}\hspace{.25cm}The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl()} and \texttt{train()} were used to fit the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
 
 Considering interpretability, Multinomial Logistic Regression (\acrshort{mnl}) is inherently interpretable. Let $y = k$, with $k \in N, [1,4]$ representing the k-th class of ApoE4AD and $\beta_{kj}$ its set of coefficients,  $\beta_{lj}$ the coefficients of the rest of classes for $j$-th metabolite, then a MNL model calculated the probability
 
@@ -489,13 +480,13 @@ Considering interpretability, Multinomial Logistic Regression (\acrshort{mnl}) i
 
 When $p > n$, the coefficient estimation method has low bias and high variance, in that small changes in the training data can result in very different coefficient estimates \cite{James2023AnEdition}. Regularization trades off a small increase in bias for a great decrease in variance, by shrinking the unimportant coefficients towards zero. \acrshort{lasso} (Least Absolute Shrinkage and Selection Operator) \cite{Tibshiranit1996RegressionLasso}, also called L1-regularization shrinks the MNL coefficients to 0, thus weeding out spurious correlations and reducing the number of predictors \cite{Tibshiranit1996RegressionLasso}. It does so by introducing the term  \[\lambda\sum_{j=1}^{p}|\beta_j|\] where $\lambda \geq 0$ is a tuning parameter that balances the coefficient shrinking effect. The package \textsf{nnet}, as implemented in \textsf{caret}'s \texttt{train()} function was used in this case.
 
-A method to treat multi-collinearity and high dimensionality is a 2-stage \acrfull{ml} \acrfull{fa}, such as the one the package \textsf{FMradio} \cite{Peeters2019StableData} performs. In the 1st stage, a L1-regularised ML estimation is used to filter out redundant features from the data matrix. In the second stage, ML FA projects the aforementioned matrix to an orthogonal space where the features are replaced by -fewer- factors that explain their covariance. One can then use the produced factor scores as predictors in MNL.
+A method to treat multi-collinearity and high dimensionality is a 2-stage \acrfull{ml} \acrfull{fa}, such as the one the package \textsf{FMradio} \cite{Peeters2019StableData} performs. In the 1st stage, a L2-regularised ML estimation is used to filter out redundant features from the data matrix. In the second stage, ML FA projects the aforementioned matrix to an orthogonal space where the features are replaced by -fewer- factors that explain their covariance. One can then use the produced factor scores as predictors in MNL.
 
 Decision Trees (DT) are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data into branches and leaves(nodes) \cite{Song2015DecisionPrediction}. The \texttt{rpart2()} \cite{rpart} function of \textsf{rpart} was used.
 
 Random Forests (RF) are ensemble learning methods, that bag several DTs and average their decisions with a majority vote. Despite RFs tend to outperform DTs, they often operate as a \textit{black box} and are poorly interpretable. The state-of-the-art ensemble learner \texttt{xgbTree} of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used.
 
-\paragraph{Implementation and Evaluation}First, a benchmark model was created using only the clinical background data in a penalised MNL model. Second, the 230 metabolite levels panel were fitted on top of the clinical background data in a penalised MNL model. Then the metabolomic data matrix was projected into 6 latent factors, explaining around 30\% of their variance. The 6-factor metabolite projection was then fit on top of the clinical data in a penalised MNL, a DT and an XGBoost model.
+\leavevmode\newline \textbf{Implementation and Evaluation}\hspace{.25cm} First, a benchmark model was created fitting the clinical background data, against ApoE4AD in a penalised MNL model. Second, the 230 metabolite levels panel were fitted on top of the clinical background data in a penalised MNL model. Then the metabolomic data matrix was projected into 6 latent factors, explaining around 30\% of their variance. The 6-factor metabolite projection was then fit on top of the clinical data in a penalised MNL, a DT and an XGBoost model.
 
 The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated (100 times) 10-fold Cross-Validation (CV). Model performance was then holistically assessed and compared using repeated 10-fold CV-obtained ROC curves and their respective Area Under the Curve \acrshort{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}'s \texttt{confusionMatrix()}.
 
@@ -519,7 +510,6 @@ In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Mat
     \item[]\textsf{dplyr} \cite{dplyr}
     \item[]\textsf{DMwR2} \cite{DMwR2}
     \item[]\textsf{globaltest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage}
-    \item[]\textsf{GlobalAncova} \cite{Mansmann2005TestingApproach, Hummel2008GlobalANCOVA:Effects, Hummel2023GlobalExpression}
     \item[]\textsf{heatmaply} \cite{heatmaply}
     \item[]\textsf{FMradio} \cite{Peeters2019StableData}
     \item[]\textsf{nnet} \cite{nnet}
