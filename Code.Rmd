@@ -186,25 +186,24 @@ multifit <- function(X,
     metric = "logLoss",
     ...
   )
-  # Create a confusion matrix and get performance metrics from caret
-  obs <- mdl$pred$obs
-  preds <- mdl$pred$pred
-  cm <- confusionMatrix(reference = obs, data = preds, mode = "everything")
-  # Get the multi-class ROC curves
-  ys <- as.numeric(obs) - 1
-  yhats <- as.numeric(preds) - 1
-  roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T, legacy.axes = T)
-  out <- list("cm" = cm, "roc" = roc, "model" = mdl)
-  return(out)
+  return(mdl)
 }
 # httpgd::hgd()
 evaluate <- function(model){
-print(model$roc$auc)
-cat("\n")
-print(model$cm)
-names(model$roc$rocs) <- c("ADE4-AD", "ADE4-SCDE4", "ADE4-SCD", "AD-SCDE4", "AD-SCD", "SCDE4-SCD")
-g <- ggroc(model$roc$rocs, legacy.axes = T) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
+obs <- model$pred$obs
+preds <- model$pred$pred
+# Get the multi-class ROC curves
+ys <- as.numeric(obs) - 1
+yhats <- as.numeric(preds) - 1
+roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T, legacy.axes = T)
+print(roc$auc)
+names(roc$rocs) <- c("ADE4-AD", "ADE4-SCDE4", "ADE4-SCD", "AD-SCDE4", "AD-SCD", "SCDE4-SCD")
+g <- ggroc(roc$rocs, legacy.axes = T) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
 ggplotly(g)
+cat("\n")
+# Create a confusion matrix and get performance metrics from caret
+cm <- confusionMatrix(reference = obs, data = preds, mode = "everything")
+print(cm)
 }
 ```
 
