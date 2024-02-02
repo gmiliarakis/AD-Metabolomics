@@ -41,6 +41,12 @@
 \usepackage{bm}                                % For roman (upright) bold latin letters
 \usepackage{mathtools}                         % Better math
 
+% For algorithms
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+% \usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
 % For urls and hyperlinks
 \usepackage[scientific-notation=true]{siunitx} % For scientific notation
 \usepackage{euscript}[mathcal]
@@ -100,8 +106,9 @@
 \newacronym{ldlr}{LDLR}{low-density lipoprotein receptor}
 \newacronym{isf}{ISF}{interstitial fluid}
 \newacronym{il}{IL}{interleukin}
-\newacronym{ros}{ROS}{reactive oxygen spieces}
+\newacronym{ros}{ROS}{reactive oxygen species}
 \newacronym{tnf}{TNF-$\alpha$}{tumor necrosis factor $\alpha$}
+\newacronym{xgb}{XGBoost}{eXtreme Gradient Boosting}
 \renewcommand{\glossarymark}[1]{}
 
 
@@ -360,7 +367,7 @@ With such techniques, de Leeuw et al. discovered distinct serum metabolic signat
 \begin{figure}[htb]
 \vspace*{-0.2cm}
   \includegraphics[width=0.9\textwidth]{figures/network.jpeg}
-    \caption{Mutual (left-hand panel) and distinct (right-hand panel) metabolic network topologies between ApoE $\varepsilon4$ carriers and non-carriers in AD, as published by de Leeuw et al.. Red edges represent links that are present exclusively in ApoeE $\varepsilon4$ carriers with AD. Green edges represent connections found in the SCD group. Solid edges represent positive partial correlations, while dashed edges represent negative partial correlations. Abbreviations: SCD, subjective cognitive decline. Source: \citetitle{deLeeuw2017Blood-basedDisease}, \Citeauthor{deLeeuw2017Blood-basedDisease} (\citeyear{deLeeuw2017Blood-basedDisease}) \cite{deLeeuw2017Blood-basedDisease}}
+    \caption{Mutual (left-hand panel) and distinct (right-hand panel) metabolic network topologies between ApoE4 carriers and non-carriers in AD, as published by de Leeuw et al.. Red edges represent links that are present exclusively in ApoE4 carriers with AD. Green edges represent connections found in the SCD group. Solid edges represent positive partial correlations, while dashed edges represent negative partial correlations. Abbreviations: SCD, subjective cognitive decline. Source: \citetitle{deLeeuw2017Blood-basedDisease}, \Citeauthor{deLeeuw2017Blood-basedDisease} (\citeyear{deLeeuw2017Blood-basedDisease}) \cite{deLeeuw2017Blood-basedDisease}}
   \label{fig3}
 \end{figure}
 
@@ -380,7 +387,7 @@ An introduction to the data used in this study is found in Section \ref{subjects
 
 The statistical methods applied to answer the research questions are described in Section \ref{stats}. To screen for ApoE4 dose effects on serum metabolites in AD, two methods were applied: a global test and nested linear model comparison using ANCOVA F-tests. 
 
-To test the classification potential of serum metabolites against ApoE4AD, several multi-class classification models were fitted. First, a benchmark multinomial logistic regression model was fitted using only clinical background data as predictors. Second, the full metabolomic panel was addded on top of the clinical data in the same model. Third, the metabolites were projected to a latent orthogonal space, where 6 meta-metabolites (accounting for around 30\% of the variance) replaced the original metabolites. Finally, the meta-metabolites were fitted on top of the clinical data in a multinomial logistic regression model, a decision tree and an XGBoost model. The discrimatory performance of the aforementioned models was then holistically evaluated and compared.
+To test the classification potential of serum metabolites against ApoE4AD, several multi-class classification models were fitted. First, a benchmark multinomial logistic regression model was fitted using only clinical background data as predictors. Second, the full metabolomic panel was addded on top of the clinical data in the same model. Third, the metabolites were projected to a latent orthogonal space, where 6 meta-metabolites (accounting for around 30\% of the variance) replaced the original metabolites. Finally, the meta-metabolites were fitted on top of the clinical data in a multinomial logistic regression model, a decision tree and an \acrfull{xgb} model. The discrimatory performance of the aforementioned models was then holistically evaluated and compared.
 
 To visualise and compare the covariance network topologies of metabolites among ApoE4 carriers and non-carriers, the high precision matrix was first sparsified using Ridge and then prunned controlling the False Discrovery Rate. Network topologies were plotted, their statistics were calculated and compared between the ApoE4 carriers and non-carriers.
 
@@ -450,45 +457,70 @@ A "low-res" approach would be to bin the samples into two groups: those carrying
 \subsubsection{SCD and AD}
 In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis of AD, a four-level feature (AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4, "ApoE4AD") was created, as shown in the last two rows of Table \ref{tab:ApoEfreq}.
 
-The data were processed using base R functions and \textsf{dplyr} \cite{dplyr}. The package \textsf{furrr} \cite{furrr} was used to enable multi-core processing whenever applicable.
-
 \subsection{Statistical Analysis} \label{stats}
 \subsubsection{ApoE4 dose effects on serum metabolite levels in AD} \label{rq1}
-\leavevmode\newline \textbf{Nested linear regression models}\hspace{.25cm}
-A straight-forward way to test whether metabolites are distinctly expressed depending on ApoE4 dose, controlling for clinical variables, is \acrfull{ancova} on $p$ nested linear models. The dependent variable in each model is a metabolite; the nested model, eq. \eqref{rm}, has only clinical variables, while the full model, eq. \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2) as explanatory variables. Let $m_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon4}$ the ApoE4 dose; the nested models then are:
+To test if the number of ApoE4 alleles have an effect on mean metabolite levels in AD, two methods were applied: a global test and nested linear model comparison with ANCOVA.
+
+\leavevmode\newline\textbf{Global Test}\hspace{.25cm} The concept of a global test was first introduced by \citeauthor{Simon2004DesignHealth}, and proposed an approach based on permutations to cater to the high dimensionality of gene expression data.
+
+The R package \textsf{GlobalTest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage} developed by \citeauthor{Goeman2004AOutcome} features a logistic regression model, fitting genes to predict clinical or biological group membership (number of ApoE4 alleles in this case). This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}. The null hypothesis is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The test statistic under $H_0$ follows, asymptotically, a normal distribution. The \texttt{gt} function of the package was used to screen for nuances in metabolite levels based depending on the presence of ApoE4 first, and then on the number of ApoE4 alleles. The \texttt{covariates} function was used to visualise the effects on metabolite levels. In order to confirm the affected metabolites nested linear model comparison was performed.
+
+\leavevmode\newline \textbf{Nested linear models}\hspace{.25cm}
+To test for ApoE4 dose effects on each metabolite, $p=230$ model comparisons were needed, hence the function \texttt{nested} (see Appendix \ref{app:nested}) was created to iterate over the metabolites, fit the nested models, compare them using ANCOVA F-tests, store and adjust the p-values, filter those below .05, then consolidate the coefficients of the meaningful full models and the p-values of their t-tests in a table and display it. To decrease run time, as well as harness the power of multiple cores, \textsf{furrr}'s \texttt{future\_map} function was used for parallel iterations.
+
+The dependent variable in each model was a metabolite; the nested model \eqref{rm}, has only clinical variables, while the full model \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2 -nominal) as explanatory variables. Let $y_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon4}$ the ApoE4 dose; the nested models then are:
 \begin{align}
-    & m_j = \beta_0 + \sum_{k=1}^m\beta_kx_k +\varepsilon \label{rm} \\
-    & m_j = \beta_0 + \sum_{k=1}^m\beta_kx_k + \beta_{m+1}D_{\varepsilon4} + \varepsilon \label{fm}
+    & y_j = \beta_0 + \sum_{k=1}^m\beta_kx_k +\epsilon \label{rm} \\
+    & y_j = \beta_0 + \sum_{k=1}^m\beta_kx_k + \beta_{m+1}D_{\varepsilon4} + \epsilon \label{fm}
 \end{align}
-Then, for every $j$ = 1,...,$p$ the hypothesis test is H$_0$: $\beta_{m+1} = 0 $ vs H$_\alpha$: $\beta_{m+1} \neq 0$. Under H$_0$ the test statistic, $F$ follows an $F_{1, n-(m+2)}$ distribution. This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected hypotheses, globally e.g. at an $\alpha$ of .05. The caveat of this approach is that minor changes in metabolite levels may not be identified. The next section introduces the concept of a \textit{global test} to deal with this issue.
+For every metabolite $j$ = 1,...,$p$ the hypothesis test is 
+H$_0$: $\beta_{m+1} = 0 $ vs H$_\alpha$: $\beta_{m+1} \neq 0$.
+Under H$_0$ the test statistic, $F$ follows an $F_{1, n-(m+2)}$ distribution. This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected hypotheses, globally e.g. at an $\alpha$ of .05. 
 
-\leavevmode\newline\textbf{Global Test}\hspace{.25cm}An alternative to multiple testing is global test \cite{Simon2004DesignHealth}. The concept was first introduced by \citeauthor{Simon2004DesignHealth}, and proposed an approach based on permutations to cater to the high dimensionality of gene expression data.
-
-The R package \textsf{GlobalTest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage} developed by \citeauthor{Goeman2004AOutcome} originally fits a logistic regression model, using genes to predict the response $Y \in [1,..., k]$ (or $k$), representing clinical or biological group membership. This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}.
-The hypothesis test is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The tests uses the -usually- low-dimensional ($n$ × $n$) the intra-sample covariance matrix instead of the larger ($p$ × $p$) metabolite covariance matrix. Hence, this method is rather efficient. The test statistic under $H_0$ follows, asymptotically, a normal distribution. In other words, this method tests whether the metabolite levels are discriminating over the dose of ApoE4. The \texttt{gt()} function of the package was used to screen for differences in metabolite levels based on the ApoE4 dose. The \texttt{covariates()} function was used to visualise the ApoE4 dose effects on metabolite levels.
+\begin{algorithm}
+\caption{Benjamini–Hochberg Procedure to Control the FDR}\label{alg:fdr}
+Specify $q$, the level at which to control the FDR.\\
+Compute p-values, $p_1, ... , p_m$, for the $m$ null hypotheses $H_{01},...,H_{0m}$. \\
+Order the $m$ p-values so that $p(1) \leq p(2) \leq ... \leq p(m)$.\\
+Define
+\[L = \max\{j : p(j) < qj/m\}\] \\
+Reject all null hypotheses $H_{0j}$ for which $p_j \leq p(L)$.
+\end{algorithm}
 
 \subsubsection{Classification of ApoE4 status and/or AD}\label{rq2}
 In machine learning, a class denotes a group of objects that share common characteristics, such as having AD or ApoE4 \cite*{Drummond2010}. Classification, in this context, denotes training a (supervised) learning algorithm on labeled data (containing their class) \cite*{Drummond2010}. The classifier learns patterns in the data and is then able to predict class membership for unknown data \cite*{Drummond2010}.
 
 \leavevmode\newline \textbf{Bias-Variance trade-off}\hspace{.25cm}The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this study to find the optimal balance between the performance of a model with its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}. One needs to consider this trade-off during model and evaluation method selection, as some impose more bias or variance than others.
 
-\leavevmode\newline \textbf{Multi-class classification models}\hspace{.25cm}The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl()} and \texttt{train()} were used to fit the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
+\leavevmode\newline \textbf{Multi-class classification models}\hspace{.25cm}The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl} and \texttt{train} were used to fit the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
 
 Considering interpretability, Multinomial Logistic Regression (\acrshort{mnl}) is inherently interpretable. Let $y = k$, with $k \in N, [1,4]$ representing the k-th class of ApoE4AD and $\beta_{kj}$ its set of coefficients,  $\beta_{lj}$ the coefficients of the rest of classes for $j$-th metabolite, then a MNL model calculated the probability
 
 \[\textrm{Pr}(y=k|X=x) =  \dfrac{e^{\sum_{j=1}^{p}\beta_{kj}x_j}}{\sum_{l=1}^{4}\sum_{j=1}^{p}e^{\beta_{lj}x_j}}\]
 
-When $p > n$, the coefficient estimation method has low bias and high variance, in that small changes in the training data can result in very different coefficient estimates \cite{James2023AnEdition}. Regularization trades off a small increase in bias for a great decrease in variance, by shrinking the unimportant coefficients towards zero. \acrshort{lasso} (Least Absolute Shrinkage and Selection Operator) \cite{Tibshiranit1996RegressionLasso}, also called L1-regularization shrinks the MNL coefficients to 0, thus weeding out spurious correlations and reducing the number of predictors \cite{Tibshiranit1996RegressionLasso}. It does so by introducing the term  \[\lambda\sum_{j=1}^{p}|\beta_j|\] where $\lambda \geq 0$ is a tuning parameter that balances the coefficient shrinking effect. The package \textsf{nnet}, as implemented in \textsf{caret}'s \texttt{train()} function was used in this case.
+When $p > n$, the coefficient estimation method has low bias and high variance, in that small changes in the training data can result in very different coefficient estimates \cite{James2023AnEdition}. Regularization trades off a small increase in bias for a great decrease in variance, by shrinking the unimportant coefficients towards zero. \acrshort{lasso} (Least Absolute Shrinkage and Selection Operator) \cite{Tibshiranit1996RegressionLasso}, also called L1-regularization shrinks the MNL coefficients to 0, thus weeding out spurious correlations and reducing the number of predictors \cite{Tibshiranit1996RegressionLasso}. It does so by introducing the term  \[\lambda\sum_{j=1}^{p}|\beta_j|\] where $\lambda \geq 0$ is a tuning parameter that balances the coefficient shrinking effect. The package \textsf{nnet}, as implemented in \textsf{caret}'s \texttt{train} function was used in this case.
 
 A method to treat multi-collinearity and high dimensionality is a 2-stage \acrfull{ml} \acrfull{fa}, such as the one the package \textsf{FMradio} \cite{Peeters2019StableData} performs. In the 1st stage, a L2-regularised ML estimation is used to filter out redundant features from the data matrix. In the second stage, ML FA projects the aforementioned matrix to an orthogonal space where the features are replaced by -fewer- factors that explain their covariance. One can then use the produced factor scores as predictors in MNL.
 
-Decision Trees (DT) are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data into branches and leaves(nodes) \cite{Song2015DecisionPrediction}. The \texttt{rpart2()} \cite{rpart} function of \textsf{rpart} was used.
+Decision Trees (DT) are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data into branches and leaves(nodes) \cite{Song2015DecisionPrediction}. The \texttt{rpart2} \cite{rpart} function of \textsf{rpart} was used.
 
 Random Forests (RF) are ensemble learning methods, that bag several DTs and average their decisions with a majority vote. Despite RFs tend to outperform DTs, they often operate as a \textit{black box} and are poorly interpretable. The state-of-the-art ensemble learner \texttt{xgbTree} of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used.
 
-\leavevmode\newline \textbf{Implementation and Evaluation}\hspace{.25cm} First, a benchmark model was created fitting the clinical background data, against ApoE4AD in a penalised MNL model. Second, the 230 metabolite levels panel were fitted on top of the clinical background data in a penalised MNL model. Then the metabolomic data matrix was projected into 6 latent factors, explaining around 30\% of their variance. The 6-factor metabolite projection was then fit on top of the clinical data in a penalised MNL, a DT and an XGBoost model.
+\leavevmode\newline \textbf{Implementation and Evaluation}\hspace{.25cm} Several models were fitted, thus two functions were created to facilitate the process: \texttt{multifit} (see Appendix \ref{app:multifit}) to fit the models and \texttt{evaluate} (see Appendix \ref{app:evaluate}) to display the performance metrics and plot the ROC curves.
 
-The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated (100 times) 10-fold Cross-Validation (CV). Model performance was then holistically assessed and compared using repeated 10-fold CV-obtained ROC curves and their respective Area Under the Curve \acrshort{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}'s \texttt{confusionMatrix()}.
+\begin{algorithm}
+\caption{Multi-class classification of ApoE4 and AD status pipeline} \label{alg:classification}
+    Fit clinical data only in MNL\\
+    Fit clinical data + 230 serum metabolites in MNL\\
+    Fit clinical data + 6 meta-metabolites in MNL\\
+    Fit clinical data + 6 meta-metabolites in a Decision Tree\\
+    Fit clinical data + 6 meta-metabolites in an XGBoost\\
+    Evaluate performance and compare
+\end{algorithm}
+
+Invoking \texttt{multifit}, first, a benchmark model was created fitting the clinical background data to predict ApoE4AD in a penalised MNL model. Second, the 230-metabolite panel was fitted on top of the clinical background data in a penalised MNL model. Then the full metabolite panel was projected into 6 latent factors (meta-metabolites), explaining around 30\% of their variance. The 6-factor metabolite projection was then fitted on top of the clinical data in a penalised MNL, a DT and an XGBoost model. The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated (100 times) 10-fold Cross-Validation (CV). 
+
+Invoking \texttt{evaluate} on the fitted models, model performance was then holistically assessed and compared, with the repeated 10-fold CV-obtained ROC curves and their respective Area Under the Curve \acrshort{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}'s \texttt{confusionMatrix}.
 
 \subsubsection{Metabolite Covariance Network Analysis}\label{rq3}
 Network science offers a unifying framework for data and system representation, applicable to any domain \cite{Barabasi2015NetworkScience}. A network, in an abstract sense, consists of nodes connected with links, also referred to as edges. In data science, a network whose nodes represent random features, whose joint probability distribution is defined by the ensemble of their edges is called \textit{graphical model} \cite{Peeters2022Rags2ridges:Matrices}. A metabolomic covariance correlation network represents the ensemble of metabolites based on their covariance, showing nuances among the samples that non-graphical statistical methods on individual metabolites may fail to detect \cite{PerezDeSouza2020Network-basedInterpretation}. It may provide insights into correlated metabolites that don't belong in the same metabolic pathway \cite{PerezDeSouza2020Network-basedInterpretation}.
@@ -541,9 +573,9 @@ Two global tests were performed on the AD group, first testing for distinct meta
   \end{figure}
   
 \subsubsection{Nested Linear Models}
-Several metabolites from all classes were affected by ApoE4 dose, both in AD and SCD. Among AD patients, ApoE4 dose seems to have an effect on several triglycerides, diglycerides, L-glutamic acid, L-lysine, 2- and 3-hydroxybutyric acid, glutamic acid, 3-phosphoglyceric acid, phosphatidylcholin, sphyngomyelin, HpH.PAF.C17, phosphoethanolamine, imino-diacetate (Table \ref{tab:nestedF}). Among individuals with SCD, lipid metabolites were not affected as much as in the AD group, with only LPC and PC showing a difference. Aminoacids (glycine, taurine, L-serine, serotonine, L-glutamic acid, L-glutamic acid, phosphoethanolamine) and oxidative stress compounds were mostly affected in this group (Table \ref{tab:nestedF}). However, after correcting for multiple testing with FDR, none of the p-values were significant at $\alpha=0.05$.
+Several metabolites from all classes were affected by ApoE4 dose, both in AD and SCD however, after correcting for multiple testing by controlling FDR, none of the effects were significant at $\alpha=0.05$. Among AD patients, ApoE4 dose seems to have an effect on several triglycerides, diglycerides, L-glutamic acid, L-lysine, 2- and 3-hydroxybutyric acid, glutamic acid, 3-phosphoglyceric acid, phosphatidylcholin, sphyngomyelin, HpH.PAF.C17, phosphoethanolamine, imino-diacetate (Table \ref{tab:nestedF}). Among individuals with SCD, lipid metabolites were not affected as much as in the AD group, with only LPC and PC showing a difference. Aminoacids (glycine, taurine, L-serine, serotonine, L-glutamic acid, L-glutamic acid, phosphoethanolamine) and oxidative stress compounds were mostly affected in this group (Table \ref{tab:nestedF}). 
 \begin{table}[H]
-\caption{ApoE4 dose effects on metabolites in AD and SCD: significant F tests ($\alpha=0.05$) from nested linear model comparison. Reduced model: \eqref{rm}, Full model: \eqref{fm}}
+\caption{ApoE4 dose effects on metabolites in AD and SCD: significant F tests ($\alpha=0.05$) from nested linear model comparison. Reduced model: \eqref{rm}, Full model: \eqref{fm}. Am: Aminoacid, Lip: Lipid, Cer: Ceramide, DG: Diglyceride, PC: Phosphatidylcholine, SM: Sphingomyelin, TG: Triglyceride, OA: Organic Acid, OS: Oxidative Stress compound}
 \label{tab:nestedF}
 \begin{tabular}{clll} \toprule
 &                           & P($>$F) & FDR-adjusted \\ \midrule
@@ -586,7 +618,7 @@ Several metabolites from all classes were affected by ApoE4 dose, both in AD and
 & Am.Taurine                           & 0.003              & 0.347        \\
 & Lip.LPC.18.1.                        & 0.035              & 0.617        \\
 & Lip.PC.36.3.                         & 0.045              & 0.641        \\
-& OA.OA11…Succinic.acid                & 0.013              & 0.444        \\
+& OA.Succinic.acid                & 0.013              & 0.444        \\
 & OS.cHpH.aLPA.C16.1                   & 0.008              & 0.366        \\
 & OS.cLpH.PGA2                         & 0.005              & 0.347        \\
 & OS.cLpH.PGF2a                        & 0.024              & 0.512        \\
@@ -613,16 +645,16 @@ Several metabolites from all classes were affected by ApoE4 dose, both in AD and
  & Lip.TG.54.5. & {\cellcolor[rgb]{0.722,0.843,0.643}}1.27 & 0.65 & {\cellcolor[rgb]{0.769,0.871,0.702}}1.06 & 0.00 & {\cellcolor[rgb]{0.82,0.898,0.765}}0.84 & 0.03 \\
  & Lip.TG.54.6. & {\cellcolor[rgb]{0.945,0.969,0.925}}0.27 & 0.92 & {\cellcolor[rgb]{0.796,0.886,0.737}}0.93 & 0.00 & {\cellcolor[rgb]{0.804,0.89,0.749}}0.90 & 0.02 \\
  & Lip.TG.56.6. & {\cellcolor[rgb]{0.439,0.678,0.278}}2.56 & 0.43 & {\cellcolor[rgb]{0.729,0.847,0.655}}1.24 & 0.00 & {\cellcolor[rgb]{0.773,0.871,0.706}}1.04 & 0.02 \\
- & OA.OA01…2.hydroxybutyric.acid & {\cellcolor[rgb]{0.898,0.678,0.686}}-4.58 & 0.02 & {\cellcolor[rgb]{0.882,0.933,0.847}}0.54 & 0.01 & {\cellcolor[rgb]{0.863,0.922,0.824}}0.63 & 0.02 \\
- & OA.OA04…Glutamic.Acid & {\cellcolor[rgb]{0.922,0.753,0.757}}-3.54 & 0.24 & {\cellcolor[rgb]{0.82,0.898,0.769}}0.83 & 0.02 & {\cellcolor[rgb]{0.8,0.886,0.741}}0.93 & 0.03 \\
- & OA.OA18…3.Phosphoglyceric.acid & {\cellcolor[rgb]{0.749,0.212,0.231}}-11.35 & 0.01 & {\cellcolor[rgb]{0.733,0.847,0.655}}1.23 & 0.01 & {\cellcolor[rgb]{0.761,0.863,0.694}}1.09 & 0.06 \\ \midrule
+ & OA.2.hydroxybutyric.acid & {\cellcolor[rgb]{0.898,0.678,0.686}}-4.58 & 0.02 & {\cellcolor[rgb]{0.882,0.933,0.847}}0.54 & 0.01 & {\cellcolor[rgb]{0.863,0.922,0.824}}0.63 & 0.02 \\
+ & OA.Glutamic.Acid & {\cellcolor[rgb]{0.922,0.753,0.757}}-3.54 & 0.24 & {\cellcolor[rgb]{0.82,0.898,0.769}}0.83 & 0.02 & {\cellcolor[rgb]{0.8,0.886,0.741}}0.93 & 0.03 \\
+ & OA.Phosphoglyceric.acid & {\cellcolor[rgb]{0.749,0.212,0.231}}-11.35 & 0.01 & {\cellcolor[rgb]{0.733,0.847,0.655}}1.23 & 0.01 & {\cellcolor[rgb]{0.761,0.863,0.694}}1.09 & 0.06 \\ \midrule
 \multirow{17}{0.056\linewidth}{\hspace{0pt}\Centering{}SCD} & Am.Glycine & {\cellcolor[rgb]{0.933,0.961,0.914}}0.31 & 0.93 & {\cellcolor[rgb]{0.824,0.902,0.773}}0.81 & 0.00 & {\cellcolor[rgb]{0.973,0.914,0.914}}-1.23 & 0.12 \\
  & Am.Taurine & {\cellcolor[rgb]{0.906,0.706,0.714}}-4.19 & 0.23 & {\cellcolor[rgb]{0.875,0.929,0.839}}0.58 & 0.04 & {\cellcolor[rgb]{0.953,0.859,0.863}}-2.00 & 0.01 \\
  & OS.cLpH.PGA2 & {\cellcolor[rgb]{0.886,0.651,0.663}}-4.97 & 0.22 & {\cellcolor[rgb]{0.863,0.922,0.82}}0.64 & 0.05 & {\cellcolor[rgb]{0.949,0.843,0.847}}-2.22 & 0.02 \\
  & OS.HpH.LPA.C18.1 & {\cellcolor[rgb]{0.953,0.859,0.863}}-2.01 & 0.54 & {\cellcolor[rgb]{0.945,0.969,0.929}}0.26 & 0.32 & {\cellcolor[rgb]{0.949,0.847,0.851}}-2.20 & 0.00 \\
  & OS.cHpH.aLPA.C16.1 & {\cellcolor[rgb]{0.98,0.949,0.949}}-0.72 & 0.81 & {\cellcolor[rgb]{0.914,0.949,0.886}}0.41 & 0.08 & {\cellcolor[rgb]{0.961,0.886,0.89}}-1.61 & 0.02 \\
  & Am.Ethanolamine & {\cellcolor[rgb]{0.827,0.463,0.478}}-7.69 & 0.01 & {\cellcolor[rgb]{0.898,0.941,0.867}}0.47 & 0.04 & {\cellcolor[rgb]{0.969,0.91,0.914}}-1.26 & 0.06 \\
- & OA.OA11…Succinic.acid & {\cellcolor[rgb]{0.941,0.816,0.82}}-2.63 & 0.43 & {\cellcolor[rgb]{0.847,0.914,0.804}}0.71 & 0.01 & {\cellcolor[rgb]{0.98,0.945,0.945}}-0.75 & 0.31 \\
+ & OA.Succinic.acid & {\cellcolor[rgb]{0.941,0.816,0.82}}-2.63 & 0.43 & {\cellcolor[rgb]{0.847,0.914,0.804}}0.71 & 0.01 & {\cellcolor[rgb]{0.98,0.945,0.945}}-0.75 & 0.31 \\
  & Am.L.Serine & {\cellcolor[rgb]{0.996,0.988,0.988}}-0.14 & 0.96 & {\cellcolor[rgb]{0.906,0.945,0.875}}0.45 & 0.09 & {\cellcolor[rgb]{0.965,0.89,0.894}}-1.55 & 0.04 \\
  & Am.Serotonine & {\cellcolor[rgb]{0.878,0.62,0.631}}-5.44 & 0.10 & {\cellcolor[rgb]{0.871,0.925,0.831}}0.60 & 0.02 & {\cellcolor[rgb]{0.976,0.929,0.929}}-1.00 & 0.17 \\
  & Am.O.Phosphoethanolamine & {\cellcolor[rgb]{0.835,0.49,0.506}}-7.29 & 0.06 & {\cellcolor[rgb]{0.886,0.937,0.855}}0.53 & 0.09 & {\cellcolor[rgb]{0.961,0.878,0.882}}-1.74 & 0.05 \\
@@ -645,11 +677,11 @@ Looking at individual ROC curves, all models were able to discriminate better am
 \label{tab:class_results}
 \begin{tabular}{lllll} \toprule
                                      & NIR & Accuracy (95/\% CI)     & P(NIR  Accuracy) & AUC   \\ \midrule
-Clinical features only & \multirow{5}{*}{0.3522} & 0.4807 (0.4744, 0.4869) & $<$ 2.2e-16 & 0.814 \\
-Clinical features + 230 metabolites  &     & 0.5751 (0.5689, 0.5813) & $<$ 2.2e-16         & 0.834 \\
-Clinical features + 6 latent factors &     & 0.5313 (0.525, 0.5375)  & $<$ 2.2e-16         & 0.818 \\
-Decision Tree                        &     & 0.5082 (0.502, 0.5145)  & $<$ 2.2e-16         & 0.818 \\
-XGBoost                              &     & 0.5944 (0.5882, 0.6005) & $<$ 2.2e-16         & 0.836 \\ \bottomrule
+Clinical features only & \multirow{5}{*}{0.3522} & 0.4807 (0.4744, 0.4869) &$< 2.2e^{-16}$ & 0.814 \\
+Clinical features + 230 metabolites  &     & 0.5751 (0.5689, 0.5813) & $< 2.2e^{-16}$         & 0.834 \\
+Clinical features + 6 latent factors &     & 0.5313 (0.525, 0.5375)  & $< 2.2e^{-16}$      & 0.818 \\
+Decision Tree                        &     & 0.5082 (0.502, 0.5145)  & $< 2.2e^{-16}$        & 0.818 \\
+XGBoost                              &     & 0.5944 (0.5882, 0.6005) & $< 2.2e^{-16}$         & 0.836 \\ \bottomrule
 \end{tabular}
 \end{table}
 
@@ -696,6 +728,104 @@ XGBoost                              &     & 0.5944 (0.5882, 0.6005) & $<$ 2.2e-
 %--------------- References -----------------------------------------
 %--------------------------------------------------------------------
 \appendix 
+\section{R functions}
+\subsection{nested} \label{app:nested}
+
+\begin{verbatim}
+    nested <- function(Y, x, ...) {
+
+  x <- as.factor(x)
+  df <- cbind(Y, x, ...)
+  ncol <- ncol(Y)
+  covariates <- names(...)
+  F_tests <- furrr::future_map(df[, 1:ncol], ~ {
+    frm <- as.formula(paste0(".x ~", paste(covariates, collapse = "+")))
+    rm <- lm(frm, data = df)
+    ffm <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
+    fm <- lm(ffm, data = df)
+    anova(rm, fm)
+  })
+  # Correction for Multiple Testing
+  # Create a list to store the p-values
+  p_values <- list(1:ncol)
+  # Extract the p-values of the F-tests from the anova summaries list and store them in p_values
+  for (i in 1:ncol) {
+    p_values[[i]] <- F_tests[[i]][["Pr(>F)"]][[2]]
+  }
+  # Coerce p_values to dataframe and transpose it
+  p_values <- t(data.frame(p_values))
+
+  # Set as row names the metabolites
+  p_values <- data.frame(p_values, row.names = colnames(Y))
+
+  # Calculate the FDR-adjusted p-values
+  p_values$p_adj <- p.adjust(p_values[, ], method = "fdr", n=230 )
+  
+  # Filter out the non-significant (a=0.05) FDR-adjusted p-values
+  sig <- as.data.frame(dplyr::filter(p_values, p_values < 0.05))
+  sig <- sig[order(sig$p_adj), ]
+  cat("Significant F-tests: \n")
+  print(sig)
+  cat("\nDose effects on metabolites:")
+  knitr::kable(sig)
+  summaries <- furrr::future_map(df[, rownames(sig)], ~ {
+    f <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
+    mdl <- lm(f, data = df)
+    summary(mdl)$coefficients[1:length(table(x)), ]
+  })
+  summaries <- lapply(summaries, function(x) {
+    x <- x[, -c(2, 3)]
+    x <- t(x)
+  })
+  summaries <- plyr::ldply(summaries, id = 1:2)
+  return(knitr::kable(summaries, table.attr = "style='width:30%;'"))
+}
+\end{verbatim}
+
+\subsection{multifit} \label{app:multifit}
+\begin{verbatim}
+multifit <- function(X,
+                     y,
+                     model,
+                     ctrl = NULL,
+                     grid = NULL,
+                     seed = 87654, ...) {
+    set.seed(seed)
+    # Merge X and y into df
+    df <- cbind.data.frame(X, y)
+    # Train the model
+    mdl <- caret::train(df[, 1:ncol(X)], df$y,
+        method = model,
+        tuneGrid = grid,
+        trControl = ctrl,
+        metric = "logLoss",
+        ...
+    )
+    return(mdl)
+}
+\end{verbatim}
+
+\subsection{evaluate} \label{app:evaluate}
+
+\begin{verbatim}
+evaluate <- function(model){
+    obs <- model$pred$obs
+    preds <- model$pred$pred
+    # Get the multi-class ROC curves
+    ys <- as.numeric(obs) - 1
+    yhats <- as.numeric(preds) - 1
+    roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T, legacy.axes = T)
+    print(roc$auc)
+    names(roc$rocs) <- c("ADE4-AD", "ADE4-SCDE4", "ADE4-SCD", "AD-SCDE4", "AD-SCD", "SCDE4-SCD")
+    g <- ggroc(roc$rocs, legacy.axes = T) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
+    ggplotly(g)
+    cat("\n")
+    # Create a confusion matrix and get performance metrics from caret
+    cm <- confusionMatrix(reference = obs, data = preds, mode = "everything")
+    print(cm)
+}    
+\end{verbatim}
+\clearpage
 \section{Multiclass ROC curves}
 \begin{figure}[htb]
   \includesvg[width=.75\textwidth]{figures/tree.svg}
