@@ -184,6 +184,7 @@ multifit <- function(X,
     tuneGrid = grid,
     trControl = ctrl,
     metric = "logLoss",
+    importance=TRUE,
     ...
   )
   return(mdl)
@@ -198,7 +199,7 @@ yhats <- as.numeric(preds) - 1
 roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T, legacy.axes = T)
 print(roc$auc)
 names(roc$rocs) <- c("ADE4-AD", "ADE4-SCDE4", "ADE4-SCD", "AD-SCDE4", "AD-SCD", "SCDE4-SCD")
-g <- ggroc(roc$rocs, legacy.axes = T) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
+g <- ggroc(roc$rocs) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
 ggplotly(g)
 cat("\n")
 # Create a confusion matrix and get performance metrics from caret
@@ -230,7 +231,7 @@ ctrl <- trainControl(
 
 ### Fitting a benchmark model: clinical characteristics only
 
-```{r mlogit}
+```{r benchmark}
 benchmark <- multifit(
   X = clin_dummy,
   y = y,
@@ -245,7 +246,7 @@ evaluate(benchmark)
 
 ### Regularized Multinomial Regression adding 230 metabolites
 
-```{r}
+```{r mlr230}
 mlr <- multifit(
   X = Xclin,
   y = y,
@@ -254,6 +255,29 @@ mlr <- multifit(
   grid = expand.grid(decay = 10),
   trace = F
 )
+
+# Get the feature importance scores
+fimp <- varImp(mlr)
+
+fimp <-  fimp$importance %>%
+  arrange(desc(Overall)) %>%
+  top_n(20)
+
+ggplot2::ggplot(fimp, aes(x = reorder(rownames(fimp), Overall), y = Overall, fill = reorder(rownames(fimp), Overall))) +
+  theme_tufte() +
+  geom_point(size = 4, alpha = 0.6, aes(x= rownames(fimp), y = Overall, fill= rownames(fimp))) +
+  geom_segment(aes(x = rownames(fimp), xend = rownames(fimp), y = 0, yend = Overall)) +
+xlab('Variable')+
+ylab('Overall Importance')+
+coord_flip() +
+scale_fill_manual(values=rainbow(20)) 
+
+
+ggplot(fimp, aes(x = rownames(fimp$importance), y = Overall, fill = rownames(fimp$importance)), top = 20) +
+  scale_y_continuous(breaks = seq(0, 100, 10)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_brewer()+
+  theme_tufte()
 
 evaluate(mlr)
 ```
@@ -290,7 +314,7 @@ X <- cbind(clin_dummy, thomson)
 ```
 
 ### Multinomial Logistic Regression adding 6 factors
-```{r }
+```{r ml6}
 mlrf <- multifit(
   X = X,
   y = y,
@@ -305,7 +329,7 @@ evaluate(mlrf)
 
 ### Decision Tree
 
-```{r multi_tree}
+```{r tree}
 tree <- multifit(
   X = X,
   y = y,
@@ -319,7 +343,7 @@ evaluate(tree)
 
 ### XGBoost Forest
 
-```{r }
+```{r zgb}
 xgb <- multifit(
   X = X,
   y = y,

@@ -44,8 +44,8 @@
 % For algorithms
 \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
 % \usepackage{algpseudocode}
-\renewcommand{\algorithmicrequire}{\textbf{Input:}}
-\renewcommand{\algorithmicensure}{\textbf{Output:}}
+% \renewcommand{\algorithmicrequire}{\textbf{Input:}}
+% \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
 % For urls and hyperlinks
 \usepackage[scientific-notation=true]{siunitx} % For scientific notation
@@ -400,7 +400,7 @@ The study is concluded in Section \ref{concl}
 \section{Methods}\label{methods}
 
 \subsection{Subjects}\label{subjects}
-The data were collected from 127 AD patients and 120 SCD ($n$ = 247) individuals in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depressants, mean arterial pressure (MAP) and body mass index (BMI) (see Table \ref{tab:clin}). The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data set is high-dimensional, in the sense that it contains more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
+The data were collected from 126 AD patients and 121 SCD ($n$ = 247) individuals in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depressants, mean arterial pressure (MAP) and body mass index (BMI) (see Table \ref{tab:clin}). The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data set is high-dimensional, in the sense that it contains more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
 
 \begin{table}[htb]
 \caption{Clinical background characteristics used as control variables of ApoE4 (dose) effects}
@@ -466,7 +466,7 @@ To test if the number of ApoE4 alleles have an effect on mean metabolite levels 
 The R package \textsf{GlobalTest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage} developed by \citeauthor{Goeman2004AOutcome} features a logistic regression model, fitting genes to predict clinical or biological group membership (number of ApoE4 alleles in this case). This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}. The null hypothesis is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The test statistic under $H_0$ follows, asymptotically, a normal distribution. The \texttt{gt} function of the package was used to screen for nuances in metabolite levels based depending on the presence of ApoE4 first, and then on the number of ApoE4 alleles. The \texttt{covariates} function was used to visualise the effects on metabolite levels. In order to confirm the affected metabolites nested linear model comparison was performed.
 
 \leavevmode\newline \textbf{Nested linear models}\hspace{.25cm}
-To test for ApoE4 dose effects on each metabolite, $p=230$ model comparisons were needed, hence the function \texttt{nested} (see Appendix \ref{app:nested}) was created to iterate over the metabolites, fit the nested models, compare them using ANCOVA F-tests, store and adjust the p-values, filter those below .05, then consolidate the coefficients of the meaningful full models and the p-values of their t-tests in a table and display it. To decrease run time, as well as harness the power of multiple cores, \textsf{furrr}'s \texttt{future\_map} function was used for parallel iterations.
+To test for ApoE4 dose effects on each metabolite, $p=230$ model comparisons were needed, hence a function was created to iterate over the metabolites, fit the nested models, compare them using ANCOVA F-tests, store and adjust the p-values, filter those below .05, then consolidate the coefficients of the meaningful full models and the p-values of their t-tests in a table and display it. To decrease run time, as well as harness the power of multiple cores, \textsf{furrr}'s \texttt{future\_map} function was used for parallel iterations.
 
 The dependent variable in each model was a metabolite; the nested model \eqref{rm}, has only clinical variables, while the full model \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2 -nominal) as explanatory variables. Let $y_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon4}$ the ApoE4 dose; the nested models then are:
 \begin{align}
@@ -475,15 +475,15 @@ The dependent variable in each model was a metabolite; the nested model \eqref{r
 \end{align}
 For every metabolite $j$ = 1,...,$p$ the hypothesis test is 
 H$_0$: $\beta_{m+1} = 0 $ vs H$_\alpha$: $\beta_{m+1} \neq 0$.
-Under H$_0$ the test statistic, $F$ follows an $F_{1, n-(m+2)}$ distribution. This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected hypotheses, globally e.g. at an $\alpha$ of .05. 
+Under H$_0$ the test statistic, $F$ follows an $F_{1, n-(m+2)}$ distribution. This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected H$_0$ hypotheses, globally e.g. at an $alpha$ of .05. First, the p-values are sorted in ascending order, and for every $j$ p-value each $\alpha$ is multiplied by $j$ divided by the total number of p-values $m = 230$ in this study. In other words, after adjustment, a null hypothesis $j$ may be rejected only if its associated F-test's p-value is less than a fraction ($j/m$) of $\alpha$.
 
 \begin{algorithm}
-\caption{Benjamini–Hochberg Procedure to Control the FDR}\label{alg:fdr}
-Specify $q$, the level at which to control the FDR.\\
+\caption{Benjamini–Hochberg's procedure to control FDR}\label{alg:fdr}
+Specify $\alpha$, the level at which to control the FDR.\\
 Compute p-values, $p_1, ... , p_m$, for the $m$ null hypotheses $H_{01},...,H_{0m}$. \\
 Order the $m$ p-values so that $p(1) \leq p(2) \leq ... \leq p(m)$.\\
 Define
-\[L = \max\{j : p(j) < qj/m\}\] \\
+\[L = \max\{j : p(j) \leq \frac{j}{m}\alpha\}\] \\
 Reject all null hypotheses $H_{0j}$ for which $p_j \leq p(L)$.
 \end{algorithm}
 
@@ -504,9 +504,7 @@ A method to treat multi-collinearity and high dimensionality is a 2-stage \acrfu
 
 Decision Trees (DT) are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data into branches and leaves(nodes) \cite{Song2015DecisionPrediction}. The \texttt{rpart2} \cite{rpart} function of \textsf{rpart} was used.
 
-Random Forests (RF) are ensemble learning methods, that bag several DTs and average their decisions with a majority vote. Despite RFs tend to outperform DTs, they often operate as a \textit{black box} and are poorly interpretable. The state-of-the-art ensemble learner \texttt{xgbTree} of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used.
-
-\leavevmode\newline \textbf{Implementation and Evaluation}\hspace{.25cm} Several models were fitted, thus two functions were created to facilitate the process: \texttt{multifit} (see Appendix \ref{app:multifit}) to fit the models and \texttt{evaluate} (see Appendix \ref{app:evaluate}) to display the performance metrics and plot the ROC curves.
+Boosting models fit several weak learners (such as linear or logistic regression or DT) sequentially, reweighing the data, and take their weighted majority vote \cite{Friedman2000boosting,Friedman2001gbm}. Despite Boosting tends to outperform DTs, it often operates as a \textit{black box} and is poorly interpretable. The state-of-the-art ensemble learner \texttt{xgbTree} of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used.
 
 \begin{algorithm}
 \caption{Multi-class classification of ApoE4 and AD status pipeline} \label{alg:classification}
@@ -518,9 +516,9 @@ Random Forests (RF) are ensemble learning methods, that bag several DTs and aver
     Evaluate performance and compare
 \end{algorithm}
 
-Invoking \texttt{multifit}, first, a benchmark model was created fitting the clinical background data to predict ApoE4AD in a penalised MNL model. Second, the 230-metabolite panel was fitted on top of the clinical background data in a penalised MNL model. Then the full metabolite panel was projected into 6 latent factors (meta-metabolites), explaining around 30\% of their variance. The 6-factor metabolite projection was then fitted on top of the clinical data in a penalised MNL, a DT and an XGBoost model. The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated (100 times) 10-fold Cross-Validation (CV). 
+First, a benchmark model was created fitting the clinical background data to predict ApoE4AD in a penalised MNL model. Second, the 230-metabolite panel was fitted on top of the clinical background data in a penalised MNL model. Then the full metabolite panel was projected into 6 latent factors (meta-metabolites), explaining around 30\% of their variance. The 6-factor metabolite projection was then fitted on top of the clinical data in a penalised MNL, a DT and an XGBoost model. The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated (100 times) 10-fold Cross-Validation (CV). 
 
-Invoking \texttt{evaluate} on the fitted models, model performance was then holistically assessed and compared, with the repeated 10-fold CV-obtained ROC curves and their respective Area Under the Curve \acrshort{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}'s \texttt{confusionMatrix}.
+Model performance was holistically assessed and compared, with the repeated 10-fold CV-obtained ROC curves and their respective Area Under the Curve \acrshort{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}'s \texttt{confusionMatrix}.
 
 \subsubsection{Metabolite Covariance Network Analysis}\label{rq3}
 Network science offers a unifying framework for data and system representation, applicable to any domain \cite{Barabasi2015NetworkScience}. A network, in an abstract sense, consists of nodes connected with links, also referred to as edges. In data science, a network whose nodes represent random features, whose joint probability distribution is defined by the ensemble of their edges is called \textit{graphical model} \cite{Peeters2022Rags2ridges:Matrices}. A metabolomic covariance correlation network represents the ensemble of metabolites based on their covariance, showing nuances among the samples that non-graphical statistical methods on individual metabolites may fail to detect \cite{PerezDeSouza2020Network-basedInterpretation}. It may provide insights into correlated metabolites that don't belong in the same metabolic pathway \cite{PerezDeSouza2020Network-basedInterpretation}.
@@ -532,7 +530,7 @@ A \textit{Gaussian graphical model} (\acrshort{ggm}) is an undirected graph that
 
 In natural language, a zero value in the inverse covariance matrix (usually referred to as precision matrix $\mathbf{\Omega}$) implies that the respective random features are independent, given the rest of features, and they are not connected by an undirected edge $((i, j) \notin \mathcal{E})$ \cite{Peeters2022Rags2ridges:Matrices}.
 
-In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices} was used to generate the feature covariance matrix, as well as the precision matrix, regularise it and represent it in a GGM --as shown in Fig. \ref{fig2}. The package was designed for metabolomic GGMs.
+In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices} was used to generate the feature covariance matrix, as well as the precision matrix, regularise it and represent it in a GGM --as shown in Fig. \ref{fig2}.
 
 \subsection{R packages} \label{packages}
 \hspace{5 pt}
@@ -677,11 +675,11 @@ Looking at individual ROC curves, all models were able to discriminate better am
 \label{tab:class_results}
 \begin{tabular}{lllll} \toprule
                                      & NIR & Accuracy (95/\% CI)     & P(NIR  Accuracy) & AUC   \\ \midrule
-Clinical features only & \multirow{5}{*}{0.3522} & 0.4807 (0.4744, 0.4869) &$< 2.2e^{-16}$ & 0.814 \\
-Clinical features + 230 metabolites  &     & 0.5751 (0.5689, 0.5813) & $< 2.2e^{-16}$         & 0.834 \\
-Clinical features + 6 latent factors &     & 0.5313 (0.525, 0.5375)  & $< 2.2e^{-16}$      & 0.818 \\
-Decision Tree                        &     & 0.5082 (0.502, 0.5145)  & $< 2.2e^{-16}$        & 0.818 \\
-XGBoost                              &     & 0.5944 (0.5882, 0.6005) & $< 2.2e^{-16}$         & 0.836 \\ \bottomrule
+Clinical features only & \multirow{5}{*}{0.3522} & 0.4807 (0.4744, 0.4869) &$<2.2e^{-16}$ & 0.814 \\
+Clinical features + 230 metabolites  &     & 0.5751 (0.5689, 0.5813) & $<2.2e^{-16}$         & 0.834 \\
+Clinical features + 6 latent factors &     & 0.5313 (0.525, 0.5375)  & $<2.2e^{-16}$      & 0.818 \\
+Decision Tree                        &     & 0.5082 (0.502, 0.5145)  & $<2.2e^{-16}$        & 0.818 \\
+XGBoost                              &     & 0.5944 (0.5882, 0.6005) & $<2.2e^{-16}$         & 0.836 \\ \bottomrule
 \end{tabular}
 \end{table}
 
@@ -728,103 +726,6 @@ XGBoost                              &     & 0.5944 (0.5882, 0.6005) & $< 2.2e^{
 %--------------- References -----------------------------------------
 %--------------------------------------------------------------------
 \appendix 
-\section{R functions}
-\subsection{nested} \label{app:nested}
-
-\begin{verbatim}
-    nested <- function(Y, x, ...) {
-
-  x <- as.factor(x)
-  df <- cbind(Y, x, ...)
-  ncol <- ncol(Y)
-  covariates <- names(...)
-  F_tests <- furrr::future_map(df[, 1:ncol], ~ {
-    frm <- as.formula(paste0(".x ~", paste(covariates, collapse = "+")))
-    rm <- lm(frm, data = df)
-    ffm <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
-    fm <- lm(ffm, data = df)
-    anova(rm, fm)
-  })
-  # Correction for Multiple Testing
-  # Create a list to store the p-values
-  p_values <- list(1:ncol)
-  # Extract the p-values of the F-tests from the anova summaries list and store them in p_values
-  for (i in 1:ncol) {
-    p_values[[i]] <- F_tests[[i]][["Pr(>F)"]][[2]]
-  }
-  # Coerce p_values to dataframe and transpose it
-  p_values <- t(data.frame(p_values))
-
-  # Set as row names the metabolites
-  p_values <- data.frame(p_values, row.names = colnames(Y))
-
-  # Calculate the FDR-adjusted p-values
-  p_values$p_adj <- p.adjust(p_values[, ], method = "fdr", n=230 )
-  
-  # Filter out the non-significant (a=0.05) FDR-adjusted p-values
-  sig <- as.data.frame(dplyr::filter(p_values, p_values < 0.05))
-  sig <- sig[order(sig$p_adj), ]
-  cat("Significant F-tests: \n")
-  print(sig)
-  cat("\nDose effects on metabolites:")
-  knitr::kable(sig)
-  summaries <- furrr::future_map(df[, rownames(sig)], ~ {
-    f <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
-    mdl <- lm(f, data = df)
-    summary(mdl)$coefficients[1:length(table(x)), ]
-  })
-  summaries <- lapply(summaries, function(x) {
-    x <- x[, -c(2, 3)]
-    x <- t(x)
-  })
-  summaries <- plyr::ldply(summaries, id = 1:2)
-  return(knitr::kable(summaries, table.attr = "style='width:30%;'"))
-}
-\end{verbatim}
-
-\subsection{multifit} \label{app:multifit}
-\begin{verbatim}
-multifit <- function(X,
-                     y,
-                     model,
-                     ctrl = NULL,
-                     grid = NULL,
-                     seed = 87654, ...) {
-    set.seed(seed)
-    # Merge X and y into df
-    df <- cbind.data.frame(X, y)
-    # Train the model
-    mdl <- caret::train(df[, 1:ncol(X)], df$y,
-        method = model,
-        tuneGrid = grid,
-        trControl = ctrl,
-        metric = "logLoss",
-        ...
-    )
-    return(mdl)
-}
-\end{verbatim}
-
-\subsection{evaluate} \label{app:evaluate}
-
-\begin{verbatim}
-evaluate <- function(model){
-    obs <- model$pred$obs
-    preds <- model$pred$pred
-    # Get the multi-class ROC curves
-    ys <- as.numeric(obs) - 1
-    yhats <- as.numeric(preds) - 1
-    roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T, legacy.axes = T)
-    print(roc$auc)
-    names(roc$rocs) <- c("ADE4-AD", "ADE4-SCDE4", "ADE4-SCD", "AD-SCDE4", "AD-SCD", "SCDE4-SCD")
-    g <- ggroc(roc$rocs, legacy.axes = T) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
-    ggplotly(g)
-    cat("\n")
-    # Create a confusion matrix and get performance metrics from caret
-    cm <- confusionMatrix(reference = obs, data = preds, mode = "everything")
-    print(cm)
-}    
-\end{verbatim}
 \clearpage
 \section{Multiclass ROC curves}
 \begin{figure}[htb]

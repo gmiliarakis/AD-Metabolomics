@@ -163,7 +163,7 @@
         "*.pdf": "latex-workshop-pdf-hook",
         "*.Rdata": "default"
     ,
-    "workbench.colorTheme": "GitHub Dark Default",
+    "workbench.colorTheme": "Ariake Sun",
     "workbench.settings.openDefaultKeybindings": true,
     "r.dependencyChecks": true,
     "r.linting.doubleQuotes": false,
@@ -263,5 +263,9 @@
                 "tectonic"
             ]
         }
-    ]
+    ],
+    "latex-workshop.synctex.path": "/Library/TeX/texbin/synctex",
+    "latex-workshop.synctex.afterBuild.enabled": true,
+    "latex-workshop.latex.outDir": "out/",
+    "latex-workshop.view.outline.sync.viewer": false
 }
