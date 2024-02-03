@@ -449,13 +449,13 @@ The ApoE allele and genotype frequencies in the population are reflected in the 
 \end{table}
 
 
-The genotypes are not equally represented in the data and hence, don't enable analysis without feature engineering. The following two sections describe the features created to balance the classes when studying only the AD group and both AD and SCD.
+The ApoE genotypes is valuable information and might be interesting to screen for metabolic nuances between them. However, the genotypes are not equally represented in the data and hence, testing for differences among them would not be reliable. The following two sections describe the features created to focus on ApoE4 status (0 or at least 1 allele) and dose (0, 1, or 2 alleles) to balance the data when studying only the AD group and both AD and SCD.
 
 \subsubsection{AD group}
-A "low-res" approach would be to bin the samples into two groups: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ \textit{dose} effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The counts of ApoE4 allele doses are shown in the bottom part of Table \ref{tab:ApoEfreq}.
+\cite{deLeeuw2017Blood-basedDisease} divided the subjects into two classes: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ \textit{dose} effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The number of ApoE4 allele doses are shown in the bottom part of Table \ref{tab:ApoEfreq} (first two and last row).
 
 \subsubsection{SCD and AD}
-In order to incorporate the presence of $\varepsilon4$, as well as the diagnosis of AD, a four-level feature (AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4, "ApoE4AD") was created, as shown in the last two rows of Table \ref{tab:ApoEfreq}.
+In order to incorporate ApoE4 status, as well as the diagnosis of AD, a four-level feature (AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4, "ApoE4AD") was created, as shown in the last two rows of Table \ref{tab:ApoEfreq}.
 
 \subsection{Statistical Analysis} \label{stats}
 \subsubsection{ApoE4 dose effects on serum metabolite levels in AD} \label{rq1}
@@ -468,14 +468,14 @@ The R package \textsf{GlobalTest} \cite{Goeman2004AOutcome, Goeman2006TestingAlt
 \leavevmode\newline \textbf{Nested linear models}\hspace{.25cm}
 To test for ApoE4 dose effects on each metabolite, $p=230$ model comparisons were needed, hence a function was created to iterate over the metabolites, fit the nested models, compare them using ANCOVA F-tests, store and adjust the p-values, filter those below .05, then consolidate the coefficients of the meaningful full models and the p-values of their t-tests in a table and display it. To decrease run time, as well as harness the power of multiple cores, \textsf{furrr}'s \texttt{future\_map} function was used for parallel iterations.
 
-The dependent variable in each model was a metabolite; the nested model \eqref{rm}, has only clinical variables, while the full model \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2 -nominal) as explanatory variables. Let $y_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon4}$ the ApoE4 dose; the nested models then are:
+The dependent variable in each model was a metabolite; the nested model \eqref{rm}, has only clinical variables (Table \ref{tab:clin}) while the full model \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2 -nominal) as explanatory variables. Let $y_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon4}$ the ApoE4 dose; the nested models then are:
 \begin{align}
     & y_j = \beta_0 + \sum_{k=1}^m\beta_kx_k +\epsilon \label{rm} \\
     & y_j = \beta_0 + \sum_{k=1}^m\beta_kx_k + \beta_{m+1}D_{\varepsilon4} + \epsilon \label{fm}
 \end{align}
 For every metabolite $j$ = 1,...,$p$ the hypothesis test is 
 H$_0$: $\beta_{m+1} = 0 $ vs H$_\alpha$: $\beta_{m+1} \neq 0$.
-Under H$_0$ the test statistic, $F$ follows an $F_{1, n-(m+2)}$ distribution. This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected H$_0$ hypotheses, globally e.g. at an $alpha$ of .05. First, the p-values are sorted in ascending order, and for every $j$ p-value each $\alpha$ is multiplied by $j$ divided by the total number of p-values $m = 230$ in this study. In other words, after adjustment, a null hypothesis $j$ may be rejected only if its associated F-test's p-value is less than a fraction ($j/m$) of $\alpha$.
+Under H$_0$ the test statistic, $F$ follows an $F_{1, n-(m+2)}$ distribution. This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected H$_0$ hypotheses, globally e.g. at an $alpha$ of .05. First, the p-values are sorted in ascending order, and for every $j$ p-value each $\alpha$ is multiplied by $j$ divided by the total number of p-values \cite{Benjamini1995ControllingTesting} $m = 230$ in this study. In other words, after adjustment, a null hypothesis $j$ may be rejected only if its associated F-test's p-value is less than a fraction ($j/m$) of $\alpha$.
 
 \begin{algorithm}
 \caption{Benjamini–Hochberg's procedure to control FDR}\label{alg:fdr}
@@ -504,7 +504,7 @@ A method to treat multi-collinearity and high dimensionality is a 2-stage \acrfu
 
 Decision Trees (DT) are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data into branches and leaves(nodes) \cite{Song2015DecisionPrediction}. The \texttt{rpart2} \cite{rpart} function of \textsf{rpart} was used.
 
-Boosting models fit several weak learners (such as linear or logistic regression or DT) sequentially, reweighing the data, and take their weighted majority vote \cite{Friedman2000boosting,Friedman2001gbm}. Despite Boosting tends to outperform DTs, it often operates as a \textit{black box} and is poorly interpretable. The state-of-the-art ensemble learner \texttt{xgbTree} of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used.
+Boosting models, are ensemble models that fit several weak learners (such as linear/logistic regression or DTs) sequentially, reweighing the data, and take their weighted majority vote \cite{Friedman2000boosting,Friedman2001gbm}. Despite Boosting tends to outperform DTs, it often operates as a \textit{black box} and is poorly interpretable. The state-of-the-art \acrlong{xgb} (\texttt{xgbTree}) of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used.
 
 \begin{algorithm}
 \caption{Multi-class classification of ApoE4 and AD status pipeline} \label{alg:classification}
