@@ -54,7 +54,7 @@
 \usepackage[
   hypertexnames=false,
   colorlinks= true,
-  linkcolor=.,
+  linkcolor={Blue4},
   citecolor={Turquoise4},
   urlcolor={PaleTurquoise4}]{hyperref} 
 
@@ -132,7 +132,7 @@
 %------------------------------------------------------------------------------
 % In this segment, enter the desired student data to be shown at the title page
 \newcommand{\thesisAuthor}{George Miliarakis}                             % State your name
-\newcommand{\thesisTitle}{Mechanistic insights in ApoE4 dose effects on serum metabolites in Alzheimer's Disease}                                      % State title thesis
+\newcommand{\thesisTitle}{ApoE4 dose effects on serum metabolites in Alzheimer's Disease}                                      % State title thesis
 \newcommand{\thesisSubTitle}{a Data Science approach}                            % State subtitle thesis
 \newcommand{\thesisDegree}{MSc Thesis}      % Choose type
 \newcommand{\university}{Wageningen University \& Research}                % You generally don't need to touch this
@@ -385,11 +385,11 @@ Are there mechanistic links between ApoE4 dose and serum metabolome in AD?
 \subsection{Approach and Overview}
 An introduction to the data used in this study is found in Section \ref{subjects}. A general overview of the software is found in Section \ref{datamanagement} and \ref{packages}, while the R \texttt{sessionInfo} is found in Appendix \ref{appendixB}. To facilitate statistical analysis, two new features were created for the first two research questions: ApoE4dose (0, 1, 2) and ApoE4AD (4 possible phenotype: AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4), respectively, as described in Section \ref{featureeng}.
 
-The statistical methods applied to answer the research questions were adapted from \Citeauthor{deLeeuw2017Blood-basedDisease}'s \citetitle{deLeeuw2017Blood-basedDisease} and are described in Section \ref{stats}. To screen for ApoE4 dose effects on serum metabolites in AD, two methods were applied: a global test and nested linear model comparison using ANCOVA F-tests. 
+The statistical methods applied to answer the research questions were adapted from \Citeauthor{deLeeuw2017Blood-basedDisease}'s \citetitle{deLeeuw2017Blood-basedDisease} and are described in Section \ref{stats}. To screen for ApoE4 dose effects on serum metabolites in AD, two approaches were taken: a global test (correcting only for sex) and nested linear model comparison using ANCOVA F-tests (correcting for several factors: Table \ref{tab:clin}, except CSF markers). 
 
-To test the classification potential of serum metabolites against ApoE4AD, several multi-class classification models were fitted. First, a benchmark multinomial logistic regression model was fitted using only clinical background data as predictors. Second, the full metabolomic panel was addded on top of the clinical data in the same model. Third, the metabolites were projected to a latent orthogonal space, where 6 meta-metabolites (accounting for around 30\% of the variance) replaced the original metabolites. Finally, the meta-metabolites were fitted on top of the clinical data in a multinomial logistic regression model, a decision tree and an \acrfull{xgb} model. The discrimatory performance of the aforementioned models was then holistically evaluated and compared.
+To test the (added) classification potential of serum metabolites against ApoE4AD, several multi-class classification models were fitted. First, a benchmark multinomial logistic regression model was fitted using only clinical background data as predictors. Second, the full metabolomic panel was addded on top of the clinical data in the same model. Third, the metabolites were projected to a latent orthogonal space, where 6 meta-metabolites (accounting for around 30\% of the variance) replaced the original metabolites. Finally, the meta-metabolites were fitted on top of the clinical data in a multinomial logistic regression model, a decision tree and an \acrfull{xgb} model. The discrimatory performance of the aforementioned models was then holistically evaluated and compared.
 
-To visualise and compare the covariance network topologies of metabolites among ApoE4 carriers and non-carriers, the high precision matrix was first sparsified using Ridge and then prunned controlling the False Discrovery Rate. Network topologies were plotted, their statistics were calculated and compared between the ApoE4 carriers and non-carriers.
+To visualise and compare the covariance network topologies of metabolites among ApoE4 carriers and non-carriers, the high precision matrices were first sparsified using Ridge and then prunned controlling the False Discrovery Rate. Network topologies were plotted and their statistics were calculated and compared between the ApoE4 carriers and non-carriers using Wilcoxon Signed Rank test.
 
 The results of the analysis are presented in Section \ref{results} and discussed in Section \ref{discuss}.
 
@@ -400,16 +400,13 @@ The study is concluded in Section \ref{concl}
 \section{Methods}\label{methods}
 
 \subsection{Subjects}\label{subjects}
-The data were collected from 126 AD patients and 121 SCD ($n$ = 247) individuals in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depressants, mean arterial pressure (MAP) and body mass index (BMI) (see Table \ref{tab:clin}). The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data set is high-dimensional, in the sense that it contains more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
+The data were collected from 126 AD patients and 121 SCD ($n$ = 247) individuals in the context of the Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depressants, mean arterial pressure (MAP) and body mass index (BMI) (see Table \ref{tab:clin}). The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's Disease \cite{deLeeuw2017Blood-basedDisease}: SMT1 . The data was cleaned as described in the same article. The resulting data sets for AD and SCD are high-dimensional, in the sense that they contain more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
 
 \begin{table}[htb]
-\caption{Clinical background characteristics used as control variables of ApoE4 (dose) effects}
+\caption{Clinical background characteristics used as control variables of ApoE4 (dose) effects. The molecules measured in CSF were used only in the Multi-class classification. }
 \label{tab:clin}
 \begin{tabular}{clllll} \toprule
                                 & \textbf{Clinical feature}   & \textbf{Type} \\ \midrule
-CSF                             & A$\beta_{42}$                 & Numeric       \\
-                                & tau                         & Numeric       \\
-                                & p-tau                       & Numeric       \\
 \multirow{2}{*}{Anthropometric} & Age                         & Discrete      \\
                                 & Sex                         & Binary        \\
 \multirow{2}{*}{Intoxications}  & Smoking (past, current, no) & Nominal       \\
@@ -419,12 +416,15 @@ CSF                             & A$\beta_{42}$                 & Numeric       
                                 & Hypercholesterolemia        & Binary        \\
 \multirow{3}{*}{Medication}     & Cholesterol lowering        & Numeric       \\
                                 & Antidepressants             & Binary        \\
-                                & Antiplatelet                & Binary        \\ \bottomrule
+                                & Antiplatelet                & Binary        \\ 
+\multirow{3}{*}{CSF}            & A$\beta_{42}$               & Numeric       \\
+                                & tau                         & Numeric       \\
+                                & p-tau                       & Numeric       \\\bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Data management}\label{datamanagement}
-The FAIR principles for data management and stewardship in science were published by  ~\citeauthor{Wilkinson2016TheStewardship} in 2016 \cite{Wilkinson2016TheStewardship}. FAIR stands for Findable, Accessible, Interactive, and Reusable data; the intention is to create and use data that are well-documented and reproducible. These principles were considered at every step of the study and implemented when applicable. All analysis was performed in R (version 4.3.2), and the current report was written in \LaTeX (Tex Live version 2023). All files are committed to a private Github repository --with git as \acrfull{vcs}.
+The FAIR principles for data management and stewardship in science were published by  ~\citeauthor{Wilkinson2016TheStewardship} in 2016 \cite{Wilkinson2016TheStewardship}. FAIR stands for Findable, Accessible, Interactive, and Reusable data; the intention is to create and use data that are well-documented and reproducible. These principles were considered at every step of the study and implemented when applicable. The statistical analysis was performed in R (version 4.3.2), and the current report was written in \LaTeX (Tex Live version 2023). All files are stored in a private Github repository --with git as \acrfull{vcs}.
 
 \subsection{Feature Engineering}\label{featureeng}
 The ApoE allele and genotype frequencies in the population are reflected in the AD and SCD data, as shown in Table \ref{tab:ApoEfreq}. That is, the most abundant allele is $\varepsilon$3, followed by $\varepsilon4$ and $\varepsilon2$. The most common genotype was $\varepsilon3\varepsilon3$, followed by $\varepsilon3\varepsilon4$ and $\varepsilon4\varepsilon4$.
@@ -461,21 +461,19 @@ In order to incorporate ApoE4 status, as well as the diagnosis of AD, a four-lev
 \subsubsection{ApoE4 dose effects on serum metabolite levels in AD} \label{rq1}
 To test if the number of ApoE4 alleles have an effect on mean metabolite levels in AD, two methods were applied: a global test and nested linear model comparison with ANCOVA.
 
-\leavevmode\newline\textbf{Global Test}\hspace{.25cm} The concept of a global test was first introduced by \citeauthor{Simon2004DesignHealth}, and proposed an approach based on permutations to cater to the high dimensionality of gene expression data.
-
-The R package \textsf{GlobalTest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage} developed by \citeauthor{Goeman2004AOutcome} features a logistic regression model, fitting genes to predict clinical or biological group membership (number of ApoE4 alleles in this case). This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}. The null hypothesis is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The test statistic under $H_0$ follows, asymptotically, a normal distribution. The \texttt{gt} function of the package was used to screen for nuances in metabolite levels based depending on the presence of ApoE4 first, and then on the number of ApoE4 alleles. The \texttt{covariates} function was used to visualise the effects on metabolite levels. In order to confirm the affected metabolites nested linear model comparison was performed.
+\leavevmode\newline\textbf{Global Test}\hspace{.25cm} The concept of a global test was first introduced by \citeauthor{Simon2004DesignHealth}, and proposed an approach based on permutations to cater to the high dimensionality of gene expression data. The R package \textsf{globaltest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage} developed by \citeauthor{Goeman2004AOutcome} features a multinomial logistic regression model, fitting genes to predict clinical or biological group membership (number of ApoE4 alleles in this case). This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}. The null hypothesis is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The test statistic under $H_0$ follows, asymptotically, a normal distribution. The \texttt{gt} function of the package was used to screen for nuances in metabolite levels on the number of ApoE4 alleles, correcting for sex. To asses ApoE4 dose effects correcting for clinical data nested linear model comparison was performed, as described in the next section.
 
 \leavevmode\newline \textbf{Nested linear models}\hspace{.25cm}
 To test for ApoE4 dose effects on each metabolite, $p=230$ model comparisons were needed, hence a function was created to iterate over the metabolites, fit the nested models, compare them using ANCOVA F-tests, store and adjust the p-values, filter those below .05, then consolidate the coefficients of the meaningful full models and the p-values of their t-tests in a table and display it. To decrease run time, as well as harness the power of multiple cores, \textsf{furrr}'s \texttt{future\_map} function was used for parallel iterations.
 
-The dependent variable in each model was a metabolite; the nested model \eqref{rm}, has only clinical variables (Table \ref{tab:clin}) while the full model \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2 -nominal) as explanatory variables. Let $y_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon4}$ the ApoE4 dose; the nested models then are:
+The dependent variable in each model was a metabolite; the nested model \eqref{rm}, has only clinical variables (Table \ref{tab:clin} except CSF markers) while the full model \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2 -nominal) as explanatory variables. Let $y_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon4}$ the ApoE4 dose; the nested models then are:
 \begin{align}
     & y_j = \beta_0 + \sum_{k=1}^m\beta_kx_k +\epsilon \label{rm} \\
     & y_j = \beta_0 + \sum_{k=1}^m\beta_kx_k + \beta_{m+1}D_{\varepsilon4} + \epsilon \label{fm}
 \end{align}
 For every metabolite $j$ = 1,...,$p$ the hypothesis test is 
 H$_0$: $\beta_{m+1} = 0 $ vs H$_\alpha$: $\beta_{m+1} \neq 0$.
-Under H$_0$ the test statistic, $F$ follows an $F_{1, n-(m+2)}$ distribution. This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected H$_0$ hypotheses, globally e.g. at an $alpha$ of .05. First, the p-values are sorted in ascending order, and for every $j$ p-value each $\alpha$ is multiplied by $j$ divided by the total number of p-values \cite{Benjamini1995ControllingTesting} $m = 230$ in this study. In other words, after adjustment, a null hypothesis $j$ may be rejected only if its associated F-test's p-value is less than a fraction ($j/m$) of $\alpha$.
+Under H$_0$ the test statistic, $F$ follows an $F_{1, n-(m+2)}$ distribution. This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected H$_0$ hypotheses, globally e.g. at an $\alpha$ of 0.05. First, the p-values are sorted in ascending order, and for every $j$ p-value each $\alpha$ is multiplied by $j$ divided by the total number of p-values \cite{Benjamini1995ControllingTesting} $m = 230$ in this study. In other words, after adjustment, a null hypothesis $j$ may be rejected only if its associated F-test's p-value is less than a fraction ($j/m$) of $\alpha$.
 
 \begin{algorithm}
 \caption{Benjamini–Hochberg's procedure to control FDR}\label{alg:fdr}
@@ -490,7 +488,7 @@ Reject all null hypotheses $H_{0j}$ for which $p_j \leq p(L)$.
 \subsubsection{Classification of ApoE4 status and/or AD}\label{rq2}
 In machine learning, a class denotes a group of objects that share common characteristics, such as having AD or ApoE4 \cite*{Drummond2010}. Classification, in this context, denotes training a (supervised) learning algorithm on labeled data (containing their class) \cite*{Drummond2010}. The classifier learns patterns in the data and is then able to predict class membership for unknown data \cite*{Drummond2010}.
 
-\leavevmode\newline \textbf{Bias-Variance trade-off}\hspace{.25cm}The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this study to find the optimal balance between the performance of a model with its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}. One needs to consider this trade-off during model and evaluation method selection, as some impose more bias or variance than others.
+\leavevmode\newline \textbf{Bias-Variance trade-off}\hspace{.25cm}The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this study to find the optimal balance between the performance of a model with its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}. One may consider this trade-off during model and evaluation method selection, as some impose more bias or variance than others.
 
 \leavevmode\newline \textbf{Multi-class classification models}\hspace{.25cm}The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl} and \texttt{train} were used to fit the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
 
@@ -555,126 +553,110 @@ In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Mat
 \section{Results} \label{results}
 \subsection{ApoE4 dose effects on serum metabolite levels in AD}
 \subsubsection{Global Test}
-Two global tests were performed on the AD group, first testing for distinct metabolites among ApoE4 carriers and non-carriers and then among distinct ApoE4 "doses". The first test showed significant (p= 0.03) global effect on serum metabolites among ApoE4 carriers and non-carriers. Metabolites positively correlated with ApoE4 were mostly triglycerides (TG) and diglycerides (DG) (Fig \ref{gt1}). The second test revealed ApoE4 dose effects (p= 0.02) on metabolite levels  -mostly TG and DG (Fig \ref{gt2}).
-\begin{figure}[htb]
-  % \vspace*{-1cm}
-    \includegraphics[width=0.9\textwidth]{figures/gt1.png}
-      \caption{Covariates plot of the Global Test showing the metabolites affected by the presence of ApoE4.}
-    \label{gt1}
-  \end{figure}
+Testing for ApoE4 dose-effect on serum metabolites of AD patients, correcting for sex (Ho: ApoE4 dose has no effect on mean metabolite levels, Ha: it has an effect), showed a significant global difference in metabolites (p = 0.017). The most significantly affected metabolites are triglycerides and diglycerides (FDR-adjusted p-value $<$0.05) See Table \ref{tab:gt} and Fig. \ref{plot:gt}.
+
+\begin{table}
+  \centering
+  \caption{Metabolites affected by ApoE4 dose, correcting for sex as per globaltest \cite{Goeman2023ThePackage}}
+  \label{tab:gt}
+  \begin{tabular}{lrcrr} \toprule
+                         & \multicolumn{1}{l}{Inheritance} & Assoc. with & \multicolumn{1}{l}{p-value} & \multicolumn{1}{l}{FDR}  \\ \midrule
+  Lip.TG.56.2.           & 0.046                           & 1 ApoE4     & $<$0.001                           & 0.016                    \\
+  Lip.TG.58.1.           & 0.117                           & 1 ApoE4     & $<$0.001                           & 0.021                    \\
+  Lip.DG.36.3.           & 0.19                            & 1 ApoE4     & $<$0.001                           & 0.021                    \\
+  Lip.TG.56.3.           & 0.244                           & 1 ApoE4     & $<$0.001                           & 0.021                    \\
+  Lip.TG.52.3.           & 0.424                           & 1 ApoE4     & 0.001                       & 0.031                    \\
+  Lip.TG.54.5.           & 0.48                            & 1 ApoE4     & 0.001                       & 0.027                    \\
+  Lip.TG.58.2.           & 0.722                           & 1 ApoE4     & 0.001                       & 0.027                    \\
+  Lip.TG.54.4.           & 0.761                           & 1 ApoE4     & 0.002                       & 0.033                    \\
+  Lip.TG.58.9.           & 1                               & 1 ApoE4     & 0.001                       & 0.027                    \\
+  Lip.TG.56.7.           & 1                               & 1 ApoE4     & 0.001                       & 0.027                    \\
+  Lip.TG.58.8.           & 1                               & 1 ApoE4     & 0.001                       & 0.032                    \\
+  Lip.TG.54.6.           & 1                               & 1 ApoE4     & 0.002                       & 0.035                    \\
+  Lip.TG.56.8.           & 1                               & 1 ApoE4     & 0.002                       & 0.037                    \\
+  Lip.TG.52.4.           & 1                               & 1 ApoE4     & 0.003                       & 0.055                    \\
+  Lip.TG.54.3.           & 1                               & 1 ApoE4     & 0.004                       & 0.055                    \\
+  Lip.TG.56.6.           & 1                               & 1 ApoE4     & 0.004                       & 0.059                    \\
+  Lip.TG.56.1.           & 1                               & 1 ApoE4     & 0.004                       & 0.059                    \\
+  Lip.TG.52.2.           & 1                               & 1 ApoE4     & 0.005                       & 0.063                    \\
+  Lip.TG.54.2.           & 1                               & 1 ApoE4     & 0.005                       & 0.063                    \\
+  Lip.TG.60.2.           & 1                               & 1 ApoE4     & 0.007                       & 0.077                    \\
+  Lip.TG.58.10.          & 1                               & 1 ApoE4     & 0.011                       & 0.124                    \\
+  Lip.TG.51.3.           & 1                               & 1 ApoE4     & 0.015                       & 0.154                    \\
+  Lip.SM.d18.1.18.1.     & 1                               & 2 ApoE4     & 0.018                       & 0.169                    \\
+  OA.2.ketoglutaric.acid & 1                               & 2 ApoE4     & 0.019                       & 0.169                    \\
+  Lip.TG.52.0.           & 1                               & 1 ApoE4     & 0.019                       & 0.169                    \\
+  Lip.TG.50.3.           & 1                               & 2 ApoE4     & 0.02                        & 0.169                    \\
+  OA.Uracil              & 1                               & no ApoE4    & 0.02                        & 0.169                    \\
+  Lip.TG.52.5.           & 1                               & 1 ApoE4     & 0.021                       & 0.174                    \\
+  Lip.TG.54.0.           & 1                               & 1 ApoE4     & 0.022                       & 0.174                    \\
+  Lip.TG.50.2.           & 1                               & 2 ApoE4     & 0.022                       & 0.174                    \\
+  Lip.TG.51.2.           & 1                               & 1 ApoE4     & 0.023                       & 0.174                    \\
+  Am.L.Glutamine         & 1                               & no ApoE4    & 0.024                       & 0.174                    \\
+  Lip.TG.50.1.           & 1                               & 2 ApoE4     & 0.025                       & 0.174                    \\
+  Lip.TG.50.4.           & 1                               & 1 ApoE4     & 0.026                       & 0.176                    \\
+  Lip.TG.52.1.           & 1                               & 1 ApoE4     & 0.027                       & 0.176                    \\
+  Lip.TG.54.1.           & 1                               & 1 ApoE4     & 0.031                       & 0.203                    \\
+  Lip.TG.50.0.           & 1                               & 1 ApoE4     & 0.037                       & 0.229                    \\
+  OA.Malic.acid          & 1                               & 2 ApoE4     & 0.038                       & 0.234                    \\
+  Lip.DG.36.2.           & 1                               & 1 ApoE4     & 0.039                       & 0.235                    \\
+  OS.HpH.PAF.C16.0       & 1                               & 2 ApoE4     & 0.049                       & 0.283                 \\ \bottomrule  
+  \end{tabular}
+  \end{table}
 
 
 \begin{figure}[htb]
     \includegraphics[width=0.9\textwidth]{figures/gt2.png}
       \caption{Covariates plot showing the metabolites affected by the number of ApoE4 alleles}
-    \label{gt2}
+    \label{plot:gt}
   \end{figure}
-  
+\clearpage  
 \subsubsection{Nested Linear Models}
-Several metabolites from all classes were affected by ApoE4 dose, both in AD and SCD however, after correcting for multiple testing by controlling FDR, none of the effects were significant at $\alpha=0.05$. Among AD patients, ApoE4 dose seems to have an effect on several triglycerides, diglycerides, L-glutamic acid, L-lysine, 2- and 3-hydroxybutyric acid, glutamic acid, 3-phosphoglyceric acid, phosphatidylcholin, sphyngomyelin, HpH.PAF.C17, phosphoethanolamine, imino-diacetate (Table \ref{tab:nestedF}). Among individuals with SCD, lipid metabolites were not affected as much as in the AD group, with only LPC and PC showing a difference. Aminoacids (glycine, taurine, L-serine, serotonine, L-glutamic acid, L-glutamic acid, phosphoethanolamine) and oxidative stress compounds were mostly affected in this group (Table \ref{tab:nestedF}). 
+Several metabolites from all classes were affected by ApoE4 dose, both in AD and SCD however, after correcting for multiple testing by controlling FDR, none of the effects were significant at $\alpha=0.05$. Among AD patients, ApoE4 dose seems to have positive effect on several triglycerides, diglycerides, putrescine, 2-ketoglutraric acid, lysophosphatidylcholin, HpH.PAF.-C16.0 and -C18.0 (Table \ref{tab:nestedF}). Among individuals with SCD, lipid metabolites were not affected as much as in the AD group, with only two sphingomyelin species showing a difference. Aminoacids L-serine, tryptophan, glycine,trytptophan, L-homoserine, putrescine were affected in this group. L-Tryptophan is negatively associated with ApoE4 dose (at 1x and 2x ApoE4), while L-serine, glycine and L-homoserine are negativelly associated only with ApoE4 homozygotes. (Table \ref{tab:nestedF}). 
 \begin{table}[H]
-\caption{ApoE4 dose effects on metabolites in AD and SCD: significant F tests ($\alpha=0.05$) from nested linear model comparison. Reduced model: \eqref{rm}, Full model: \eqref{fm}. Am: Aminoacid, Lip: Lipid, Cer: Ceramide, DG: Diglyceride, PC: Phosphatidylcholine, SM: Sphingomyelin, TG: Triglyceride, OA: Organic Acid, OS: Oxidative Stress compound}
+\caption{ApoE4 dose effects on metabolites in AD and SCD: significant F tests ($\alpha=0.05$) from nested linear model comparison. Reduced model: \eqref{rm}, Full model: \eqref{fm}. Am: Aminoacid, Lip: Lipid, DG: Diglyceride, LPC: Lysophosphatidylcholine, SM: Sphingomyelin, TG: Triglyceride, OA: Organic Acid, OS: Oxidative Stress compound}
 \label{tab:nestedF}
-\begin{tabular}{clll} \toprule
-&                           & P($>$F) & FDR-adjusted \\ \midrule
-\multirow{29}{*}{AD} & Am.L.Glutamic.acid        & 0.011              & 0.314        \\
-& Am.L.Lysine                & 0.029              & 0.314        \\
-& Am.O.Phosphoethanolamine      & 0.044              & 0.361        \\
-& Lip.Cer.d18.1.24.0.           & 0.028              & 0.314        \\
-& Lip.DG.36.3.                  & 0.009              & 0.285        \\
-& Lip.PC.O.34.3.                & 0.021              & 0.314        \\
-& Lip.SM.d18.1.22.0.            & 0.037              & 0.345        \\
-& Lip.TG.50.1.                  & 0.036              & 0.345        \\
-& Lip.TG.50.2.                  & 0.027              & 0.314        \\
-& Lip.TG.50.3.                  & 0.024              & 0.314        \\
-& Lip.TG.51.3.                  & 0.031              & 0.326        \\
-& Lip.TG.52.2.                  & 0.023              & 0.314        \\
-& Lip.TG.52.3.                  & 0.002              & 0.250        \\
-& Lip.TG.52.4.                  & 0.003              & 0.250        \\
-& Lip.TG.52.5.                  & 0.022              & 0.314        \\
-& Lip.TG.54.3.                  & 0.042              & 0.355        \\
-& Lip.TG.54.4.                  & 0.008              & 0.285        \\
-& Lip.TG.54.5.                  & 0.005              & 0.250        \\
-& Lip.TG.54.6.                  & 0.005              & 0.250        \\
-& Lip.TG.56.6.                  & 0.003              & 0.250        \\
-& Lip.TG.56.7.                  & 0.017              & 0.314        \\
-& Lip.TG.56.8.                  & 0.024              & 0.314        \\
-& OA.2.hydroxybutyric.acid      & 0.021              & 0.314        \\
-& OA.Glutamic.Acid              & 0.025              & 0.314        \\
-& OA.3.Hydroxybutyric.acid      & 0.039              & 0.348        \\
-& OA.3.Phosphoglyceric.acid     & 0.025              & 0.314        \\
-& OA.Iminodiacetate             & 0.047              & 0.375        \\
-& OS.HpH.LPA.C18.3              & 0.015              & 0.314        \\
-& OS.HpH.PAF.C16.0              & 0.038              & 0.345       \\ \midrule
-\multirow{17}{*}{SCD}& Am.Ethanolamine                      & 0.014              & 0.444        \\
-& Am.Glycine                           & 0.004              & 0.347        \\
-& Am.L.Aspartic.acid                   & 0.049              & 0.641        \\
-& Am.L.Glutamic.acid                   & 0.038              & 0.617        \\
-& Am.L.Serine                          & 0.017              & 0.458        \\
-& Am.O.Phosphoethanolamine             & 0.022              & 0.504        \\
-& Am.Serotonine                        & 0.018              & 0.458        \\
-& Am.Taurine                           & 0.003              & 0.347        \\
-& Lip.LPC.18.1.                        & 0.035              & 0.617        \\
-& Lip.PC.36.3.                         & 0.045              & 0.641        \\
-& OA.Succinic.acid                & 0.013              & 0.444        \\
-& OS.cHpH.aLPA.C16.1                   & 0.008              & 0.366        \\
-& OS.cLpH.PGA2                         & 0.005              & 0.347        \\
-& OS.cLpH.PGF2a                        & 0.024              & 0.512        \\
-& OS.HpH.LPA.C18.1                     & 0.006              & 0.347        \\
-& OS.HpH.S.1.P.C18.1                   & 0.040              & 0.620        \\
-& OS.LpH.PGE2                          & 0.029              & 0.552       \\ \bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}
-\caption{ApoE4 dose effects on metabolites in AD and SCD: coefficients and p-values (of t-tests) from model comparisons with significant F tests ($\alpha=0.05$). Reduced model: \eqref{rm}, Full model: \eqref{fm}}
 \centering
-\begin{tabular}{clrrrrrr} \toprule
-\multicolumn{1}{l}{}  &                                & \multicolumn{2}{c}{No ApoE4}                               & \multicolumn{2}{c}{1x ApoE4}                               & \multicolumn{2}{c}{2x ApoE4}                                \\
-\multicolumn{1}{l}{}  & \multicolumn{1}{c}{Metabolite} & \multicolumn{1}{c}{Coefficient} & \multicolumn{1}{c}{P($>$t)} & \multicolumn{1}{c}{Coefficient} & \multicolumn{1}{c}{P($>$t)} & \multicolumn{1}{c}{Coefficient} & \multicolumn{1}{c}{P($>$t)} \\ \midrule
-\multirow{14}{0.056\linewidth}{\hspace{0pt}\Centering{}AD} & Am.L.Glutamic.acid & {\cellcolor[rgb]{0.749,0.855,0.675}}1.16 & 0.71 & {\cellcolor[rgb]{0.761,0.863,0.69}}1.10 & 0.00 & {\cellcolor[rgb]{0.863,0.922,0.824}}0.63 & 0.14 \\
- & Am.L.Lysine & {\cellcolor[rgb]{0.882,0.933,0.851}}0.54 & 0.85 & {\cellcolor[rgb]{0.992,0.973,0.973}}-0.35 & 0.25 & {\cellcolor[rgb]{0.855,0.918,0.816}}0.67 & 0.08 \\
- & Lip.DG.36.3. & {\cellcolor[rgb]{0.984,0.992,0.976}}0.08 & 0.98 & {\cellcolor[rgb]{0.757,0.859,0.682}}1.13 & 0.00 & {\cellcolor[rgb]{0.78,0.875,0.714}}1.02 & 0.03 \\
- & Lip.TG.50.2. & {\cellcolor[rgb]{0.784,0.875,0.722}}1.00 & 0.72 & {\cellcolor[rgb]{0.871,0.925,0.831}}0.61 & 0.05 & {\cellcolor[rgb]{0.784,0.878,0.722}}1.00 & 0.01 \\
- & Lip.TG.50.3. & {\cellcolor[rgb]{0.604,0.776,0.49}}1.81 & 0.54 & {\cellcolor[rgb]{0.824,0.902,0.773}}0.81 & 0.02 & {\cellcolor[rgb]{0.796,0.882,0.737}}0.95 & 0.02 \\
- & Lip.TG.52.3. & {\cellcolor[rgb]{0.965,0.898,0.898}}-1.46 & 0.64 & {\cellcolor[rgb]{0.741,0.851,0.663}}1.20 & 0.00 & {\cellcolor[rgb]{0.741,0.855,0.671}}1.18 & 0.01 \\
- & Lip.TG.52.4. & {\cellcolor[rgb]{0.996,0.992,0.992}}-0.11 & 0.97 & {\cellcolor[rgb]{0.765,0.867,0.698}}1.08 & 0.00 & {\cellcolor[rgb]{0.78,0.875,0.718}}1.01 & 0.01 \\
- & Lip.TG.54.4. & {\cellcolor[rgb]{0.941,0.965,0.922}}0.28 & 0.93 & {\cellcolor[rgb]{0.741,0.851,0.667}}1.20 & 0.00 & {\cellcolor[rgb]{0.835,0.906,0.788}}0.76 & 0.10 \\
- & Lip.TG.54.5. & {\cellcolor[rgb]{0.722,0.843,0.643}}1.27 & 0.65 & {\cellcolor[rgb]{0.769,0.871,0.702}}1.06 & 0.00 & {\cellcolor[rgb]{0.82,0.898,0.765}}0.84 & 0.03 \\
- & Lip.TG.54.6. & {\cellcolor[rgb]{0.945,0.969,0.925}}0.27 & 0.92 & {\cellcolor[rgb]{0.796,0.886,0.737}}0.93 & 0.00 & {\cellcolor[rgb]{0.804,0.89,0.749}}0.90 & 0.02 \\
- & Lip.TG.56.6. & {\cellcolor[rgb]{0.439,0.678,0.278}}2.56 & 0.43 & {\cellcolor[rgb]{0.729,0.847,0.655}}1.24 & 0.00 & {\cellcolor[rgb]{0.773,0.871,0.706}}1.04 & 0.02 \\
- & OA.2.hydroxybutyric.acid & {\cellcolor[rgb]{0.898,0.678,0.686}}-4.58 & 0.02 & {\cellcolor[rgb]{0.882,0.933,0.847}}0.54 & 0.01 & {\cellcolor[rgb]{0.863,0.922,0.824}}0.63 & 0.02 \\
- & OA.Glutamic.Acid & {\cellcolor[rgb]{0.922,0.753,0.757}}-3.54 & 0.24 & {\cellcolor[rgb]{0.82,0.898,0.769}}0.83 & 0.02 & {\cellcolor[rgb]{0.8,0.886,0.741}}0.93 & 0.03 \\
- & OA.Phosphoglyceric.acid & {\cellcolor[rgb]{0.749,0.212,0.231}}-11.35 & 0.01 & {\cellcolor[rgb]{0.733,0.847,0.655}}1.23 & 0.01 & {\cellcolor[rgb]{0.761,0.863,0.694}}1.09 & 0.06 \\ \midrule
-\multirow{17}{0.056\linewidth}{\hspace{0pt}\Centering{}SCD} & Am.Glycine & {\cellcolor[rgb]{0.933,0.961,0.914}}0.31 & 0.93 & {\cellcolor[rgb]{0.824,0.902,0.773}}0.81 & 0.00 & {\cellcolor[rgb]{0.973,0.914,0.914}}-1.23 & 0.12 \\
- & Am.Taurine & {\cellcolor[rgb]{0.906,0.706,0.714}}-4.19 & 0.23 & {\cellcolor[rgb]{0.875,0.929,0.839}}0.58 & 0.04 & {\cellcolor[rgb]{0.953,0.859,0.863}}-2.00 & 0.01 \\
- & OS.cLpH.PGA2 & {\cellcolor[rgb]{0.886,0.651,0.663}}-4.97 & 0.22 & {\cellcolor[rgb]{0.863,0.922,0.82}}0.64 & 0.05 & {\cellcolor[rgb]{0.949,0.843,0.847}}-2.22 & 0.02 \\
- & OS.HpH.LPA.C18.1 & {\cellcolor[rgb]{0.953,0.859,0.863}}-2.01 & 0.54 & {\cellcolor[rgb]{0.945,0.969,0.929}}0.26 & 0.32 & {\cellcolor[rgb]{0.949,0.847,0.851}}-2.20 & 0.00 \\
- & OS.cHpH.aLPA.C16.1 & {\cellcolor[rgb]{0.98,0.949,0.949}}-0.72 & 0.81 & {\cellcolor[rgb]{0.914,0.949,0.886}}0.41 & 0.08 & {\cellcolor[rgb]{0.961,0.886,0.89}}-1.61 & 0.02 \\
- & Am.Ethanolamine & {\cellcolor[rgb]{0.827,0.463,0.478}}-7.69 & 0.01 & {\cellcolor[rgb]{0.898,0.941,0.867}}0.47 & 0.04 & {\cellcolor[rgb]{0.969,0.91,0.914}}-1.26 & 0.06 \\
- & OA.Succinic.acid & {\cellcolor[rgb]{0.941,0.816,0.82}}-2.63 & 0.43 & {\cellcolor[rgb]{0.847,0.914,0.804}}0.71 & 0.01 & {\cellcolor[rgb]{0.98,0.945,0.945}}-0.75 & 0.31 \\
- & Am.L.Serine & {\cellcolor[rgb]{0.996,0.988,0.988}}-0.14 & 0.96 & {\cellcolor[rgb]{0.906,0.945,0.875}}0.45 & 0.09 & {\cellcolor[rgb]{0.965,0.89,0.894}}-1.55 & 0.04 \\
- & Am.Serotonine & {\cellcolor[rgb]{0.878,0.62,0.631}}-5.44 & 0.10 & {\cellcolor[rgb]{0.871,0.925,0.831}}0.60 & 0.02 & {\cellcolor[rgb]{0.976,0.929,0.929}}-1.00 & 0.17 \\
- & Am.O.Phosphoethanolamine & {\cellcolor[rgb]{0.835,0.49,0.506}}-7.29 & 0.06 & {\cellcolor[rgb]{0.886,0.937,0.855}}0.53 & 0.09 & {\cellcolor[rgb]{0.961,0.878,0.882}}-1.74 & 0.05 \\
- & OS.cLpH.PGF2a & {\cellcolor[rgb]{0.91,0.718,0.725}}-4.02 & 0.31 & {\cellcolor[rgb]{0.878,0.933,0.843}}0.56 & 0.08 & {\cellcolor[rgb]{0.961,0.882,0.886}}-1.66 & 0.06 \\
- & OS.LpH.PGE2 & {\cellcolor[rgb]{0.91,0.718,0.722}}-4.06 & 0.32 & {\cellcolor[rgb]{0.882,0.933,0.851}}0.54 & 0.09 & {\cellcolor[rgb]{0.961,0.878,0.882}}-1.70 & 0.06 \\
- & Am.L.Glutamic.acid & {\cellcolor[rgb]{0.937,0.804,0.812}}-2.77 & 0.42 & {\cellcolor[rgb]{0.976,0.988,0.969}}0.11 & 0.67 & {\cellcolor[rgb]{0.957,0.863,0.867}}-1.93 & 0.01 \\
- & Lip.LPC.18.1. & {\cellcolor[rgb]{0.898,0.682,0.69}}-4.55 & 0.19 & {\cellcolor[rgb]{0.878,0.933,0.847}}0.56 & 0.04 & {\cellcolor[rgb]{0.973,0.922,0.925}}-1.07 & 0.17 \\
- & OS.HpH.S.1.P.C18.1 & {\cellcolor[rgb]{0.992,0.976,0.976}}-0.32 & 0.92 & {\cellcolor[rgb]{0.925,0.957,0.902}}0.36 & 0.18 & {\cellcolor[rgb]{0.965,0.894,0.894}}-1.51 & 0.05 \\
- & Am.L.Aspartic.acid & {\cellcolor[rgb]{0.996,0.996,0.996}}-0.02 & 0.99 & {\cellcolor[rgb]{0.992,0.984,0.984}}-0.19 & 0.48 & {\cellcolor[rgb]{0.957,0.863,0.867}}-1.93 & 0.02 \\
- & Lip.PC.36.3. & {\cellcolor[rgb]{0.969,0.91,0.91}}-1.30 & 0.67 & {\cellcolor[rgb]{0.878,0.933,0.843}}0.56 & 0.02 & {\cellcolor[rgb]{0.988,0.965,0.965}}-0.47 & 0.49 \\ \bottomrule
+  \begin{tabular}{clrrrrrrrr} \toprule
+    \multicolumn{1}{l}{} & \multicolumn{1}{c}{\multirow{2}{*}{Metabolite}} & \multicolumn{1}{c}{\multirow{2}{*}{P($>$F)}} & \multicolumn{1}{c}{\multirow{2}{*}{FDR}} & \multicolumn{2}{c}{No $\varepsilon4$} & \multicolumn{2}{c}{1x $\varepsilon4$} & \multicolumn{2}{c}{2x $\varepsilon4$} \\
+\multicolumn{1}{l}{} & \multicolumn{1}{c}{} & \multicolumn{1}{c}{} & \multicolumn{1}{c}{} & \multicolumn{1}{l}{Coef.} & \multicolumn{1}{l}{P($>$t)} & \multicolumn{1}{l}{Coef.} & \multicolumn{1}{l}{P($>$t)} & \multicolumn{1}{l}{Coef.} & \multicolumn{1}{l}{P($>$t)} \\ \midrule
+  % \multicolumn{1}{l}{} & Metabolite & \multicolumn{1}{l}{P($>$F)} & \multicolumn{1}{l}{FDR} & \multicolumn{1}{l}{No $\varepsilon4$} & \multicolumn{1}{l}{P($>$t)} & \multicolumn{1}{l}{1x$\varepsilon4$} & \multicolumn{1}{l}{P($>$t)} & \multicolumn{1}{l}{2x$\varepsilon4$} & \multicolumn{1}{l}{P($>$t)} \\ 
+  \multirow{19}{*}{AD} & Lip.TG.52.3. & 0.001 & 0.156 & {\cellcolor[rgb]{0.98,0.8,0.808}}-1.4 & 0.818 & {\cellcolor[rgb]{0.949,0.973,0.969}}2.6 & 0.004 & {\cellcolor[rgb]{0.929,0.965,0.949}}3.7 & 0.001 \\
+   & Lip.TG.52.4. & 0.003 & 0.156 & {\cellcolor[rgb]{0.984,0.988,0.996}}0.6 & 0.888 & {\cellcolor[rgb]{0.969,0.98,0.98}}1.6 & 0.008 & {\cellcolor[rgb]{0.953,0.976,0.973}}2.4 & 0.002 \\
+   & Lip.DG.36.3. & 0.002 & 0.156 & {\cellcolor[rgb]{0.984,0.957,0.969}}0.0 & 0.631 & {\cellcolor[rgb]{0.984,0.957,0.965}}0.0 & 0.012 & {\cellcolor[rgb]{0.984,0.957,0.969}}0.0 & 0.001 \\
+   & OS.HpH.PAF.C16.0 & 0.002 & 0.156 & {\cellcolor[rgb]{0.388,0.745,0.482}}34.8 & $<$0.001 & {\cellcolor[rgb]{0.949,0.973,0.969}}2.6 & 0.017 & {\cellcolor[rgb]{0.914,0.961,0.937}}4.6 & 0.001 \\
+   & Lip.TG.52.2. & 0.006 & 0.255 & {\cellcolor[rgb]{0.973,0.412,0.42}}-5.1 & 0.469 & {\cellcolor[rgb]{0.957,0.976,0.976}}2.1 & 0.03 & {\cellcolor[rgb]{0.929,0.965,0.949}}3.7 & 0.002 \\
+   & Lip.TG.54.5. & 0.01 & 0.373 & {\cellcolor[rgb]{0.965,0.98,0.98}}1.9 & 0.496 & {\cellcolor[rgb]{0.98,0.984,0.992}}0.9 & 0.016 & {\cellcolor[rgb]{0.973,0.984,0.988}}1.3 & 0.006 \\
+   & Lip.TG.50.2. & 0.012 & 0.398 & {\cellcolor[rgb]{0.973,0.471,0.478}}-4.5 & 0.297 & {\cellcolor[rgb]{0.98,0.984,0.992}}0.9 & 0.141 & {\cellcolor[rgb]{0.957,0.976,0.973}}2.2 & 0.003 \\
+   & Lip.TG.50.1. & 0.018 & 0.45 & {\cellcolor[rgb]{0.98,0.706,0.714}}-2.3 & 0.539 & {\cellcolor[rgb]{0.984,0.988,0.996}}0.7 & 0.179 & {\cellcolor[rgb]{0.965,0.98,0.98}}1.8 & 0.005 \\
+   & Lip.TG.54.4. & 0.02 & 0.45 & {\cellcolor[rgb]{0.937,0.969,0.953}}3.5 & 0.318 & {\cellcolor[rgb]{0.976,0.984,0.988}}1.2 & 0.015 & {\cellcolor[rgb]{0.973,0.984,0.984}}1.4 & 0.02 \\
+   & Lip.TG.54.6. & 0.017 & 0.45 & {\cellcolor[rgb]{0.984,0.906,0.918}}-0.4 & 0.795 & {\cellcolor[rgb]{0.988,0.988,1}}0.5 & 0.027 & {\cellcolor[rgb]{0.984,0.988,0.996}}0.7 & 0.009 \\
+   & Am.Putrescine & 0.029 & 0.515 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & $<$0.001 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.035 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.017 \\
+   & OA.2.ketoglutaric.acid & 0.026 & 0.515 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.366 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.953 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.014 \\
+   & Lip.TG.50.3. & 0.028 & 0.515 & {\cellcolor[rgb]{0.98,0.824,0.835}}-1.2 & 0.668 & {\cellcolor[rgb]{0.984,0.988,0.996}}0.6 & 0.127 & {\cellcolor[rgb]{0.973,0.984,0.988}}1.3 & 0.008 \\
+   & Lip.TG.52.5. & 0.042 & 0.538 & {\cellcolor[rgb]{0.988,0.988,1}}0.5 & 0.789 & {\cellcolor[rgb]{0.988,0.988,1}}0.4 & 0.134 & {\cellcolor[rgb]{0.984,0.988,0.996}}0.7 & 0.014 \\
+   & Lip.TG.56.7. & 0.042 & 0.538 & {\cellcolor[rgb]{0.976,0.698,0.706}}-2.4 & 0.095 & {\cellcolor[rgb]{0.988,0.988,1}}0.5 & 0.015 & {\cellcolor[rgb]{0.988,0.988,1}}0.4 & 0.105 \\
+   & Lip.TG.56.8. & 0.044 & 0.538 & {\cellcolor[rgb]{0.98,0.804,0.816}}-1.4 & 0.055 & {\cellcolor[rgb]{0.984,0.98,0.992}}0.2 & 0.014 & {\cellcolor[rgb]{0.984,0.973,0.984}}0.2 & 0.151 \\
+   & Lip.TG.58.9. & 0.042 & 0.538 & {\cellcolor[rgb]{0.984,0.906,0.918}}-0.4 & 0.068 & {\cellcolor[rgb]{0.984,0.961,0.973}}0.1 & 0.013 & {\cellcolor[rgb]{0.984,0.957,0.969}}0.0 & 0.41 \\
+   & Lip.LPC.16.0. & 0.033 & 0.538 & {\cellcolor[rgb]{0.922,0.961,0.945}}4.2 & 0.028 & {\cellcolor[rgb]{0.988,0.988,1}}0.3 & 0.237 & {\cellcolor[rgb]{0.98,0.988,0.992}}0.9 & 0.009 \\
+   & OS.HpH.LPA.C18.0 & 0.044 & 0.538 & {\cellcolor[rgb]{0.988,0.988,1}}0.5 & 0.038 & {\cellcolor[rgb]{0.984,0.957,0.969}}0.0 & 0.178 & {\cellcolor[rgb]{0.984,0.965,0.976}}0.1 & 0.013 \\ \midrule
+  \multirow{7}{*}{SCD} & Am.L.Serine & 0.002 & 0.285 & {\cellcolor[rgb]{0.914,0.961,0.937}}4.7 & $<$0.001 & {\cellcolor[rgb]{0.984,0.973,0.984}}0.2 & 0.115 & {\cellcolor[rgb]{0.98,0.839,0.851}}-1.1 & 0.003 \\
+   & Am.L.Tryptophan & 0.002 & 0.285 & {\cellcolor[rgb]{0.929,0.965,0.949}}3.7 & 0.004 & {\cellcolor[rgb]{0.984,0.922,0.933}}-0.3 & 0.047 & {\cellcolor[rgb]{0.98,0.808,0.82}}-1.4 & 0.002 \\
+   & Am.Glycine & 0.006 & 0.45 & {\cellcolor[rgb]{0.922,0.961,0.941}}4.3 & 0.001 & {\cellcolor[rgb]{0.988,0.988,1}}0.4 & 0.015 & {\cellcolor[rgb]{0.984,0.859,0.871}}-0.9 & 0.052 \\
+   & Am.L.homoserine & 0.047 & 0.931 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.001 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.723 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.014 \\
+   & Am.Putrescine & 0.045 & 0.931 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.969 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.013 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.927 \\
+   & Lip.SM.d18.1.22.0. & 0.043 & 0.931 & {\cellcolor[rgb]{0.937,0.969,0.957}}3.3 & 0.002 & {\cellcolor[rgb]{0.984,0.984,0.996}}0.3 & 0.015 & {\cellcolor[rgb]{0.984,0.98,0.992}}0.3 & 0.448 \\
+   & Lip.SM.d18.1.23.0. & 0.029 & 0.931 & {\cellcolor[rgb]{0.973,0.984,0.988}}1.2 & 0.01 & {\cellcolor[rgb]{0.984,0.969,0.98}}0.1 & 0.012 & {\cellcolor[rgb]{0.984,0.973,0.984}}0.2 & 0.277 \\ \bottomrule
 \end{tabular}
 \end{table}
 
-\clearpage
 \subsection{Classification of ApoE4 status and/or AD}
-Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models.
-Looking at individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/AD-E4 and SCD+E4/SCD-E4).
+All classification models had a multi-class ROC \acrshort{auc} aboce 80\%. The worst performing model was  Multinomial Logistic Regression fitting the clinical data only (Table \ref{tab:clin}), while the best performing one was XGBoost fitting the clinical data and the 6 meta-metabolites. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models. Notably, looking at individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/AD-E4 and SCD+E4/SCD-E4).
 \begin{table}[H]
 \caption{Performance metrics of multi-class classification of ApoE4 and AD status, obtained from 10-fold CV repeated 100 times. NIR: No Information Rate, AUC: Area Under the (ROC) Curve}
 \label{tab:class_results}
 \begin{tabular}{lllll} \toprule
-                                     & NIR & Accuracy (95/\% CI)     & P(NIR  Accuracy) & AUC   \\ \midrule
+                                     & NIR & Accuracy (95/\% CI)     & P(NIR $>$ Accuracy) & AUC   \\ \midrule
 Clinical features only & \multirow{5}{*}{0.3522} & 0.4807 (0.4744, 0.4869) &$<2.2e^{-16}$ & 0.814 \\
 Clinical features + 230 metabolites  &     & 0.5751 (0.5689, 0.5813) & $<2.2e^{-16}$         & 0.834 \\
 Clinical features + 6 latent factors &     & 0.5313 (0.525, 0.5375)  & $<2.2e^{-16}$      & 0.818 \\
@@ -703,7 +685,22 @@ XGBoost                              &     & 0.5944 (0.5882, 0.6005) & $<2.2e^{-
 \end{figure}
 \clearpage
 \subsection{Metabolite Covariance Network Analysis}
-
+The metabolite covariance network analysis among ApoE4 carriers and non-carriers showed distinct correlations between the metabolites. The ApoE4 carriers' network was less sparse, having less edges comparet to the non-carriers'. A Wilcoxon Signed Rank Test showed distinct degrees of centrality between ApoE4 carriers and non-carriers (p = 0.001).
+\begin{figure}[htb]
+  \minipage{0.32\textwidth}
+    \includegraphics[width=\linewidth]{figures/netAD.png}
+    a
+  \endminipage\hfill
+  \minipage{0.32\textwidth}
+    \includegraphics[width=\linewidth]{figures/netSCD.png}
+    b
+  \endminipage\hfill
+  \minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{figures/netDiff.png}
+  c
+  \endminipage
+\caption{Prunned metabolite covariance network topologies among ApoE4 carriers (a) and non-carriers in AD (b); differential edge network (c). The ApoE4-positive metabolite covariance network is more sparse compared to ApoE4-negative. Red edges represent links that are present exclusively in ApoE4 carriers. Green edges represent connections found in ApoE4 non-carriers.}  
+  \end{figure}
 \clearpage
 \section{Discussion} \label{discuss}
 
@@ -761,10 +758,10 @@ other attached packages:
  [4] dplyr_1.1.4             caret_6.0-94            lattice_0.21-9                    
  [7] globaltest_5.56.0       survival_3.5-7          heatmaply_1.5.0               
 [10] xgboost_1.7.6.1         pROC_1.18.5             FMradio_1.1.1       
-[13] future_1.33.0           ggthemes_5.0.0          GlobalAncova_4.20.0 
+[13] future_1.33.0           ggthemes_5.0.0          corpcor_1.6.10
 [16] viridisLite_0.4.2       plotly_4.10.3           ggplot2_3.4.4
 [19] rpart_4.1.21            furrr_0.3.1             viridis_0.6.4 
-[22] e1071_1.7-14            corpcor_1.6.10
+[22] e1071_1.7-14            
 
 loaded via a namespace (and not attached):
   [1] splines_4.3.2           bitops_1.0-7            tibble_3.2.1                              

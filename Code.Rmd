@@ -21,7 +21,6 @@ knitr::opts_chunk$set(
 ```{r packages, include=FALSE}
 require(heatmaply)
 require(globaltest)
-require(GlobalAncova)
 require(ggplot2)
 require(ggthemes)
 require(plotly)
@@ -47,38 +46,36 @@ load("data/data.Rdata")
 X <- df[df$Diagnosis == "Probable AD", 1:230]
 C <- round(cor(X), 2)
 
-heatmaply_cor(C, color = viridis, plot_method = "plotly", dendrogram = F, reorderfun = sort.default(d,w), main = "Correlation Heatmap", file = "heatmap.html", colorbar_thickness = 15, colorbar_len = 0.5)
+# heatmaply_cor(C, color = viridis, plot_method = "plotly", dendrogram = F, reorderfun = sort.default(d,w), main = "Correlation Heatmap", file = "heatmap.html", colorbar_thickness = 15, colorbar_len = 0.5)
 ```
 
 ## Differential expression of metabolites per ApoE genotype
+### Global test in AD
 
-### Global test in AD group
-
-Performing a Global Test on the serum metabolites of AD patients, correcting for sex (Ho: E4 status has no effect on metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.029 ) between E4 carriers and non-carriers. The presence of ApoE4, correcting for sex seems to have an effect on the metabolites shown in the plot below. The most significantly affected metabolites are triglycerides, diglycerides (positively) and γ-aminobutyric acid (negatively).
-
-```{r, fig.height=8}
-load("data/clinical.Rdata")
-clinical$V_MMSE <- NULL
-df[,1:230] <- scale(df[,1:230])
-AD <- subset(df, Diagnosis == "Probable AD")
-AD$sex <- as.numeric(AD$sex) -1
-# Testing for effects
-gt.b <- globaltest::gt(E4 ~ 1, E4 ~ .-E4dose -Diagnosis -target, data = AD)
-gt.b
-globaltest::covariates(gt.b)
-```
-
-Performing a Global Test on ApoE4 dose shows distinct effects depeding on the number of ApoE4 alleles (p = 0.199).
+Performing a Global Test of ApoE4 dose-effects, on serum metabolites of AD patients, correcting for sex (Ho: ApoE4 dose has no effect on mean metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.0171). The most significantly affected metabolites are triglycerides and diglycerides (FDR-adjusted p-value <0.05).
 ```{r gt, fig.height=8}
-# Multinomial outcome
+AD <- subset(df, Diagnosis == "Probable AD")
 AD$E4dose <- as.factor(AD$E4dose)
-gt.m <- globaltest::gt(E4dose ~ 1, E4dose ~ .-E4 -Diagnosis -target, data = AD)
-gt.m
-globaltest::covariates(gt.m)
+
+gt<- globaltest::gt(E4dose ~ 1, E4dose ~ .-E4 -Diagnosis -target, data = AD, standardize = TRUE)
+gt
+covariates <- covariates(gt, sort = T) 
+res.gt <- extract(covariates) %>%
+  sort() %>%
+  p.adjust(, method = "FDR") %>%
+  globaltest::result() %>%
+  mutate_if(is.numeric, round, digits = 3)
+res.gt$direction <- as.factor(res.gt$direction)
+levels(res.gt$direction) <- c("no ApoE4", "1 ApoE4", "2 ApoE4")
+res.gt$alias <- NULL
+res.gt <- res.gt[, 1:4]
+names(res.gt) = c("Inheritance", "Assoc. with", "FDR", "p-value")
+res.gt <- res.gt[, c(1:(ncol(res.gt) - 2), ncol(res.gt), (ncol(res.gt) - 1))]
+knitr::kable(dplyr::filter(res.gt, `p-value` < 0.05), table.attr = "style='width:30%;'")
 ```
 
 ### Nested Linear Models
-Metabolite-level models to test for ApoE4 dose effects. The F-tests yielded p-values < 0.05, however none of them survived FDR correction.
+Metabolite-level models to test for ApoE4 dose effects, correcting for age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, anti-depressants, mean arterial pressure (MAP) and body mass index (BMI). The F-tests yielded p-values < 0.05, however none of them survived FDR correction. Interestingly, in the SCD group, aminoacids are mostly affected and no TGs or DGs compared to the AD group.
 ```{r}
 nested <- function(Y, x, ...) {
   ### Analysis of Variance (ANOVA)
@@ -95,27 +92,23 @@ nested <- function(Y, x, ...) {
   })
   # Correction for Multiple Testing
   # Create a list to store the p-values
-  p_values <- list(1:ncol)
   # Extract the p-values of the F-tests from the anova summaries list and store them in p_values
-  for (i in 1:ncol) {
-    p_values[[i]] <- F_tests[[i]][["Pr(>F)"]][[2]]
-  }
+  p_values <- F_tests %>%
+    future_map(~.x[["Pr(>F)"]][[2]])
   # Coerce p_values to dataframe and transpose it
-  p_values <- t(data.frame(p_values))
-
-  # Set as row names the metabolites
-  p_values <- data.frame(p_values, row.names = colnames(Y))
-
+  p_values <- as.data.frame(p_values) %>%
+    t() %>%
+    data.frame(row.names = colnames(Y))
   # Calculate the FDR-adjusted p-values
-  p_values$p_adj <- p.adjust(p_values[, ], method = "fdr", n=230 )
-  
+  p_values$p_adj <- p.adjust(p_values[, ], method = "fdr", n = 230)
+  p_values <- round(p_values, 3)
   # Filter out the non-significant (a=0.05) FDR-adjusted p-values
-  sig <- as.data.frame(dplyr::filter(p_values, p_values < 0.05))
+  sig <- as.data.frame(dplyr::filter(p_values, `.` < 0.05))
   sig <- sig[order(sig$p_adj), ]
+  names(sig) <- c("P(>F)", "FDR")
   cat("Significant F-tests: \n")
   print(sig)
   cat("\nDose effects on metabolites:")
-  knitr::kable(sig)
   summaries <- furrr::future_map(df[, rownames(sig)], ~ {
     f <- as.formula(paste0(".x ~ x +", paste(covariates, collapse = "+")))
     mdl <- lm(f, data = df)
@@ -125,12 +118,15 @@ nested <- function(Y, x, ...) {
     x <- x[, -c(2, 3)]
     x <- t(x)
   })
-  summaries <- plyr::ldply(summaries, id = 1:2)
-  return(knitr::kable(summaries, table.attr = "style='width:30%;'"))
+  summaries <- plyr::ldply(summaries, id = 1:2) %>%
+    mutate(across(where(is.numeric), round, digits = 3))
+  coeffs <- summaries[c(TRUE, FALSE), ]
+  pvalues <- summaries[c(FALSE, TRUE), ]
+  t_tests <- cbind.data.frame(coeffs[, 1], coeffs[, 2], pvalues[, 2], coeffs[, 3], pvalues[, 3], coeffs[, 4], pvalues[, 4])
+  names(t_tests) <- c("Metabolite", "No ApoE4", "P(>t)", "ApoE4x1","P(>t)", "ApoE4x2","P(>t)")
+  return(knitr::kable(t_tests, table.attr = "style='width:30%;'"))
 }
 ```
-### SCD and AD
-The  metabolites most affected by ApoE4 dose are D-L-3-aminoisobutyric.acid, histamine, L-serine, ceramide d18:1/24:0, lysophosphatidylcholine 18:1, phosphatidylcholine 34:4, 36:6 and 40:4, sphingomyelin d18:1/22:0 and d18:1/24:0, LpH.PGE2, cLpH.PGA2, Lyso-phosphatidic acid 20:5 and taurine.
 ```{r}
 Y <- df[, 1:230]
 df$E4dose <- as.numeric(df$E4dose) -1
@@ -138,12 +134,9 @@ df$E4dose[df$E4dose == 0] <- "No ApoE4"
 df$E4dose[df$E4dose == 1] <- "1 ApoE4"
 df$E4dose[df$E4dose == 2] <- "2 ApoE4"
 E4dose <- df$E4dose <- as.factor(df$E4dose)
-## Testing for effects of ApoE4 dose
-nested(Y, relevel(E4dose, ref= "No ApoE4"), clinical)
 ```
-
-### AD group only
-Among AD patients, ApoE4 dose seems to have an effect on several triglycerides, diglycerides, L-glutamic acid, L-lysine, 2- and 3-hydroxybutyric acid, glutamic acid, 3-phosphoglyceric acid, phosphatidylcholin, sphyngomyelin, HpH.PAF.C17, phosphoethanolamine, imino-diacetate.
+### AD group
+Among AD patients, ApoE4 dose seems to have positive effect on several triglycerides, diglycerides, putrescine, 2-ketoglutraric acid, lysophosphatidylcholin, HpH.PAF.-C16.0 and -C18.0
 ```{r}
 AD <- subset(df, Diagnosis == "Probable AD")
 ADY <- AD[, 1:230]
@@ -154,8 +147,8 @@ ADclinical <- clinical[df$Diagnosis == "Probable AD",]
 nested(ADY, relevel(ADE4dose, ref= "No ApoE4"), ADclinical)
 ```
 
-### SCD group only
-Among individuals with SCD, lipid metabolites were not affected as much as in the AD group, with only LPC and PC showing a difference. Aminoacids (glycine, taurine, L-serine, serotonine, L-glutamic acid, L-glutamic acid, phosphoethanolamine) and oxidative stress compounds were mostly affected in this group.
+### SCD group
+Among individuals with SCD, lipid metabolites were not affected as much as in the AD group, with only two sphingomyelin species showing a difference. Aminoacids L-serine, tryptophan, glycine,trytptophan, L-homoserine, putrescine were affected in this group.
 ```{r}
 SCD <- df[df$Diagnosis == "Subjectieve klachten",]
 SCDY <- SCD[, 1:230]
@@ -165,7 +158,6 @@ SCDclinical <- clinical[df$Diagnosis == "Subjectieve klachten",]
 ## Testing for effects of ApoE4 dose
 nested(SCDY, relevel(SCDE4dose, ref= "No ApoE4"), SCDclinical)
 ```
-
 ## Multinomial Classification of ApoE4 presence and AD
 The discriminative potential of the metabolites, correcting for clinical background features, on AD and ApoE4 or not (4-class response ADE4, AD, SCDE4, SCD)is assessed by first fitting a Multi-nomial Logistic Regression (benchmark model). The benchmark model fits only the clinical features. The model's AUC is compared with the same model (with altered hyperparameters) fitting clinical variables + 230 metabolites. The metabolites are then projected to 6 latent ML-estimated factors and 3 more models are fitted: Multi-nomial Logistic Regression, Decision Tree and XGBoost fitting clinical variables + 6 factors. The models' multi-class classification performance is compared using confusion matrices and AUCs.
 ```{r multifit}
@@ -255,6 +247,7 @@ mlr <- multifit(
   grid = expand.grid(decay = 10),
   trace = F
 )
+evaluate(mlr)
 
 # Get the feature importance scores
 fimp <- varImp(mlr)
@@ -265,7 +258,7 @@ fimp <-  fimp$importance %>%
 
 ggplot2::ggplot(fimp, aes(x = reorder(rownames(fimp), Overall), y = Overall, fill = reorder(rownames(fimp), Overall))) +
   theme_tufte() +
-  geom_point(size = 4, alpha = 0.6, aes(x= rownames(fimp), y = Overall, fill= rownames(fimp))) +
+  geom_point(size = 4, alpha = 0.6, aes(x= rownames(fimp), y = Overall, fill= rownames(fimp)), show.legend = FALSE) +
   geom_segment(aes(x = rownames(fimp), xend = rownames(fimp), y = 0, yend = Overall)) +
 xlab('Variable')+
 ylab('Overall Importance')+
@@ -273,13 +266,11 @@ coord_flip() +
 scale_fill_manual(values=rainbow(20)) 
 
 
-ggplot(fimp, aes(x = rownames(fimp$importance), y = Overall, fill = rownames(fimp$importance)), top = 20) +
-  scale_y_continuous(breaks = seq(0, 100, 10)) +
-  geom_col(show.legend = FALSE) +
-  scale_fill_brewer()+
-  theme_tufte()
-
-evaluate(mlr)
+# ggplot(fimp, aes(x = rownames(fimp$importance), y = Overall)) +
+#   geom_boxplot(aes(x = rownames(fimp$importance), y = Overall), show.legend = FALSE) +
+#   scale_y_continuous(breaks = seq(0, 100, 10)) +
+#   coord_flip() +
+#   theme_tufte()
 ```
 
 ### Projection to Latent Factors
@@ -343,7 +334,7 @@ evaluate(tree)
 
 ### XGBoost Forest
 
-```{r zgb}
+```{r xgb}
 xgb <- multifit(
   X = X,
   y = y,
@@ -435,7 +426,7 @@ Colors[grep("Am", rownames(PCE4YES))] <- "pink"
 Colors[grep("OA", rownames(PCE4YES))] <- "lightblue"
 Colors[grep("Lip", rownames(PCE4YES))] <- "yellow"
 Colors[grep("OS", rownames(PCE4YES))] <- "purple"
-
+httpgd::hgd()
 set.seed(111213)
 # Plot the sparsified ridge matrix of ApoE4 carriers with AD
 Coords <- Ugraph(PCE4YES,
