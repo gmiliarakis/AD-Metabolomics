@@ -384,7 +384,7 @@ Are there mechanistic links between ApoE4 dose and serum metabolome in AD?
 \end{enumerate}
 
 \subsection{Approach and Overview}
-An introduction to the data used in this study is found in Section \ref{subjects}. A general overview of the software is found in Section \ref{datamanagement} and \ref{packages}, while the R \texttt{sessionInfo} is found in Appendix \ref{appendixB}. To facilitate statistical analysis, two new features were created for the first two research questions: ApoE4dose (0, 1, 2) and ApoE4AD (4 possible phenotype: AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4), respectively, as described in Section \ref{featureeng}.
+An introduction to the data used in this study is found in Section \ref{subjects}. A general overview of the software is found in Section \ref{datamanagement} and \ref{packages}, while the R session information is found in Appendix \ref{appendixB}. To facilitate statistical analysis, two new features were created for the first two research questions: ApoE4dose (0, 1, 2) and ApoE4AD (4 possible phenotype: AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4), respectively, as described in Section \ref{featureeng}.
 
 The statistical methods applied to answer the research questions were adapted from \Citeauthor{deLeeuw2017Blood-basedDisease}'s \citetitle{deLeeuw2017Blood-basedDisease} and are described in Section \ref{stats}. To screen for ApoE4 dose effects on serum metabolites in AD, two approaches were taken: a global test (correcting only for sex) and nested linear model comparison using ANCOVA F-tests (correcting for several factors: Table \ref{tab:clin}, except CSF markers). 
 
@@ -415,10 +415,10 @@ The data were collected from 126 AD patients and 121 SCD ($n$ = 247) individuals
 \multirow{3}{*}{Commorbidities} & Hypertension                & Binary        \\
                                 & Diabetes mellitus           & Binary        \\
                                 & Hypercholesterolemia        & Binary        \\
-\multirow{3}{*}{Medication}     & Cholesterol lowering        & Numeric       \\
+\multirow{3}{*}{Medication}     & Cholesterol lowering        & Binary       \\
                                 & Antidepressants             & Binary        \\
                                 & Antiplatelet                & Binary        \\ 
-\multirow{3}{*}{CSF}            & A$\beta_{42}$               & Numeric       \\
+\multirow{3}{*}{CSF} markers            & A$\beta_{42}$               & Numeric       \\
                                 & tau                         & Numeric       \\
                                 & p-tau                       & Numeric       \\\bottomrule
 \end{tabular}
@@ -453,7 +453,7 @@ The ApoE allele and genotype frequencies in the population are reflected in the 
 The ApoE genotypes is valuable information and might be interesting to screen for metabolic nuances between them. However, the genotypes are not equally represented in the data and hence, testing for differences among them would not be reliable. The following two sections describe the features created to focus on ApoE4 status (0 or at least 1 allele) and dose (0, 1, or 2 alleles) to balance the data when studying only the \acrshort{ad} group and both AD and SCD.
 
 \subsubsection{AD group}
-\cite{deLeeuw2017Blood-basedDisease} divided the subjects into two classes: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ \textit{dose} effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The number of ApoE4 allele doses are shown in the bottom part of Table \ref{tab:ApoEfreq} (first two and last row).
+\citeauthor{deLeeuw2017Blood-basedDisease} divided the subjects into two classes: those carrying at least one $\varepsilon4$ allele, and $\varepsilon4$ non-carriers. However, in order to study the $\varepsilon4$ \textit{dose} effects, the genotypes can be binned into groups, based on the number of $\varepsilon4$ alleles they carry: 0, 1 or 2. The number of ApoE4 allele doses are shown in the bottom part of Table \ref{tab:ApoEfreq} (first two and last row).
 
 \subsubsection{SCD and AD}
 In order to incorporate ApoE4 status, as well as the diagnosis of AD, a four-level feature (AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4, "ApoE4AD") was created, as shown in the last two rows of Table \ref{tab:ApoEfreq}.
@@ -465,16 +465,19 @@ To test if the number of ApoE4 alleles have an effect on mean metabolite levels 
 \leavevmode\newline\textbf{Global Test}\hspace{.25cm} The concept of a global test was first introduced by \citeauthor{Simon2004DesignHealth}, and proposed an approach based on permutations to cater to the high dimensionality of gene expression data. The R package \textsf{globaltest} \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage} developed by \citeauthor{Goeman2004AOutcome} features a multinomial logistic regression model, fitting genes to predict clinical or biological group membership (number of ApoE4 alleles in this case). This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}. The null hypothesis is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The test statistic under $H_0$ follows, asymptotically, a normal distribution. The \texttt{gt} function of the package was used to screen for nuances in metabolite levels on the number of ApoE4 alleles, correcting for sex. To asses ApoE4 dose effects correcting for clinical data nested linear model comparison was performed, as described in the next section.
 
 \leavevmode\newline \textbf{Nested linear models}\hspace{.25cm}
-To test for ApoE4 dose effects on each metabolite, $p=230$ model comparisons were needed, hence a function was created to iterate over the metabolites, fit the nested models, compare them using ANCOVA F-tests, store and adjust the p-values, filter those below .05, then consolidate the coefficients of the meaningful full models and the p-values of their t-tests in a table and display it. To decrease run time, as well as harness the power of multiple cores, \textsf{furrr}'s \texttt{future\_map} function was used for parallel iterations.
-
-The dependent variable in each model was a metabolite; the nested model \eqref{rm}, has only clinical variables (Table \ref{tab:clin} except CSF markers) while the full model \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2 -nominal) as explanatory variables. Let $y_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon4}$ the ApoE4 dose; the nested models then are:
+An ANCOVA model using a Least Squares estimation fits a regression line using categorical and numerical variables, while minimizing the Residual Sum of Squares (RSS) \cite{ott2015introduction}, 
+$$\mathrm{RSS} = \sum (y - \hat{y})^2$$ where $y$ is the response and $\hat{y}$ is its regression estimatation. Two models were fitted for each metabolite, a full and a nested model. The dependent variable in each model was a metabolite; the nested model \eqref{rm}, has only clinical variables (Table \ref{tab:clin} except CSF markers) while the full model \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2 -nominal) as explanatory variables. Let $y_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon4}$ the ApoE4 dose; the nested models then are:
 \begin{align}
     & y_j = \beta_0 + \sum_{k=1}^m\beta_kx_k +\epsilon \label{rm} \\
     & y_j = \beta_0 + \sum_{k=1}^m\beta_kx_k + \beta_{m+1}D_{\varepsilon4} + \epsilon \label{fm}
 \end{align}
 For every metabolite $j$ = 1,...,$p$ the hypothesis test is 
-H$_0$: $\beta_{m+1} = 0 $ vs H$_\alpha$: $\beta_{m+1} \neq 0$.
-Under H$_0$ the test statistic, $F$ follows an $F_{1, n-(m+2)}$ distribution. This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected H$_0$ hypotheses, globally e.g. at an $\alpha$ of 0.05. First, the p-values are sorted in ascending order, and for every $j$ p-value each $\alpha$ is multiplied by $j$ divided by the total number of p-values \cite{Benjamini1995ControllingTesting} $m = 230$ in this study. In other words, after adjustment, a null hypothesis $j$ may be rejected only if its associated F-test's p-value is less than a fraction ($j/m$) of $\alpha$.
+\[H_0: \beta_{m+1} = 0 \; \mathrm{vs} \; H_\alpha: \beta_{m+1} \neq 0\]
+The test statistic is:
+\[ F = \frac{\mathrm{SSReg}_{full}-\mathrm{SSReg}_{nested}/df_{full}-df_{nested}}{\mathrm{RSS}_{nested}/n-(m+2)}\]
+Under H$_0$ $F$ follows an $F_{1, n-(m+2)}$ distribution \cite{ott2015introduction}. The null hypothesis is rejected for large values of $F$.
+
+This implies $p$ hypothesis tests, which qualifies as multiple testing. A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected H$_0$ hypotheses, globally e.g. at an $\alpha$ of 0.05. With the Benjamini-Hochberg's approach, first, the p-values are sorted in ascending order. Then, for every p-value $j$, $\alpha$ is multiplied by $j$ divided by the total number of tests \cite{Benjamini1995ControllingTesting} $m = 230$ in this study. In other words, after adjustment, a null hypothesis $j$ may be rejected only if its associated F-test's p-value is less or equal to a fraction ($j/m$) of $\alpha$.
 
 \begin{algorithm}
 \caption{Benjamini–Hochberg's procedure to control FDR}\label{alg:fdr}
@@ -486,6 +489,8 @@ Define
 Reject all null hypotheses $H_{0j}$ for which $p_j \leq p(L)$.
 \end{algorithm}
 
+To test for ApoE4 dose effects on each metabolite in AD and SCD, $2p=460$ model comparisons were needed, hence a function was created to iterate over the metabolites, fit the nested models, compare them using ANCOVA F-tests, store and adjust the p-values, filter those below .05, then consolidate the coefficients of the meaningful full models and the p-values of their t-tests in a table and display it. To decrease run time, as well as harness the power of multiple cores, \textsf{furrr}'s \texttt{future\_map} function was used for parallel iterations.
+
 \subsubsection{Classification of ApoE4 status and/or AD}\label{rq2}
 In machine learning, a class denotes a group of objects that share common characteristics, such as having \acrshort{ad} or ApoE4 \cite*{Drummond2010}. Classification, in this context, denotes training a (supervised) learning algorithm on labeled data (containing their class) \cite*{Drummond2010}. The classifier learns patterns in the data and is then able to predict class membership for unknown data \cite*{Drummond2010}.
 
@@ -493,15 +498,21 @@ In machine learning, a class denotes a group of objects that share common charac
 
 \leavevmode\newline \textbf{Multi-class classification models}\hspace{.25cm}The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl} and \texttt{train} were used to fit the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
 
-Considering interpretability, Multinomial Logistic Regression (\acrshort{mnl}) is inherently interpretable. Let $y = k$, with $k \in N, [1,4]$ representing the k-th class of ApoE4AD and $\beta_{kj}$ its set of coefficients,  $\beta_{lj}$ the coefficients of the rest of classes for $j$-th metabolite, then a \acrlong{mnl} model calculated the probability
+Considering interpretability, Multinomial Logistic Regression (\acrshort{mnl}) is inherently interpretable. Let $y$ a response with $K$ classes, $k \in N, [1,4]$ representing the k-th class of ApoE4AD and $\beta_{kj}$ its set of coefficients,  $\beta_{lj}$ the coefficients of the rest of classes for $j$-th metabolite, then a \acrlong{mnl} model calculated the probability
 
-\[\textrm{Pr}(y=k|X=x) =  \dfrac{e^{\sum_{j=1}^{p}\beta_{kj}x_j}}{\sum_{l=1}^{4}\sum_{j=1}^{p}e^{\beta_{lj}x_j}}\]
+\[\textrm{Pr}(y=k|X=x) =  \dfrac{e^{\sum_{j=1}^{p}\beta_{kj}x_j}}{\sum_{l=1}^{K}\sum_{j=1}^{p}e^{\beta_{lj}x_j}}\]
 
-When $p > n$, the coefficient estimation method has low bias and high variance, in that small changes in the training data can result in very different coefficient estimates \cite{James2023AnEdition}. Regularization trades off a small increase in bias for a great decrease in variance, by shrinking the unimportant coefficients towards zero. \acrshort{lasso} (Least Absolute Shrinkage and Selection Operator) \cite{Tibshiranit1996RegressionLasso}, also called L1-regularization shrinks the \acrshort{mnl} coefficients to 0, thus weeding out spurious correlations and reducing the number of predictors \cite{Tibshiranit1996RegressionLasso}. It does so by introducing the term  \[\lambda\sum_{j=1}^{p}|\beta_j|\] where $\lambda \geq 0$ is a tuning parameter that balances the coefficient shrinking effect. The package \textsf{nnet}, as implemented in \textsf{caret}'s \texttt{train} function was used in this case.
+When $p > n$, the coefficient estimation method has low bias and high variance, in that small changes in the training data can result in very different coefficient estimates \cite{James2023AnEdition}. 
 
-A method to treat multi-collinearity and high dimensionality is a 2-stage \acrfull{ml} \acrfull{fa}, such as the one the package \textsf{FMradio} \cite{Peeters2019StableData} performs. In the 1st stage, a L2-regularised ML estimation is used to filter out redundant features from the data matrix. In the second stage, ML FA projects the aforementioned matrix to an orthogonal space where the features are replaced by -fewer- factors that explain their covariance. One can then use the produced factor scores as predictors in any model.
+Regularization trades off a small increase in bias for a great decrease in variance, by shrinking the low coefficients towards zero \cite{James2023AnEdition}. Ridge or L2 regularization \cite{Cessie1992RidgeRegression} shrinks the coefficients without setting them to exactly zero \cite{Cessie1992RidgeRegression}
+\[\textrm{RSS} + \lambda\sum_{j=1}^{p}\beta_j^2 \]where $\lambda \geq 0$ is a tuning parameter that balances the coefficient shrinking effect. The function with the same name of the package \textsf{nnet} fits a shallow neural network (with a single hidden layer, but allowing skip-layer connections) \cite{nnet}. For the $i$-th observation, it calculates the weights using a Least Squares estimation of negative conditional log-likelihood that it belongs to the $k$-th class
+\[E = \sum_{i}\sum_{k}-y_{ik}\log\hat{y}_{ik}, \; \;  \hat{y}_{ik} =  \dfrac{e^{\sum_{j=1}^{p}\beta_{kj}x_{ij}}}{\sum_{l=1}^{K}\sum_{j=1}^{p}e^{\beta_{lj}x_{ij}}}\]
+where $y_{ik}$, the true class will be exactly one and the others all zero \cite{nnet}. It regularises the fit by introducing a penalty $C$ on the roughness of the function $f$
+ \[E + \lambda C(f)\].
 
-\acrfull{dt} are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data into branches and leaves(nodes) \cite{Song2015DecisionPrediction}. The \texttt{rpart2} \cite{rpart} function of \textsf{rpart} was used.
+Another method to treat multi-collinearity and high dimensionality is a 2-stage \acrfull{ml} Factor Projection to a Latent Orthogonal space, such as the one the package \textsf{FMradio} \cite{Peeters2019StableData} performs. In the 1st stage, a L2-regularised ML estimation is used to filter out redundant features from the data matrix. In the second stage, the aforementioned matrix to an orthogonal space where the features are replaced by -fewer- factors that explain their covariance. One can then use the produced factor scores as predictors in any model.
+
+\acrfull{dt} are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data into branches and leaves (nodes) \cite{Song2015DecisionPrediction}. The \texttt{rpart2} \cite{rpart} function of \textsf{rpart} was used.
 
 Boosting models, are ensemble models that fit several weak learners (such as linear/logistic regression or DTs) sequentially, reweighing the data, and take their weighted majority vote \cite{Friedman2000boosting,Friedman2001gbm}. Despite Boosting tends to outperform DTs, it often operates as a \textit{black box} and is poorly interpretable. The state-of-the-art \acrlong{xgb} (\texttt{xgbTree}) of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used.
 
@@ -515,7 +526,7 @@ Boosting models, are ensemble models that fit several weak learners (such as lin
     Evaluate performance and compare
 \end{algorithm}
 
-First, a benchmark model was created fitting the clinical background data to predict ApoE4AD in a penalised \acrlong{mnl} model. Second, the 230-metabolite panel was fitted on top of the clinical background data in a penalised \acrlong{mnl} model. Then the full metabolite panel was projected into 6 latent factors (meta-metabolites), explaining around 30\% of their variance. The 6-factor metabolite projection was then fitted on top of the clinical data in a penalised \acrlong{mnl}, a \acrlong{dt} and an XGBoost model. The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated (100 times) 10-fold Cross-Validation (CV). 
+\leavevmode\newline \textbf{Implementation \& Evaluation}\hspace{.25cm} First, a benchmark model was created fitting the clinical background data to predict ApoE4AD in a penalised \acrlong{mnl} model. Second, the 230-metabolite panel was fitted on top of the clinical background data in a penalised \acrlong{mnl} model. Then the full metabolite panel was projected into 6 latent factors (meta-metabolites), explaining around 30\% of their variance. The 6-factor metabolite projection was then fitted on top of the clinical data in a penalised \acrlong{mnl}, a \acrlong{dt} and an XGBoost model. The aforementioned models were hyper-parameter tuned over a grid of values and the best was selected using repeated (100 times) 10-fold Cross-Validation (CV). 
 
 Model performance was holistically assessed and compared, with the repeated 10-fold CV-obtained ROC curves and their respective Area Under the Curve \acrshort{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as Accuracy, Precision, Recall and F1-score from \textsf{caret}'s \texttt{confusionMatrix}.
 
