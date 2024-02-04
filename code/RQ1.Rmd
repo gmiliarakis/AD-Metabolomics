@@ -31,27 +31,39 @@ load("data/clinical.Rdata")
 ## Differential expression of metabolites per ApoE genotype
 
 ### Global test in AD
+```{r}
+global.test <- function(data) {
+  gt <- globaltest::gt(E4dose ~ 1, E4dose ~ . - E4 - Diagnosis - target, data = data, standardize = TRUE)
+  print(gt)
+  covariates <- covariates(gt, sort = TRUE)
+  res.gt <- extract(covariates) %>%
+    sort() %>%
+    p.adjust(, method = "FDR") %>%
+    globaltest::result() %>%
+    mutate(across(where(is.numeric), \(x) round(x, digits = 3)))
 
+  res.gt$direction <- as.factor(res.gt$direction)
+  levels(res.gt$direction) <- c("no ApoE4", "1 ApoE4", "2 ApoE4")
+  res.gt$alias <- NULL
+  res.gt <- res.gt[, 1:4]
+  names(res.gt) <- c("Inheritance", "Assoc. with", "FDR", "p-value")
+  res.gt <- res.gt[, c(1:(ncol(res.gt) - 2), ncol(res.gt), (ncol(res.gt) - 1))]
+
+  sig <- dplyr::filter(res.gt, `p-value` < 0.05)
+  return(knitr::kable(sig, table.attr = "style='width:30%;'"))
+}
+```
 Performing a Global Test of ApoE4 dose-effects, on serum metabolites of AD patients, correcting for sex (Ho: ApoE4 dose has no effect on mean metabolite levels, Ha: it has an effect), yields a significant difference (p = 0.0171). The most significantly affected metabolites are triglycerides and diglycerides (FDR-adjusted p-value <0.05).
 ```{r gt, fig.height=8}
 AD <- subset(df, Diagnosis == "Probable AD")
 AD$E4dose <- as.factor(AD$E4dose)
-
-gt<- globaltest::gt(E4dose ~ 1, E4dose ~ .-E4 -Diagnosis -target, data = AD, standardize = TRUE)
-gt
-covariates <- covariates(gt, sort = T) 
-res.gt <- extract(covariates) %>%
-  sort() %>%
-  p.adjust(, method = "FDR") %>%
-  globaltest::result() %>%
-  mutate_if(is.numeric, round, digits = 3)
-res.gt$direction <- as.factor(res.gt$direction)
-levels(res.gt$direction) <- c("no ApoE4", "1 ApoE4", "2 ApoE4")
-res.gt$alias <- NULL
-res.gt <- res.gt[, 1:4]
-names(res.gt) = c("Inheritance", "Assoc. with", "FDR", "p-value")
-res.gt <- res.gt[, c(1:(ncol(res.gt) - 2), ncol(res.gt), (ncol(res.gt) - 1))]
-knitr::kable(dplyr::filter(res.gt, `p-value` < 0.05), table.attr = "style='width:30%;'")
+global.test(AD)
+```
+### Global test in SCD
+```{r}
+SCD <- subset(df, Diagnosis == "Subjectieve klachten")
+SCD$E4dose <- as.factor(SCD$E4dose)
+global.test(SCD)
 ```
 
 ### Nested Linear Models
@@ -98,7 +110,7 @@ nested <- function(Y, x, ...) {
     x <- t(x)
   })
   summaries <- plyr::ldply(summaries, id = 1:2) %>%
-    mutate(across(where(is.numeric), round, digits = 3))
+    mutate(across(where(is.numeric), \(x) round(x, digits = 3)))
   coeffs <- summaries[c(TRUE, FALSE), ]
   pvalues <- summaries[c(FALSE, TRUE), ]
   t_tests <- cbind.data.frame(coeffs[, 1], coeffs[, 2], pvalues[, 2], coeffs[, 3], pvalues[, 3], coeffs[, 4], pvalues[, 4])
