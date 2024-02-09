@@ -410,7 +410,7 @@ Ps <- ridgeP.fused(S, n, Ts,lambda = optf$lambda, maxit = 1000)
 # Get the sparsified high precision matrices, correcting FDR at .001
 P0s <- sparsify.fused(Ps,
   threshold = "localFDR",
-  FDRcut = 0.999
+  FDRcut = 0.9999
 )
 ```
 GGMs showing distinct metabolic compositions among ApoE4 carriers (left), non-carriers(middle) and the differential edges (right).
@@ -425,27 +425,38 @@ Colors <- rownames(PCE4YES)
 Colors[grep("Am", rownames(PCE4YES))] <- "pink"
 Colors[grep("OA", rownames(PCE4YES))] <- "lightblue"
 Colors[grep("Lip", rownames(PCE4YES))] <- "yellow"
-Colors[grep("OS", rownames(PCE4YES))] <- "purple"
-httpgd::hgd()
+Colors[grep("OS", rownames(PCE4YES))] <- "grey"
+httpgd::hgd( width = getOption("httpgd.width", 700),
+  height = getOption("httpgd.height", 700),)
 set.seed(111213)
-# Plot the sparsified ridge matrix of ApoE4 carriers with AD
+# Plot he sparsified ridge matrix of ApoE4 carriers with AD
 Coords <- Ugraph(PCE4YES,
   type = "fancy", lay = "layout_with_fr",
-  Vcolor = Colors, prune = FALSE, Vsize = 10, Vcex = 0.4,
+  Vcolor = Colors, prune = FALSE, Vsize = 5, Vcex = 0.7, cut = 0.5,
   main = "ApoE4 carriers with AD"
 )
-# Plot he sparsified ridge matrix of ApoE4 non-carriers with AD
+plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1)
+legend("topleft", legend =c('Amines, aminoacids', 'Organic Acids', 'Lipids',
+    'Oxidative stress compounds'), pch=16, pt.cex=3, cex=1.5, bty='n',
+    col = c('pink', 'lightblue', 'yellow', 'grey'))
+
+
+names <- c('ApoE4 non-carrier edges', 'ApoE4 carrier edges', 'positive partial cor.', 'negative partial cor.')
+clrs <- c('red', 'green', 'black', 'black')
+ltype <- c(1, 1, 1, 2)
+plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1)
+legend("topleft", title="", legend = names, lty=ltype, lwd=2, cex=1.5,
+       bty='n', col = clrs)
+# Plot the sparsified ridge matrix of ApoE4 non-carriers with AD
 Ugraph(PCE4NO,
-  type = "fancy", lay= NULL, coords = Coords,
-  Vcolor = Colors, prune = FALSE, Vsize = 10, Vcex = 0.4,
+  type = "fancy", lay= NULL, coords= Coords,
+  Vcolor = Colors, prune = FALSE, Vsize = 5, Vcex = 0.7, cut = 0.5,
   main = "ApoE4 non-carriers with AD"
 )
-
 # Plot the differential network
 DiffGraph(PCE4NO, PCE4YES,
 lay = NULL, coords = Coords,
-  Vcolor = Colors, Vsize = 10, Vcex = 0.4,
-  main = "Differential Network"
+  Vcolor = Colors,  Vsize = 5, Vcex = 0.7,  main = "Differential Network"
 )
 ```
 
@@ -458,6 +469,10 @@ NetStatsE4yes <- NetStats[,10:18]
 NetStatsE4no <- NetStats[, 1:9]
 
 NetStatsE4yes[, c(3, 9)] <- NetStatsE4no[, c(3, 9)] <- NULL
+DegreesE4yes <- as.data.frame(NetStatsE4yes[, 1], row.names = rownames(NetStatsE4yes))
+DegreesE4no <-  as.data.frame(NetStatsE4no[, 1], row.names = rownames(NetStatsE4no))
+head(order(DegreesE4yes, decreasing = TRUE))
+
 ```
 ### Network statistics
 ```{r degree density plot }
