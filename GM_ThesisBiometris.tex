@@ -95,7 +95,7 @@
 \newacronym{smote}{SMOTE}{synthetic minority over-sampling technique}
 \newacronym{ml}{ML}{maximum likelihood}
 \newacronym{lasso}{LASSO}{least absolute shrinkage and selection operator}
-\newacronym{mnl}{MNL}{multinomial logistic regression}
+\newacronym{mnl}{MLR}{multinomial logistic regression}
 \newacronym{roc}{ROC}{receiver-operating characteristics}
 \newacronym{auc}{AUC}{area under the ROC curve}
 \newacronym{ggm}{GGM}{Gaussian graphical model}
@@ -251,19 +251,19 @@
 %-------------------------------------------------------------------
 \frontmatter
 % Foreword
-\section*{Foreword}
-This is where you type your foreword.
-In the Foreword the student states clearly his/her contribution that originates from the master thesis project, and, if applicable, what contribution(s) possibly followed from the student’s internship on the same topic.
-It is also stated in the foreword what data sources were used, and whether the data have a degree of confidentiality.
-In addition, possible acknowledgements may be made to people who have contributed to (certain parts of) the thesis.
+% \section*{Foreword}
+% This is where you type your foreword.
+% In the Foreword the student states clearly his/her contribution that originates from the master thesis project, and, if applicable, what contribution(s) possibly followed from the student’s internship on the same topic.
+% It is also stated in the foreword what data sources were used, and whether the data have a degree of confidentiality.
+% In addition, possible acknowledgements may be made to people who have contributed to (certain parts of) the thesis.
 
 
-% Abstract
-\newpage
-\section*{Abstract}
-This is where you type your abstract.
-The abstract must be communicable to a broad audience and contain, next to a summary text, an outreach item such as an infographic or a link to a video/website/web application.
-Such as, for example, the nice figure below.
+% % Abstract
+% \newpage
+% \section*{Abstract}
+% This is where you type your abstract.
+% The abstract must be communicable to a broad audience and contain, next to a summary text, an outreach item such as an infographic or a link to a video/website/web application.
+% Such as, for example, the nice figure below.
 
 
 % Glossary
@@ -389,7 +389,7 @@ An introduction to the data used in this study is found in Section \ref{subjects
 
 The statistical methods applied to answer the research questions were adapted from \Citeauthor{deLeeuw2017Blood-basedDisease}'s \citetitle{deLeeuw2017Blood-basedDisease} and are described in Section \ref{stats}. To screen for ApoE4 dose effects on serum metabolites, two approaches were taken: a global test (correcting only for sex) and nested linear model comparison using ANCOVA F-tests (correcting for several factors: Table \ref{tab:clin}, except CSF markers). 
 
-To test the (added) classification potential of serum metabolites against ApoE4AD, several multi-class classification models were fitted. First, a benchmark multinomial logistic regression model was fitted using only clinical background data as predictors. Second, the full metabolomic panel was addded on top of the clinical data in the same model and feature importance was calculated. Third, the metabolites were projected to a latent orthogonal space, where 6 meta-metabolites (accounting for around 30\% of the variance) replaced the original metabolites. Finally, the meta-metabolites were fitted on top of the clinical data in a multinomial logistic regression model, a decision tree and an \acrfull{xgb} model. The discrimatory performance of the aforementioned models was then comprehensively evaluated and compared.
+To test the (added) classification potential of serum metabolites against ApoE4AD, several multi-class classification models were fitted. First, a benchmark multinomial logistic regression model was fitted using only clinical background data as predictors. Second, the full metabolomic panel was addded on top of the clinical data in the same model and feature importance was calculated. Third, the metabolites were projected to a latent orthogonal space, where 6 meta-metabolites (accounting for around 30\% of the variance) replaced the original metabolites. Finally, the meta-metabolites were fitted on top of the clinical data in a multinomial logistic regression model, a decision tree and an \acrfull{xgb} model. The discriminatory performance of the aforementioned models was then comprehensively evaluated and compared.
 
 To visualise and compare the covariance network topologies of metabolites among ApoE4 carriers and non-carriers, the high precision matrices were first regularised with Ridge, sparsified and then prunned controlling the False Discrovery Rate. Network topologies were plotted and their statistics were calculated and compared between the ApoE4 carriers and non-carriers using Wilcoxon Signed Rank test.
 
@@ -507,11 +507,11 @@ In machine learning, a class denotes a group of objects that share common charac
 
 \leavevmode\newline \textbf{Bias-Variance trade-off}\hspace{.25cm}The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It is of interest in this study to find the optimal balance between the performance of a model and its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}. One may consider this trade-off during model and evaluation method selection, as some impose more bias or variance than others.
 
-\leavevmode\newline \textbf{Multi-class classification models}\hspace{.25cm}The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad parametrization options \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl} and \texttt{train} were used to fit the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
+\leavevmode\newline \textbf{Multi-class classification models}\hspace{.25cm}The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad model training options and feature importance estimation \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl} and \texttt{train} were used to fit the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
 
 Considering interpretability, Multinomial Logistic Regression (\acrshort{mnl}) is inherently interpretable. Let $y$ a response with $K$ classes, $k \in N, [1,4]$ representing the k-th class of ApoE4AD and $\beta_{kj}$ its set of coefficients,  $\beta_{lj}$ the coefficients of the rest of classes for $j$-th metabolite, then a \acrlong{mnl} model calculated the probability
 
-\[\textrm{Pr}(y=k|X=x) =  \dfrac{e^{\sum_{j=1}^{p}\beta_{kj}x_j}}{\sum_{l=1}^{K}\sum_{j=1}^{p}e^{\beta_{lj}x_j}}\]
+\[\textrm{P}(y=k|X=x) =  \dfrac{e^{\sum_{j=1}^{p}\beta_{kj}x_j}}{\sum_{l=1}^{K}\sum_{j=1}^{p}e^{\beta_{lj}x_j}}\]
 
 When $p > n$, the coefficient estimation method has low bias and high variance, in that small changes in the training data can result in very different coefficient estimates \cite{James2023AnEdition}. 
 
@@ -663,8 +663,8 @@ Several metabolites from all classes were altered by ApoE4 dose, both in AD and 
    & Am.Glycine & 0.006 & 0.45 & {\cellcolor[rgb]{0.922,0.961,0.941}}4.3 & 0.001 & {\cellcolor[rgb]{0.988,0.988,1}}0.4 & 0.015 & {\cellcolor[rgb]{0.984,0.859,0.871}}-0.9 & 0.052 \\
    & Am.L-homoserine & 0.047 & 0.931 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.001 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.723 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.014 \\
    & Am.Putrescine & 0.045 & 0.931 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.969 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.013 & {\cellcolor[rgb]{0.984,0.953,0.965}}0.0 & 0.927 \\
-   & SM (d18:1/22:0) & 0.043 & 0.931 & {\cellcolor[rgb]{0.937,0.969,0.957}}3.3 & 0.002 & {\cellcolor[rgb]{0.984,0.984,0.996}}0.3 & 0.015 & {\cellcolor[rgb]{0.984,0.98,0.992}}0.3 & 0.448 \\
-   & SM (d18:1/23:0) & 0.029 & 0.931 & {\cellcolor[rgb]{0.973,0.984,0.988}}1.2 & 0.01 & {\cellcolor[rgb]{0.984,0.969,0.98}}0.1 & 0.012 & {\cellcolor[rgb]{0.984,0.973,0.984}}0.2 & 0.277 \\ \bottomrule
+   & Lip.SM (d18:1/22:0) & 0.043 & 0.931 & {\cellcolor[rgb]{0.937,0.969,0.957}}3.3 & 0.002 & {\cellcolor[rgb]{0.984,0.984,0.996}}0.3 & 0.015 & {\cellcolor[rgb]{0.984,0.98,0.992}}0.3 & 0.448 \\
+   & Lip.SM (d18:1/23:0) & 0.029 & 0.931 & {\cellcolor[rgb]{0.973,0.984,0.988}}1.2 & 0.01 & {\cellcolor[rgb]{0.984,0.969,0.98}}0.1 & 0.012 & {\cellcolor[rgb]{0.984,0.973,0.984}}0.2 & 0.277 \\ \bottomrule
 \end{tabular}
 \begin{tablenotes}
   \item[$\ast$] Not corrected for multiple testing.
@@ -677,11 +677,12 @@ Several metabolites from all classes were altered by ApoE4 dose, both in AD and 
 All classification models had a multi-class ROC \acrshort{auc} above 0.8 and accuracies significantly higher than the No-Information Rate (p$<2.2e^{-16}$) (Table \ref{tab:clin}) in predicting AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4. The worst-performing model was  Multinomial Logistic Regression fitting the clinical data only, while the best-performing one was XGBoost fitting the clinical data and the 6 meta-metabolites. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to slightly increase the discriminatory power of the models.
 Notably, looking at the individual ROC curves (Fig. \ref{roc:full}, \ref{roc:6mlogit} and Appendix \ref{appendixA}), as well as the confusion matrices (Fig. \ref{cm:full} and \ref{cm:xgboost}) all models were able to discriminate better among certain classes (AD+E4 vs. SCD+E4, AD+E4 vs. SCD, AD-E4 vs. SCD+E4 and AD-E4 vs. SCD-E4) compared to others (AD+E4 vs. AD-E4 and SCD+E4 vs. SCD-E4).
 \begin{table}[H]
+  \centering
 \caption{Performance metrics of multi-class classification of ApoE4 and AD status (AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4), obtained from 10-fold CV repeated 100 times.} 
 \label{tab:class_results}
 \begin{threeparttable}
-\begin{tabular}{clllll} \toprule
-Model  & Fitting & AUC & Accuracy (95/\% CI) & P(NIR $>$ Accuracy) & NIR \\ \midrule
+\begin{tabular}{clllll}\toprule
+Model  & Fitting & AUC & Accuracy (95/\% CI) & P(NIR$>$Acc.) & NIR \\ \midrule
 \multirow{3}{*}{MLR} & Clinical features only & 0.814 & 0.4807 (0.4744, 0.4869) & $<2.2e^{-16}$ & \multirow{5}{*}{0.3522} \\
 & Clinical features + 230 metabolites & 0.834 & 0.5753 (0.5692, 0.5815) & $<2.2e^{-16}$ &  \\
 & \multirow{3}{*}{Clinical features + 6 latent factors} & 0.818 & 0.5313 (0.525, 0.5375) & $<2.2e^{-16}$ &  \\
@@ -788,11 +789,37 @@ The Wilcoxon Signed Rank Test showed higher degrees of centrality in ApoE4 carri
 \end{threeparttable}
   \end{table}
 
+\begin{figure}
+  \includesvg[width=0.7\textwidth]{figures/comms.svg}
+  \caption{\label{comms} Communities of (densely correlated) metabolites in ApoE4 non-carriers (top) and ApoE4 carriers with AD (bottom).}
+\end{figure}
+
 \clearpage
 \section{Discussion} \label{discuss}
-This study had two aims: to unveil potentially unknown pathways of systemic metabolic deregulation attributed to ApoE4 (dose or presence), and to propose a multi-faceted methodology for high-dimensional data analysis in the context of AD. To this end, three analytical approaches were taken: differential expression, multiclass classification and network analysis.
+This study had two aims: to unveil potentially unknown pathways of systemic metabolic deregulation attributed to ApoE4 (dose or presence), and to propose a comprehensive methodology for high-dimensional data analysis in the context of AD. To this end, the serum metabolic signatures were assessed with three approaches: differential expression, multiclass classification and network analysis. Differential expression highlights metabolites whose levels are affected by ApoE4 dose. The multiclasss classification reveals metabolites that, on top of clinical background variables, can be fitted to predict AD and ApoE4 status. Covariance network analysis reveals metabolic interdependencies among ApoE4 carriers and non-carriers in AD. The serum metabolites reported here, through these metabolic signatures might serve as a \textit{proxy} of metabolic perturbations in the brain --they were measured in serum obtained from peripheral blood, an (almost) non-invasive alternative to spinal aspiration for \acrshort{csf}.
 
-The global test for ApoE4 dose effects on serum metabolite levels revealed positive dose effects on lipids in AD, mainly triglycerides and diglycerides. This is consistent with evidence from Caucasian \cite{Maxwell2013APOEMT,CARVALHOWELLS20121447,Bernath2020SerumTI} and southern Chinese populations \cite{Gan2022EffectsPopulation}. While the same test was not significant in the SCD group, only two sphingomyelin species showed trends of a negative, but mostly amines and amino acids in this group. This could putatively reflect compensatory mechanisms still in place for the poor lipidation and clearance potential of ApoE4.
+The metabolites highlighted were generally different between the approaches, and among AD-SCD (it is important to note that the SCD group is not a control group, as subjects with varying degrees of cognitive impairment were included, who might develop AD or another form of dementia later). However, certain metabolites appeared in all, or many of the metabolic signatures. 
+
+A metabolite that appeared in all three metabolic signatures was putrescine: trends of positive ApoE4 dose effects in AD, top metabolite in demarcating ApoE4 and AD status and central metabolite (5 dependent metabolites regardless of ApoE4 status) in AD. Putrescine appeared increased in a recent study \cite{Ju2021AstrocyticUC}, where it is described as a toxic by-product of activated urea cycle in A$\beta$-reactive astrocytes of AD brains \cite*{Ju2021AstrocyticUC,Wong2022PathogenicP}.
+
+Trends of a negative ApoE4 dose effect on putrescine and four amino acids were observed in the SCD group: L-serine, L-tryptophan, glycine and L-homoserine. Tryptophan and serine proved also important in demarcating ApoE4 and AD status. In the brain, L-tryptophan is catabolised to kynurenine with the enzymes indoleamine 2,3-dioxygenase and tryptophan 2,3-dioxygenase, through the kynurenine pathway \cite*{Liang2022KynureninePM}. In this study, kynurenine was found central in the serum metabolome, branched with five  metabolites. Recent reviews find kurenine pathway metabolites closely associated with AD pathogenesis \cite{Liang2022KynureninePM,Sharma2022KynurenineMA}. Increased kynurenine pathway metabolites may reflect the extent of neuroinflammation in amyotrophic lateral sclerosis (ALS) frontotemporal dementia (FTD) and early onset AD \cite*{Heylen2023BrainKP}. A whole-blood targeted metabolomics panel also revealed increased kynurenine pathway metabolites \cite{Teruya2021WholebloodMO}. Conversely, L-serine levels appear to be deficient in AD brains due to impaired glycolysis \cite{LeDouce2020ImpairmentOG}. 
+
+ApoE4 showed trends of a negative dose effect on ketoglutarate in the global test and the ANCOVA F-tests exclusively in the AD group. The network analysis revealed it is also a central metabolite, driving the variance of six other metabolites. In the brain, the $\alpha$-ketoglutarate dehydrogenase complex is perceived as a "hub of plasticity in neurodegeneration and regeneration", as it reflects the impaired glucose metabolism and key enzymes of the tricarboxylic acid (TCA) cycle \cite*{Hansen2022TheD}.
+
+\subsection{ApoE4 dose effects on serum metabolite levels}
+The global test for ApoE4 dose effects on serum metabolite levels revealed positive dose effects on lipids in AD, mainly triglycerides and diglycerides. This is consistent with evidence from Caucasian \cite{Maxwell2013APOEMT,CARVALHOWELLS20121447,Bernath2020SerumTI} and southern Chinese populations \cite{Gan2022EffectsPopulation} that shows elevated TGs associated with ApoE4. The same test was not significant in the SCD group; mostly amines and amino acids showed trends of an effect. This could putatively reflect compensatory mechanisms still in place for the debilitating effects of ApoE4.
+
+The nested linear model comparison did not reveal any significant ApoE4 dose effects, after correcting FDR. This can be potentially explained considering the covariates in each approach. The global test was corrected for sex only, while the nested models fitted several background clinical factors. That is, the metabolic variance explained by ApoE4 dose in the global test might be partially attributed to other clinical factors, such as hypercholesterolemia (that often coexists with hypertriglyceremia and is not measured in this study). Notably, the metabolites showing trends of an Apoe4 dose effect were different between the AD and SCD group. Consistent with the global test, AD group presented mainly a lipid (TG \& DG) signature, while the SCD group an amino one (serine, tryptophan, glycine, homoserine and putrescine).
+
+\subsection{Classification of ApoE4 and AD status}
+Serum metabolic information, in the form of a semi-targeted metabolomic panel or its latent 6-factor projection seems to slightly increase the classification potential of the models. Interestingly, all models discriminated better among certain classes (AD+E4 vs. SCD+E4, AD+E4 vs. SCD, AD-E4 vs. SCD+E4 and AD-E4 vs. SCD-E4) compared to others (AD+E4 vs. AD-E4 and SCD+E4 vs. SCD-E4). This can be putatively attributed to the class imbalance between AD+E4 (34) and AD (86), as well as SCD+E4 (87) and SCD (40). It might also show that the metabolic nuances among ApoE4 carriers and non-carriers are not as pronounced as among AD and SCD.
+
+Each of the top four metabolites in demarcating ApoE4 and AD status belonged to one of the major metabolite classes studied: amines (putrescine), oxidative stress compounds (sphingolipid 1.P.C18.0), organic acids (uracil) and lipids (TG (56:0)). 
+
+
+
+
+
 
 
 

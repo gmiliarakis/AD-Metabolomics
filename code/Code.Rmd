@@ -496,13 +496,15 @@ Distinct metabolite communities among ApoE4 carriers/non carriers
 ```{r communities}
 # Get the communities per class
 set.seed(141516)
+httpgd::hgd()
 CommC1 <- Communities(PCE4NO,
-  Vcolor = Colors,
-  Vsize = 10, Vcex = 0.5, main = "ApoE4 non-carriers"
+  Vcolor = Colors, Vsize = 5, Vcex = 0.7,
+  main = "ApoE4 non-carriers with AD"
 )
 
 CommC2 <- Communities(PCE4YES,
-  Vcolor = Colors,
-  Vsize = 10, Vcex = 0.5, main = "ApoE4 carriers"
+  Vcolor = Colors, coords = CommC1, Vsize = 5, Vcex = 0.7,
+  main = "ApoE4 carriers with AD"
 )
+
 ```
