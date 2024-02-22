@@ -154,7 +154,7 @@
         "*.pdf": "latex-workshop-pdf-hook",
         "*.Rdata": "default"
     ,
-    "workbench.colorTheme": "Xcode Spartan (Light)",
+    "workbench.colorTheme": "Ariake Sands",
     "workbench.settings.openDefaultKeybindings": true,
     "r.dependencyChecks": true,
     "r.linting.doubleQuotes": false,
