@@ -25,3 +25,11 @@ sparsified
 Wilcoxon
 aminic
 APOE
+apolipoprotein
+hyperphosphorylated
+epi
+apolipoprotein-E
+apoe
+kDa
+coregulated
+high-dimentional
