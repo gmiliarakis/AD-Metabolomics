@@ -45,8 +45,10 @@ The (interactive) correlation heatmap reveals very high correlation among aminoa
 load("data/data.Rdata")
 X <- df[df$Diagnosis == "Probable AD", 1:230]
 C <- round(cor(X), 2)
-
-# heatmaply_cor(C, color = viridis, plot_method = "plotly", dendrogram = F, reorderfun = sort.default(d,w), main = "Correlation Heatmap", file = "heatmap.html", colorbar_thickness = 15, colorbar_len = 0.5)
+write.csv(C, "C.csv")
+p <- heatmaply_cor(C, color = viridis, plot_method = "plotly", dendrogram = F, reorderfun = sort.default(d, w), main = "Correlation Heatmap", file = "heatmap.html", colorbar_thickness = 15, colorbar_len = 0.5)
+load(listviewer)
+p <- plotly::plotly_build(p)
 ```
 
 ## Differential expression of metabolites per ApoE genotype
@@ -158,7 +160,7 @@ SCDclinical <- clinical[df$Diagnosis == "Subjectieve klachten",]
 ## Testing for effects of ApoE4 dose
 nested(SCDY, relevel(SCDE4dose, ref= "No ApoE4"), SCDclinical)
 ```
-## Multinomial Classification of ApoE4 presence and AD
+## Multi-class classification of ApoE4 presence and AD
 The discriminative potential of the metabolites, correcting for clinical background features, on AD and ApoE4 or not (4-class response ADE4, AD, SCDE4, SCD)is assessed by first fitting a Multi-nomial Logistic Regression (benchmark model). The benchmark model fits only the clinical features. The model's AUC is compared with the same model (with altered hyperparameters) fitting clinical variables + 230 metabolites. The metabolites are then projected to 6 latent ML-estimated factors and 3 more models are fitted: Multi-nomial Logistic Regression, Decision Tree and XGBoost fitting clinical variables + 6 factors. The models' multi-class classification performance is compared using confusion matrices and AUCs.
 ```{r multifit}
 multifit <- function(X,
@@ -182,22 +184,33 @@ multifit <- function(X,
   return(mdl)
 }
 # httpgd::hgd()
-evaluate <- function(model){
-obs <- model$pred$obs
-preds <- model$pred$pred
+evaluate <- function(model) {
+  obs <- model$pred$obs
+  preds <- model$pred$pred
 
-# Get the multi-class ROC curves
-ys <- as.numeric(obs) - 1
-yhats <- as.numeric(preds) - 1
-roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T, legacy.axes = T)
-print(roc$auc)
-names(roc$rocs) <- c("ADE4-AD", "ADE4-SCDE4", "ADE4-SCD", "AD-SCDE4", "AD-SCD", "SCDE4-SCD")
-g <- ggroc(roc$rocs) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves"))
-ggplotly(g)
-cat("\n")
-# Create a confusion matrix and get performance metrics from caret
-cm <- confusionMatrix(reference = obs, data = preds, mode = "everything")
-print(cm)
+  # Get the multi-class ROC curves
+  ys <- as.numeric(obs) - 1
+  yhats <- as.numeric(preds) - 1
+  roc <- multiclass.roc(response = ys, predictor = yhats, quiet = T, legacy.axes = T)
+  # print(roc$auc)
+  names <- c("ADE4 vs. AD", "ADE4 vs. SCDE4", "ADE4 vs. SCD", "AD vs SCDE4", "AD vs. SCD", "SCDE4 vs. SCD")
+  for (i in 1:length(names)) {
+    names[[i]] <- paste0(names[[i]], ", AUC=", paste(round(auc(roc$rocs[[i]]), 2)))
+  }
+  names(roc$rocs) <- names
+  ggroc(roc$rocs) + scale_color_tableau() + theme_tufte() + guides(color = guide_legend(title = "ROC curves")) + theme(
+    panel.border = element_rect(fill = NA),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = c(1, 0),
+    legend.justification = c(1, 0),
+    legend.box.just = "left"
+  )
+  ggplotly(g)
+  cat("\n")
+  # Create a confusion matrix and get performance metrics from caret
+  cm <- confusionMatrix(reference = obs, data = preds, mode = "everything")
+  print(cm)
 }
 ```
 
@@ -253,11 +266,11 @@ evaluate(mlr)
 # cvms::plot_confusion_matrix(cm, theme_fn = ggthemes::theme_tufte)
 
 # Get the feature importance scores
-fimp <- varImp(mlr)
+# fimp <- varImp(mlr)
 
-fimp <-  fimp$importance %>%
-  arrange(desc(Overall)) %>%
-  top_n(20)
+# fimp <-  fimp$importance %>%
+#   arrange(desc(Overall)) %>%
+#   top_n(20)
 ```
 
 ### Projection to Latent Factors
@@ -330,8 +343,8 @@ xgb <- multifit(
   grid = xgb.grid
 )
 
-cmxgb <- evaluate(xgb)
-cvms::plot_confusion_matrix(cmxgb, palette = "Oranges" , theme_fn = ggthemes::theme_tufte)
+evaluate(xgb)
+# cvms::plot_confusion_matrix(cmxgb, palette = "Oranges" , theme_fn = ggthemes::theme_tufte)
 ```
 ### Model Comparison
 Observations:
@@ -355,9 +368,9 @@ knitr::kable(aucs)
 The covariance network analysis shows distinct metabolic "images" among ApoE4 carriers and non-carriers in AD. The network vertices and edges are distinct. 
 ```{r preparation}
 # Store all observations of ApoE4 non-carriers in C1
-C1 <- scale(df[df$E4 == 0,1:230])
+C1 <- scale(AD[AD$E4 == 0,1:230])
 # Store all observations of ApoE4 carriers in C2
-C2 <- scale(df[df$E4 == 1,1:230])
+C2 <- scale(AD[AD$E4 == 1,1:230])
 
 # Get the covariance matrices of C1 and C2
 S1 <- covML(C1)
@@ -414,8 +427,8 @@ Colors[grep("Am", rownames(PCE4YES))] <- "pink"
 Colors[grep("OA", rownames(PCE4YES))] <- "lightblue"
 Colors[grep("Lip", rownames(PCE4YES))] <- "yellow"
 Colors[grep("OS", rownames(PCE4YES))] <- "grey"
-httpgd::hgd( width = getOption("httpgd.width", 700),
-  height = getOption("httpgd.height", 700),)
+# httpgd::hgd( width = getOption("httpgd.width", 700),
+#   height = getOption("httpgd.height", 700),)
 set.seed(111213)
 # Plot he sparsified ridge matrix of ApoE4 carriers with AD
 Coords <- Ugraph(PCE4YES,
@@ -487,24 +500,26 @@ w <- furrr::future_map2(NetStatsE4yes[, 1:7], NetStatsE4no[, 1:7], ~ {
 })
 p.values <- list(1:length(w))
 for(i in 1:length(w)){
-  p.values[i] <- w[[i]][['p.value']]
+  p.values[[i]] <- w[[i]][["p.value"]]
 }
 names(p.values) <- names(w)
-p.values[p.values<0.05]
+d <- t(as.data.frame(p.values))
+p.adjust(p.values[-8], method = "fdr")
+  p.values <- round(p.values, 3)
+  # Filter out the non-significant (a=0.05) FDR-adjusted p-values
+  sig <- as.data.frame(dplyr::filter(p_values, `.` < 0.05))
 ```
 Distinct metabolite communities among ApoE4 carriers/non carriers
 ```{r communities}
 # Get the communities per class
 set.seed(141516)
-httpgd::hgd()
 CommC1 <- Communities(PCE4NO,
   Vcolor = Colors, Vsize = 5, Vcex = 0.7,
   main = "ApoE4 non-carriers with AD"
 )
 
 CommC2 <- Communities(PCE4YES,
-  Vcolor = Colors, coords = CommC1, Vsize = 5, Vcex = 0.7,
+  Vcolor = Colors, Vsize = 5, Vcex = 0.7,
   main = "ApoE4 carriers with AD"
 )
-
 ```

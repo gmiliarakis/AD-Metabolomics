@@ -15,6 +15,7 @@
 \usepackage{booktabs}
 % \usepackage{lipsum}
 \setcounter{tocdepth}{2}
+\usepackage{enumitem}
 
 % Setting margins
 \usepackage[a4paper, left=3cm,right=3cm]{geometry}
@@ -110,6 +111,12 @@
 \newacronym{mci}{MCI}{mild cognitive impairment}
 \newacronym{scd}{SCD}{subjective cognitive decline}
 \newacronym{nir}{NIR}{no-information rate}
+\newacronym{ssr}{SSR}{sum of squares of the regression}
+\newacronym{map}{MAP}{mean arterial pressure}
+\newacronym{bmi}{BMI}{body mass index}
+\newacronym{uplcms}{UPLC-MS/MS}{ultra high-performance liquid chromatography tandem mass spectrometry}
+\newacronym{gcms}{GC-MS}{gas chromatography tandem mass spectrometry}
+\newacronym{uplcesitof}{UPLC-ESI-Q-TOF-MS}{ultra high-performance liquid chromatography electrospray quadrupole time-of-flight tandem mass spectrometry}
 \renewcommand{\glossarymark}[1]{}
 
 
@@ -134,7 +141,7 @@
 % In this segment, enter the desired student data to be shown at the title page
 \newcommand{\thesisAuthor}{George Miliarakis}                             % State your name
 \newcommand{\thesisTitle}{Mechanistic links between ApoE4 dose and serum metabolome in Alzheimer's disease}                                      % State title thesis
-\newcommand{\thesisSubTitle}{a data science approach}                            % State subtitle thesis
+\newcommand{\thesisSubTitle}{A data science approach}                            % State subtitle thesis
 \newcommand{\thesisDegree}{MSc Thesis}      % Choose type
 \newcommand{\university}{Wageningen University \& Research}                % You generally do not need to touch this
 \newcommand{\thesisPlaceDate}{Wageningen, March 2024}                      % State month and year
@@ -252,34 +259,32 @@
 %-------------------------------------------------------------------
 \frontmatter
 % Foreword
-% \section*{Foreword}
-% This is where you type your foreword.
-% In the Foreword the student states clearly his/her contribution that originates from the master thesis project, and, if applicable, what contribution(s) possibly followed from the student’s internship on the same topic.
-% It is also stated in the foreword what data sources were used, and whether the data have a degree of confidentiality.
-% In addition, possible acknowledgements may be made to people who have contributed to (certain parts of) the thesis.
+\section*{Foreword}
+This thesis represents the culmination of my journey through the MSc programme in Data Science for Food and Health at Wageningen University \& Research. It was written loving memory of a cherished one who struggled with Alzheimer's disease (AD). Witnessing their struggle (and ultimate passing a month before I embarked on this project) ignited a profound desire to contribute to AD research and advocate for improved dementia care.
+
+I am incredibly grateful to my supervisors, Dr. Carel F.W. Peeters and Dr. Yannick Vermeiren. Their guidance proved instrumental throughout this project. The depth and breadth of their combined academic and scientific expertise fostered an unparalleled learning environment. Their mentorship not only facilitated a deeper understanding of AD but also equipped me with the necessary data science skills to navigate this complex field. Dr. Peeters' brilliance was evident in his insightful feedback and his development of innovative data analysis packages -\textsf{rags2ridges} and \textsf{FMradio}- which streamlined my analysis. My appreciation for Dr. Vermeiren's invaluable contributions is equally profound. His expertise in AD, coupled with his consistently constructive feedback, played a pivotal role in shaping this project. The latter would not have been possible without the invaluable data provided by the Amsterdam Dementia Cohort (confidentiality maintained).
+
+George Miliarakis
 
 
 % Abstract
 \newpage
 \section*{Abstract}
-\textbf{Backgrounds}\hspace{.1cm}Alzheimer's disease (AD), the most common form of dementia, presents a significant global healthcare challenge. Despite extensive research, key aspects of its development remain unclear. Apolipoprotein-$\varepsilon$4 (ApoE4) is the strongest genetic risk factor for late-onset AD, with nuanced impacts based on sex and ancestry. This study explored mechanistic links between the ApoE4 haplotype on serum metabolome in AD patients and SCD subjects implementing a comprehensive methodology: ApoE4 dose-effects (0, 1, 2 alleles) on metabolite levels, multi-class classification of ApoE4 status and AD (4 possible phenotypes: AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4), as well as metabolite precision network analysis among ApoE4 carriers and non-carriers in AD.
+\textbf{Background}\hspace{.1cm}Alzheimer's disease (AD), the most common form of dementia, represents a significant global healthcare challenge. Apolipoprotein-$\varepsilon$4 (ApoE4) is the strongest genetic risk factor for late-onset AD, with nuanced impacts based on sex and ancestry. It is reported that ApoE4 is not metabolized and recycled adequately in the brain, and over time induces the deposition of amyloid-$\beta$ and hyperphosphorylated tau proteins, impairs mitochondrial glucose metabolism and promotes neuroinflammation. There is limited evidence, however, on the effects of ApoE4 on peripheral metabolism. This study explored mechanistic links between the ApoE4 haplotype and serum metabolome in AD and subjective cognitive decline (SCD) patients via three approaches: ApoE4 dose-effects (0, 1, 2 alleles) on individual metabolite levels, multi-class classification of ApoE4 status and AD (4 possible phenotypes: AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4), as well as metabolite precision network analysis among ApoE4 carriers and non-carriers in AD.
 
-\textbf{Methods}\hspace{.1cm} To screen for ApoE4 dose-effects on serum metabolites, two methods were applied: a global test (correcting only for sex) and nested linear model comparison using ANCOVA F-tests (correcting for several confounding clinical factors). To test the (added) classification potential of serum metabolites against the target, several multi-class classification models were fitted and evaluated using ROC curves and AUC, accuracy and no-information rate obtained from repeated (100 times) 10-fold CV. To visualize and compare the (precision) metabolite network topologies among ApoE4 carriers and non-
-carriers, the high precision matrices were first regularized with Ridge, sparsified and then pruned controlling
-the False Discovery Rate. Network topologies were plotted, their statistics were calculated and compared
-between the ApoE4 carriers and non-carriers using Wilcoxon Signed Rank test.
+\textbf{Methods}\hspace{.1cm} To screen for ApoE4 dose-effects on serum metabolites, two methods were applied: a global test (correcting only for sex) and nested linear model comparison using ANCOVA F-tests (correcting for several confounding clinical factors and adjusting for multiple testing via FDR). To test the (added) classification potential of serum metabolites against the target, several multi-class classification models (multinomial logistic regression, decision tree and \acrlong{xgb}) were fitted considering the bias-variance trade-off. Model performance was  evaluated via confusion matrices, ROC curves and AUC, as well as accuracy and no-information rate obtained from repeated (100 times) 10-fold CV. To visualize and compare the (precision) metabolite network topologies among ApoE4 carriers and non-carriers, the high-dimensional matrices were first regularized with a Ridge penalty, sparsified and then pruned at a local FDR threshold of 0.999. Network topologies were plotted in Gaussian graphical models (GGMs) and communities of coregulated metabolites were identified. The centrality measures were calculated and compared between the ApoE4 carriers and non-carriers using Wilcoxon Signed Rank test.
 
 \textbf{Results}\hspace{.1cm} 
-The global test revealed links between ApoE4 dose and alterations in the serum metabolome (p = 0.017). Tri- and di-glycerides were mostly affected in this group (FDR-adj. p = 0.016 and 0.021 respectively). No significant ApoE4 dose effects were observed with nested linear model comparison (ANCOVA F-test FDR-adj. $p >$0.05). Serum metabolites slightly ($\sim0.02\%$) improved the model's performance: multi-class ROC AUC= 0.81 MLR fitting clinical data only vs. 0.834 MLR fitting 230 metabolites on top of clinical data vs 0.836 XGBoost fitting 6 meta-metabolites obtained from latent factor projection on top of clinical data, P(Accuracy$<$NIR)$< 2.2e^{-16}$ from repeated (100 times) 10-fold CV. Putrescine and sphingosine-1-phosphate emerged as top metabolites in predicting ApoE4 and AD status. Metabolite network analysis revealed distinct metabolite interactions between ApoE4 carriers and non-carriers. Less random correlations and distinct degrees of centrality (Wilcoxon p = 0.001) were also observed in the metabolite precision network analysis ApoE4 carriers compared to non-carriers.
+In the analysis 120 AD patients and 127 SCD individuals (n = 247) were included from the Amsterdam Dementia Cohort. The global test revealed significantly higher tri- and diglyceride levels in AD, while no significant nuances were obsered in the SCD group. After adjusting for FDR, no significant ApoE4 dose effects were observed via nested linear model comparison in AD or SCD. However, consistent with the global test, the AD group presented a more pronounced lipid deregulated signature, while the SCD group mainly aminic. Serum metabolites slightly ($\sim0.02\%$ AUC) improved model performance and all models had higher accuracy compared to the no-information rate. Putrescine and sphingosine-1-phosphate (oxidative stress compound) emerged as top metabolites in predicting ApoE4 and AD status. The metabolite network of ApoE4 carriers was less random and had higher centrality measures, compared to the non-carriers'. Lastly, the first network could be separated in communities of coregulated metabolites, while the latter was largely more sparse.
 
-\textbf{Discussion}\hspace{.1cm}These findings suggest beyond triglyceride metabolism, aminic and oxidative stress perturbations at systematic level associated with ApoE4 presence and dose in AD. This study highlights the potential of the proposed methodology for unraveling complex relationships between genetic and metabolic factors in AD. By incorporating additional omics data over time, researchers can potentially develop more sensitive disease-predicting models and stage-dependent biomarkers through large-scale clinical studies. Future investigations could also explore the ApoE4 lipoprotein levels in CSF and serum throughout the AD progression, considering the influence of other risk factors.
+\textbf{Discussion}\hspace{.1cm} These findings suggest beyond perturbed triglyceride metabolism, pronounced aminic and oxidative stress signatures at systematic level associated with ApoE4 presence and (increasing) dose in AD. Further, impaired glucose metabolism (ketoglutarate), increased kynurenine pathway catabolism of tryptophan were observed in AD and SCD, respectively. By incorporating additional "omics" data over time, researchers can potentially develop more sensitive disease-predicting models and stage-dependent biomarkers through large-scale clinical studies. Future investigations could also explore the ApoE4 lipoprotein levels in cerebrospinal fluid (CSF) and serum across the AD continuum, considering as many confounding factors as possible.
 
-\textbf{Conclusion}\hspace{.25cm} Overall, this study contributes to a growing body of insights into the intricate interplay between ApoE4, peripheral metabolism, and AD. The proposed methodology (adapted by \citeauthor{deLeeuw2017Blood-basedDisease} (\citeyear{deLeeuw2017Blood-basedDisease})) paves the way for more comprehensive analysis of "omics" data in AD research, potentially leading to the development of improved diagnosis support tools and therapeutic strategies. 
+\textbf{Conclusion}\hspace{.1cm} Peripheral metabolism is reported shifted by (the presence or dose) of ApoE4 in AD considering individual metabolite levels, an ApoE4 and AD status classification signature and network analysis. The proposed methodology paves the way for more elaborate and efficient "omics" data analysis in AD research, potentially leading to the development of improved diagnosis support tools and therapeutic strategies. 
 
 
 % Glossary
 \clearpage
-\printacronyms[title = Abbreviations, toctitle = Abbreviations]
+\printacronyms[title = Abbreviations, toctitle = ABBREVIATIONS]
 
 \newpage
 % Inserting table of contents
@@ -296,23 +301,22 @@ The global test revealed links between ApoE4 dose and alterations in the serum m
 
 Age is the main risk factor for AD, while several genetic and lifestyle risk factors, as well as biochemical pathways contribute to its development \cite{Penke2023NewDisease}. AD manifests in various histopathological phenotypes and presents a broad spectrum of clinical signs and symptoms \cite{Heneka2015NeuroinflammationDisease, Edwards2019ANeurodegeneration}. The AD continuum starts with \acrfull{scd}, followed by \acrfull{mci} \cite*{AALDIJK2022101556}, and continues with progressive loss of global cognition, of which particularly memory, processing speed and executive functioning, spanning a total period of 10-15 years \cite{Scheltens2016AlzheimersDisease}. 
 
-Sporadic or late-onset AD (\acrshort{sad}, \acrshort{load}; \>95\% of cases) is the most frequent phenotype, typically appearing after 65 years of age \cite{Beydoun2014EpidemiologicMeta-analysis}. A rarer phenotype is early-onset familial AD (\acrshort{fad}), usually starting at ages 30–65 and passed in an autosomal dominant fashion \cite{VanCauwenberghe2015ThePerspectives}.
-Even though FAD mutations explain only a small percentage of AD cases, they have a great impact on AD research given their appealing genotype-phenotype links.
+Sporadic or late-onset AD (\acrshort{load}; \>95\% of cases) is the most frequent phenotype, typically appearing after 65 years of age \cite{Beydoun2014EpidemiologicMeta-analysis}. A rarer phenotype ($\sim1\%$) is early onset familial AD (\acrshort{fad}), usually starting at ages 30–65 and passed in an autosomal dominant fashion \cite{VanCauwenberghe2015ThePerspectives}.
 
 \subsubsection{Amyloid cascade hypothesis}
-The amyloid cascade hypothesis has dominated the scientific discussion on the pathogenesis of AD. In historical terms, its impact was profound, as it helped distinguish and identify AD as a single disease that may be studied for treatment \cite{Hardy2006AlzheimersReappraisal}. It suggests that chronic neuroinflammation promotes protein misfolding and accumulation in the brain, forming plaques (consisting of oligomerized amyloid A$\beta_{42}$) and tangles (consisting of hyperphosphorylated tau protein) \cite{Edwards2019ANeurodegeneration}. Nevertheless, it does not necessarily cover all AD cases. Clinical trials with A$\beta$ antibodies as a potential disease-modifying treatment have so far failed to demonstrate any clinical improvement in patients, despite successful removal of plaques from AD brains \cite{Kepp2023TheReview,Kurkinen2023TheThinking}. Evidence suggests that oxidative stress, metabolic abnormalities, atherosclerosis, cardiovascular effects, imbalances of intra-neuronal calcium and metal ion depositioning might also contribute to the development of AD \cite{Kepp2023TheReview}. \citeauthor{Kepp2023TheReview} propose a more complex and holistic view of AD pathology, by integrating (epi)genetic, environmental, vascular, neuro-inflammatory and metabolic factors in disease-predicting models \cite{Kepp2023TheReview}.
+The amyloid cascade hypothesis has dominated the scientific discussion on the pathogenesis of AD. In historical terms, its impact was profound, as it helped distinguish and identify AD as a singular disease that may be studied for treatment \cite{Hardy2006AlzheimersReappraisal}. It suggests that chronic neuroinflammation promotes protein misfolding and accumulation in the brain, forming plaques (consisting of oligomerized amyloid A$\beta_{42}$) and tangles (consisting of hyperphosphorylated tau protein) \cite{Edwards2019ANeurodegeneration}. Nevertheless, it does not necessarily cover all AD cases. Clinical trials with A$\beta$ antibodies as a potential disease-modifying treatment have so far failed to demonstrate any clinical improvement in patients, despite successful removal of plaques from AD brains \cite{Kepp2023TheReview,Kurkinen2023TheThinking}. Evidence suggests that oxidative stress, metabolic abnormalities, atherosclerosis, cardiovascular effects, imbalances of intra-neuronal calcium and metal ion depositioning might also contribute to the development of AD \cite{Kepp2023TheReview}. \citeauthor{Kepp2023TheReview} propose a more complex and holistic view of AD pathology, by integrating (epi)genetic, environmental, vascular, neuro-inflammatory and metabolic factors in disease-predicting models \cite{Kepp2023TheReview}.
 
 \subsection{Human apolipoprotein-E gene}
 LOAD has been associated with genetic risk factors, such as with the gene that encodes for \acrfull{apoe} \cite{Corder1993GeneFamilies}. The structure and function of ApoE, as well as how the first defines the latter is described in Section \ref{ApoEprot}.
 
 \subsubsection{ApoE4 and Alzheimer's disease}
-Humans due to two point mutations in the ApoE gene (rs7412 C/T, rs429358 C/T) present three common variants: $\varepsilon_2$, $\varepsilon_3$ and $\varepsilon_4$ \cite{Husain2021APOETherapeutics, Yang2023ApolipoproteinDisease}. The three ApoE haplotypes result in six genotypes [Fig. \ref{fig1}]. In Caucasian populations, the most abundant allele is ApoE3 (rs7412 C, rs429358 T), with a frequency of 78\%, and is considered neutral regarding the risk of \acrshort{ad} \cite{Liu2013ApolipoproteinTherapy}. ApoE4 (rs7412 C, rs429358 C) has a frequency of 14\% and represents the strongest genetic risk factor for LOAD, with gene dose effects \cite{Strittmatter1993ApolipoproteinDisease}. Conversely, ApoE2 (rs7412 T, rs429358 T) is found in 8\% of Caucasian populations, and is associated with a reduced risk of LOAD \cite{Liu2013ApolipoproteinTherapy}. The ApoE haplotypes are strongly linked to the primary pathological features of LOAD, namely A$\beta$ and phosphorylated tau \cite{Deming2017Genome-wideModifiers}. While the association between ApoE alleles and LOAD risk or protection is observed across diverse ancestral backgrounds, the strength of this association varies \cite{Belloy2019AForward, Farrer1997EffectsMeta-analysis}, see Section \ref{ancestry}.
+Humans due to two point mutations in the ApoE gene (rs7412 C/T, rs429358 C/T) present three common variants: $\varepsilon_2$, $\varepsilon_3$ and $\varepsilon_4$ \cite{Husain2021APOETherapeutics, Yang2023ApolipoproteinDisease}. The three ApoE haplotypes are phased in genotypes [Fig. \ref{fig1}]. In Caucasian populations, the most abundant allele is ApoE3 (rs7412 C, rs429358 T), with a frequency of 78\%, and is considered neutral regarding the risk of \acrshort{ad} \cite{Liu2013ApolipoproteinTherapy}. ApoE4 (rs7412 C, rs429358 C) has a frequency of 14\% and represents the strongest genetic risk factor for LOAD, with gene dose effects \cite{Strittmatter1993ApolipoproteinDisease}. Conversely, ApoE2 (rs7412 T, rs429358 T) is found in 8\% of Caucasian populations, and is associated with a reduced risk of LOAD \cite{Liu2013ApolipoproteinTherapy}. The ApoE haplotypes are strongly linked to the primary pathological features of LOAD, namely A$\beta$ and phosphorylated tau \cite{Deming2017Genome-wideModifiers}. While the association between ApoE alleles and LOAD risk or protection is observed across diverse ancestral backgrounds, the strength of this association varies \cite{Belloy2019AForward, Farrer1997EffectsMeta-analysis}, see Section \ref{ancestry}.
 
-Carrying a single $\varepsilon_4$ allele implies a risk of developing AD of about 20\% \cite{Bookheimer2009APOE4GA}. A heterozygous ApoE4 allelic composition (e.g., $\varepsilon_4$/$\varepsilon_x$) is associated with approximately 3-4 times increased life-time risk of developing AD, while the homozygous composition ($\varepsilon_4$/$\varepsilon_4$) 12 times increased \cite{Kim2009TheRO}. Even though ApoE4 is the strongest known genetic risk factor for LOAD, it is neither necessary nor sufficient to cause AD, and it is certainly not the only genetic risk factor \cite{SerranoPozo2019IsAD}.
+Carrying a single $\varepsilon_4$ allele implies a risk of developing AD of about 20\% \cite{Bookheimer2009APOE4GA}. A heterozygous ApoE4 allelic composition (e.g., $\varepsilon_4$/$\varepsilon_x$) is associated with approximately 3-4 times increased life-time risk of developing AD, while the homozygous composition ($\varepsilon_4$/$\varepsilon_4$) is associated with 12 times increased risk \cite{Kim2009TheRO}. Even though ApoE4 is the strongest known genetic risk factor for LOAD, it is neither necessary nor sufficient to cause AD, and it is certainly not the only genetic risk factor \cite{SerranoPozo2019IsAD}.
 
 \begin{figure}[H]
   \includegraphics[width=0.7\textwidth]{figures/ApoE@2x.png}
-    \caption{Sankey chart reflecting the distribution of ApoE alleles in the composition of the 6 ApoE genotypes.}
+    \caption{Sankey chart reflecting the contribution of the three common ApoE alleles forming the $\binom{3}{2} = 6$ ApoE genotypes. Heterozygotes ($\varepsilon_2$/$\varepsilon_3$, $\varepsilon_2$/$\varepsilon_4$, $\varepsilon_3$/$\varepsilon_4$) bear two distinct alleles, while homozygotes ($\varepsilon_2$/$\varepsilon_2$, $\varepsilon_3$/$\varepsilon_3$, $\varepsilon_4$/$\varepsilon_4$) two copies of the same allele.}
   \label{fig1}
 \end{figure}
 
@@ -320,130 +324,130 @@ Carrying a single $\varepsilon_4$ allele implies a risk of developing AD of abou
 Notably, sex (60\% females) and ApoE4 allelic composition (50\% has at least one $\varepsilon_4$ allele) are the strongest genetic risk factors for \acrshort{load} \cite{Arnold2020SexMetabolome}. In this regard, it is shown that the ApoE4 genotype has a larger impact on females, as they present greater impairment of mitochondrial energy production, compared to males \cite{Arnold2020SexMetabolome, Yassine2020APOEDisease}.
 
 \subsubsection{ApoE and ancestry in Alzheimer's disease} \label{ancestry}
-The majority of studies exploring the relationship between ApoE alleles and the genetics of LOAD have primarily focused on Northern European populations\cite{Yang2023ApolipoproteinDisease}. However, smaller studies involving diverse ancestral backgrounds show variations in ApoE4 allele \cite{Yang2023ApolipoproteinDisease}. While ApoE4 is present in 14\% of Caucasian Americans, its prevalence increases to 40\% among African Americans, 37\% in Oceania, and 26\% in Australia. Southern Asia and Europe exhibit ApoE4 allelic frequencies of less than 10\%, compared to Northern Europe where it rises to 25\% \cite{Belloy2019AForward, Egert2012ApoEFactors, Eisenberg2010WorldwideHistory, Logue2011AAmericans}.
+The majority of studies exploring the relationship between ApoE polymorphism and the genetic aspect of LOAD have primarily focused on Northern European populations\cite{Yang2023ApolipoproteinDisease}. However, smaller studies involving diverse ancestral backgrounds show variations in ApoE4 allele frequencies \cite{Yang2023ApolipoproteinDisease}. While ApoE4 is present in 14\% of Caucasian Americans, its prevalence increases to 40\% among African Americans, 37\% in Oceania, and 26\% in Australia. Southern Asia and Europe exhibit ApoE4 allelic frequencies of less than 10\%, compared to Northern Europe where it rises to 25\% \cite{Belloy2019AForward, Egert2012ApoEFactors, Eisenberg2010WorldwideHistory, Logue2011AAmericans}.
 
 ApoE alleles have different impact on distinct populations. ApoE4 implies a higher risk of LOAD for Korean, Japanese, and Japanese-American, compared to Caucasian populations \cite{Farrer1997EffectsMeta-analysis}. Conversely, ApoE4 is associated with a lower risk of LOAD in Native Americans, Hispanic Americans, African Americans, and those of African descent, compared to Caucasian-American populations \cite{Farrer1997EffectsMeta-analysis, Blue2019LocalHispanics, Suchy-Dicey2022APOEStudy, Rajabli2018AncestralPopulations, Naslavsky2022GlobalSample}. Notably, ApoE3 is more protective than ApoE2 against AD, as reported by a study in a Chinese population \cite{Chen2011ApolipoproteinDisease}. Some of these population-specific effects are attributed to the ApoE haplotype and ancestral variations in the ApoE gene beyond the $\varepsilon_2/\varepsilon_3/\varepsilon_4$ haplotypes \cite{Blue2019LocalHispanics, Rajabli2018AncestralPopulations}.
 
-
 \subsubsection{Evolution of ApoE over time}
-Interestingly, humans are the only species exhibiting polymorphism in the ApoE gene \cite{Yassine2020APOEDisease}. All other animal species have one ApoE variant, which resembles the human ApoE3 allele \cite{Hunsberger2019TheInterventions}. ApoE4 is the oldest human allele, followed by ApoE3 and ApoE2 in age \cite{Yassine2020APOEDisease}. ApoE4 may be adaptive, reducing mortality in highly infectious environments, with food scarcity and shorter lifespans \cite{Trumble2017ApolipoproteinBurden}. However, as human environments became less septic, with food abundance and longer life expectancy, ApoE4 started to burden the arteries and brain, increasing the risk of diseases related to ageing \cite{Yassine2020APOEDisease}. The emergence of ApoE3 from ApoE4 putatively reflects the shift in human diet from a plant-based one to a meat-rich one, where genes adaptive to high meat consumption were, and still are vital to regulate increased cholesterol levels \cite{Finch1999TheIsoforms}. 
+Interestingly, humans are the only species exhibiting polymorphism in the ApoE gene \cite{Yassine2020APOEDisease}. All other animal species have one ApoE variant, which resembles the human ApoE3 allele \cite{Hunsberger2019TheInterventions}. Nonetheless, ApoE4 is the oldest human allele, followed by ApoE3 and ApoE2 in age \cite{Yassine2020APOEDisease}. ApoE4 may be adaptive by reducing mortality in highly infectious environments, with food scarcity and shorter lifespans \cite{Trumble2017ApolipoproteinBurden}. However, as human environments became less septic and provided abundance of food, thus extending life expectancies,  ApoE4 started to burden the arteries and brain, increasing the risk of diseases related to ageing \cite{Yassine2020APOEDisease}. The emergence of ApoE3 from ApoE4 putatively reflects the shift in human diet from a plant-based one to a meat-rich one, where genes adaptive to high meat consumption were, and still are vital to regulate increased cholesterol levels \cite{Finch1999TheIsoforms}. 
 
 \subsubsection{Tissue expression}
 The principal producers of ApoE are hepatocytes in the liver \cite{Mahley2016CentralMetabolism}. In the CNS, ApoE is primarily expressed in glia (non-neuronal cells of the brain that support the neurons) and particularly in astrocytes (metabolic homeostasis and neuronal communication modulators), followed by microglia (the brain immune cells) \cite{Lanfranco2021ExpressionInflammation}. Each genotype is linked to different expression levels \cite{Husain2021APOETherapeutics}. ApoE2 carriers seem to have higher \acrfull{csf} levels of ApoE, compared to ApoE4 carriers \cite{Castellano2011HumanClearance, Cruchaga2012CerebrospinalDisease}. 
 
 \subsection{Apolipoprotein-E}\label{ApoEprot}
 \subsubsection{Structure and function}
-\acrshort{apoe} is a brain-specific lipid-binding glycoprotein of 299 amino-acids (34 kDa) that comprises several types of lipoproteins, i.e., chilomicra, \acrlong{idl} and \acrlong{vldl} \cite{Husain2021APOETherapeutics}. Its main function in the brain is the transport of lipids (mainly cholesterol) through membrane receptors \cite{Yang2023ApolipoproteinDisease}. Moreover, its isoforms have an effect on diverse cellular functions, e.g. synaptic integrity, glucose metabolism, A$\beta$ clearance, \acrlong{bbb} integrity and mitochondrial regulation \cite{Husain2021APOETherapeutics}. How these relate to \acrshort{ad} pathology will be elaborated in Section \ref{ApoEAD}.
-
-
+\acrshort{apoe} is a brain-specific lipid-binding glycoprotein of 299 amino-acids (34 kDa, 1 dalton is the mass of $1/12$ of C$_{12}$) that comprises several types of lipoproteins, i.e., chilomicra, \acrlong{idl} and \acrlong{vldl} \cite{Husain2021APOETherapeutics}. Its main function in the brain is the transport of lipids (mainly cholesterol) through membrane receptors \cite{Yang2023ApolipoproteinDisease}. ApoE isoforms have an effect on diverse cellular functions, e.g. synaptic integrity, glucose metabolism, A$\beta$ clearance, \acrlong{bbb} integrity and mitochondrial regulation \cite{Husain2021APOETherapeutics}, see Fig. \ref{ApoeEffectsA} and \ref{ApoeEffectsB}. How these relate to \acrshort{ad} pathology will be elaborated in Section \ref{ApoEAD}.
 
 \begin{figure}[htb]
   \includegraphics[width=0.8\textwidth]{figures/ApoEprot.png}
-    \caption{Linear representation of the ApoE protein. Three structural domains are highlighted: N-terminal, hinge and C-terminal domains. The different amino acids at positions 112 and 158 are shown per common alleles and amino acids at positions 136, 236 and 251 coded by rarer alleles. Source: \citetitle{Bu2022APOEVariants}, \Citeauthor{Bu2022APOEVariants} (\citeyear{Bu2022APOEVariants}) \cite{Bu2022APOEVariants}}
+    \caption{Linear representation of the ApoE protein. Three structural domains are highlighted: N-terminal, hinge and C-terminal domains. The different amino acids at positions 112 and 158 are shown per common alleles and amino acids at positions 136, 236 and 251 coded by rarer alleles. Source: \citetitle{Bu2022APOEVariants}, \Citeauthor{Bu2022APOEVariants} (\citeyear{Bu2022APOEVariants}) \cite{Bu2022APOEVariants}}.
   \label{fig2}
 \end{figure}
 
 \subsubsection{ApoE isoforms}
-The nuances in the amino acid composition of ApoE, specifically the presence of cysteine or arginine at positions 112 and 158, significantly impact its binding with lipids and receptors \cite{Yassine2020APOEDisease}. The most prevalent isoform, ApoE3, features cysteine at position 112 and arginine at position 158  \cite{Yassine2020APOEDisease}, as shown in Fig. \ref{fig2}. ApoE2 has two cysteines, while ApoE4 has two arginines at these positions \cite{Yassine2020APOEDisease}. The C-terminal domain of ApoE (positions 273–299) is crucial for its lipidation specificity and efficiency \cite{Hu2015OpposingMice}.
+The nuances in the amino acid composition of ApoE, specifically the presence of cysteine or arginine at positions 112 and 158, significantly change its structure and, thusz binding with lipids and receptors \cite{Yassine2020APOEDisease}. The most prevalent isoform, ApoE3, features cysteine at position 112 and arginine at position 158  \cite{Yassine2020APOEDisease}, as shown in Fig. \ref{fig2}. ApoE2 has two cysteines, while ApoE4 has two arginines at these positions \cite{Yassine2020APOEDisease}. The C-terminal domain of ApoE (positions 273–299) is crucial for its lipidation specificity and efficiency \cite{Hu2015OpposingMice}.
 
 \subsubsection{Lipidation nuances of ApoE isoforms}
 For ApoE to exert its effects, it needs to be lipidated \cite{Husain2021APOETherapeutics}. ApoE undergoes lipidation via \acrfull{abca1}, a lipid efflux protein \cite{Flowers2020APOEBrain, Courtney2016LXRDisease}. The lipidation degree varies among ApoE isoforms, with ApoE4 exhibiting the least efficient lipidation \cite{Hu2015OpposingMice, Heinsinger2016ApolipoproteinFluid}. This discrepancy in lipidation has been linked to alterations in lipoprotein size and type, in that ApoE4 "prefers" large triglyceride-rich VLDL, while ApoE2 and ApoE3 have a higher affinity for phospholipid-rich \acrshort{hdl} particles \cite{Nguyen2010MolecularE4}. The lower affinity of ApoE4 for HDL particles leads to increased levels of unlipidated ApoE, resulting in its aggregation \cite{Hatters2006ApolipoproteinFunction}. Moreover, ApoE4 fibrils are more neurotoxic than those of ApoE2 and ApoE3 \cite{Hatters2006Amino-terminalFibrils}.
 
-Poor lipidation leads to poor ApoE recycling \cite{Yassine2020APOEDisease} (Fig. \ref{ApoeEffectsA}). The latter favors the entrapment of ABCA1 in endosomes, away from the cell membrane, thereby pooling cholesterol in the cell membrane rather than attaching it to HDL particles \cite{Rawat2019ApoE4Astrocytes}. This increased cholesterol content in the cell membrane amplifies \acrfull{tlr4} signaling in macrophages, activating \acrshort{nfkb} and inducing an inflammatory gene response \cite{Yassine2020APOEDisease}.  ApoE4 accumulation also sequestrates the insulin receptor (IR) in endosomes, impacting cellular energy preferences \cite{Zhao2017ApolipoproteinEndosomes}. This leads to a decrease in glucose utilization for \acrshort{atp} production (Fig. \ref{ApoeEffectsB}) and an increase in fatty acid oxidation \cite{Svennerholm1997ChangesSwedes}. 
+Poor lipidation leads to poor ApoE recycling \cite{Yassine2020APOEDisease} (Fig. \ref{ApoeEffectsA}). The latter favours the entrapment of ABCA1 in endosomes, away from the cell membrane, thereby pooling cholesterol in the cell membrane rather than attaching it to HDL particles \cite{Rawat2019ApoE4Astrocytes}. This increased cholesterol content in the cell membrane amplifies \acrfull{tlr4} signalling in macrophages, activating \acrshort{nfkb} and inducing an inflammatory gene response \cite{Yassine2020APOEDisease}.  ApoE4 accumulation also sequestrates the insulin receptor (IR) in endosomes, impacting cellular energy preferences \cite{Zhao2017ApolipoproteinEndosomes}. This leads to a decrease in glucose utilization for \acrshort{atp} production (Fig. \ref{ApoeEffectsB}) and an increase in fatty acid oxidation \cite{Svennerholm1997ChangesSwedes}. 
 
 \begin{figure}[t]
   \includegraphics[width=0.8\textwidth]{figures/ApoEeffectsB.jpg}
-    \caption{Effects of ApoE isoforms on the metabolism and removal of A$\beta$. A$\beta$ is primarily cleaved from \acrfull{app}. In the brain, ApoE is mainly expressed in astrocytes and microglia, and undergoes lipidation by \acrfull{abca1} to create lipoprotein particles. ApoE increases the accumulation and buildup of A$\beta$, or promotes cellular uptake of A$\beta$ by astrocytes or microglia via endocytosis of the lipidated ApoE-A$\beta$ in an isoform-specific manner. This process involves several receptors, such as \acrfull{ldlr} and \acrfull{lrp}. ApoE also facilitates isoform-specific breakdown of A$\beta$ outside the cells. At the \acrlong{bbb}, soluble A$\beta$ is predominantly transported from the \acrfull{isf} into the bloodstream via LRP1 and P-glycoproteins. Additionally, ApoE plays a role in the perivascular drainage of A$\beta$. Insufficient clearance of A$\beta$ can lead to its accumulation in the brain tissue, contributing to the formation of A$\beta$ oligomers and amyloid plaques. Source: \citetitle{Husain2021APOETherapeutics}, \Citeauthor{Husain2021APOETherapeutics} (\citeyear{Husain2021APOETherapeutics}) \cite{Husain2021APOETherapeutics}}
+    \caption{Effects of ApoE isoforms on the metabolism and removal of A$\beta$. A$\beta$ is primarily cleaved from the amyloid precursor protein. In the brain, ApoE is mainly expressed in astrocytes and microglia, and undergoes lipidation by \acrfull{abca1} to create lipoprotein particles. ApoE increases the accumulation and build up of A$\beta$, or promotes cellular uptake of A$\beta$ by astrocytes or microglia via endocytosis of the lipidated ApoE-A$\beta$ in an isoform-specific manner. This process involves several receptors, such as the low-density lipoprotein receptor and \acrfull{lrp}. ApoE also facilitates isoform-specific breakdown of A$\beta$ outside the cells. At the \acrlong{bbb}, soluble A$\beta$ is predominantly transported from the \acrfull{isf} into the bloodstream via LRP1 and P-glycoproteins. Additionally, ApoE plays a role in the perivascular drainage of A$\beta$. Insufficient clearance of A$\beta$ can lead to its accumulation in the brain tissue, contributing to the formation of A$\beta$ oligomers and amyloid plaques. Source: \citetitle{Husain2021APOETherapeutics}, \Citeauthor{Husain2021APOETherapeutics} (\citeyear{Husain2021APOETherapeutics}) \cite{Husain2021APOETherapeutics}}
   \label{ApoeEffectsA}
 \end{figure}
 
 \begin{figure}[b]
   \includegraphics[width=0.8\textwidth]{figures/ApoEeffectsA.jpg}
-    \caption{Schematic overview of A$\beta$-independent effects of ApoE in AD pathology. ApoE4 increases the phosphorylation of tau proteins, leading to the creation of tangles, inducing neurodegeneration, synaptic deficits and neurotoxicity. Moreover, ApoE4 is associated with decreased cholesterol efflux and neuroinflammation mediated by \acrfull{il}, \acrfull{tnf}, \acrfull{ros}. In the mitochondria, ApoE4 impairs glucose metabolism and ATP production.  Source: \citetitle{Husain2021APOETherapeutics}, \Citeauthor{Husain2021APOETherapeutics} (\citeyear{Husain2021APOETherapeutics}) \cite{Husain2021APOETherapeutics}}
+    \caption{Schematic overview of A$\beta$-independent effects of ApoE in AD pathology. ApoE4 increases the phosphorylation of tau proteins, leading to the creation of tangles, inducing neurodegeneration, synaptic deficits and neurotoxicity. Moreover, ApoE4 is associated with decreased cholesterol efflux and neuroinflammation mediated by interleukin, tumour necrosis factor $\alpha$, \acrfull{ros}. In the mitochondria, ApoE4 impairs glucose metabolism and ATP production.  Source: \citetitle{Husain2021APOETherapeutics}, \Citeauthor{Husain2021APOETherapeutics} (\citeyear{Husain2021APOETherapeutics}) \cite{Husain2021APOETherapeutics}.}
   \label{ApoeEffectsB}
 \end{figure}
 
 \subsubsection{Interplay between ApoE lipidation and Alzheimer's disease pathophysiology}\label{ApoEAD}
-As mentioned earlier, ApoE isoforms have differential pleiotropic effects on various cellular functions. ApoE4 induces a pro-inflammatory response, leading to the dysfunction of the \acrlong{bbb}, which in turn impairs cognitive functions \cite{Marottoli2017PeripheralDysfunction, Teng2017ApoEInjury, Kloske2020TheDisease}. Moreover, ApoE modulates the primary neuropathological hallmarks of \acrshort{ad}: neuroinflammation, A$\beta$ plaques and tau tangles \cite{Husain2021APOETherapeutics}. Evidence from human and transgenic mice studies reveals increased brain A$\beta$ and amyloid plaque loads in ApoE4 carriers, compared to ApoE3; with the lowest levels in ApoE2 carriers \cite{Huang2017ApoE2Secretion, Tachibana2016RescuingLRP1, Safieh2019ApoE4:Disease}. ApoE4 has a higher binding affinity for A$\beta$ which leads to impaired clearance, its intracellular aggregation and higher plaque loads \cite{Kloske2020TheDisease} (Fig. \ref{ApoeEffectsA}). Additionally, high levels of ApoE4 in neurons remarkably increase tau protein phosphorylation, while high concentrations of ApoE3 do not seem to have an effect \cite{Cao2017ApoE4-associatedInjury, Shi2017ApoE4Tauopathy, Vasilevskaya2020InteractionAthletes, Wang2018GainCorrector}. Notably,  ApoE directly inhibits phosphorylation of tau by \acrfull{gsk} \cite{Hoe2006ApolipoproteinNeurons}. An overview of the A$\beta$-(in)dependent effects of ApoE is shown in Fig. \ref{ApoeEffectsB}.
+As mentioned earlier, ApoE isoforms have differential pleiotropic effects on various cellular functions. ApoE4 induces a pro-inflammatory response, leading to the dysfunction of the blood-brain barrier, which in turn impairs cognitive functions \cite{Marottoli2017PeripheralDysfunction, Teng2017ApoEInjury, Kloske2020TheDisease}. Moreover, ApoE modulates the primary neuropathological hallmarks of \acrshort{ad}: neuroinflammation, A$\beta$ plaques and tau tangles \cite{Husain2021APOETherapeutics}. Evidence from human and transgenic mice studies reveals increased brain A$\beta$ and amyloid plaque loads in ApoE4 carriers, compared to ApoE3; with the lowest levels in ApoE2 carriers \cite{Huang2017ApoE2Secretion, Tachibana2016RescuingLRP1, Safieh2019ApoE4:Disease}. ApoE4 has a higher binding affinity for A$\beta$ which leads to impaired clearance, its intracellular aggregation and higher plaque loads \cite{Kloske2020TheDisease} (Fig. \ref{ApoeEffectsA}). Additionally, high levels of ApoE4 in neurons remarkably increase tau protein phosphorylation, while high concentrations of ApoE3 do not seem to have an effect \cite{Cao2017ApoE4-associatedInjury, Shi2017ApoE4Tauopathy, Vasilevskaya2020InteractionAthletes, Wang2018GainCorrector}. Notably,  ApoE directly inhibits phosphorylation of tau by glycogen synthase kinase-3$\beta$ \cite{Hoe2006ApolipoproteinNeurons}. An overview of the A$\beta$-(in)dependent effects of ApoE is shown in Fig. \ref{ApoeEffectsB}.
 
 \subsection{ApoE4-mediated metabolic changes in Alzheimer's disease}
-Metabolism entails the repertoire of chemical reactions that keep living organisms alive. Metabolites  --especially lipid \cite{Barupal2019SetsPathophysiology,Fernandez-Calle2022APOEDiseases, Proitsi2017AssociationAnalysis}--, perceived as functional intermediates of \acrshort{ad} development, are rigorously studied for biomarkers or targets for treatment \cite{Oeckl2019GlialImpairment}.
+Metabolism entails the repertoire of chemical reactions that keep living organisms alive. Metabolites, the molecules involved,  --especially lipid \cite{Barupal2019SetsPathophysiology,Fernandez-Calle2022APOEDiseases, Proitsi2017AssociationAnalysis}--, perceived as functional intermediates, are rigorously studied as biomarkers or targets for treatment in AD research \cite{Oeckl2019GlialImpairment}.
  
-\subsubsection{Measured in \textit{post-mortem} brain tissue} A metabolomic profiling of brain tissue, obtained \textit{post-mortem} from \acrshort{ad} patients and healthy controls showed  pronounced impairments in sterol and sphingolipid levels in ApoE4 carriers with \acrshort{ad}  \cite{Bandaru2009ApoE4Brain}. However, another \textit{post-mortem} metabolomic analysis did not reveal nuances significantly correlated with ApoE4 \cite{Novotny2023MetabolomicBrains}, although they showed trends in increased cholesterol esters, unsaturated lipids, and sphingomyelin species.
+\subsubsection{Measured in \textit{post-mortem} brain tissue} A metabolomic profiling of brain tissue, obtained \textit{post-mortem} from \acrshort{ad} patients and healthy controls showed  pronounced impairments in sterol and sphingolipid levels in ApoE4 carriers with \acrshort{ad}  \cite{Bandaru2009ApoE4Brain}. However, another \textit{post-mortem} metabolomic analysis did not reveal nuances significantly correlated with ApoE4 \cite{Novotny2023MetabolomicBrains}, although they showed trends of increased cholesterol esters, unsaturated lipids, and sphingomyelin species.
 
 \subsubsection{Measured in blood}
-Transcriptomic and lipidomic analyses in humanized ApoE mice associated ApoE4 with decreased free fatty acid levels, many increased  tricarboxylic acid (TCA) cycle metabolites, as well as changes in plasma levels of phosphatidylcholines and unsaturated fatty acids \cite{Area-Gomez2020APOE4Mice, Zhao2020AlzheimersPathways}. A recent study on 58 individuals found six downregulated plasma metabolites (including lysophospholipids and cardiolipin) in ApoE4 carriers \cite{pena-bautista2020MetabolomicsEffect}. Further, the plasma metabolome of the latter reveals a preference for aerobic glycolysis \cite{Farmer2021APO4Glycolysis}. Significant correlations of ApoE genotype and sex with metabolites were observed, i.e. several phosphatidylcholines were found in a large study of more than 1500 individuals \cite{Arnold2020SexMetabolome}.
+Transcriptomics and lipidomics analyses in humanized ApoE mice associated ApoE4 with decreased free fatty acid levels, many increased  tricarboxylic acid (TCA) cycle metabolites, as well as changes in plasma levels of phosphatidylcholines and unsaturated fatty acids \cite{Area-Gomez2020APOE4Mice, Zhao2020AlzheimersPathways}. A recent study on 58 individuals found six downregulated plasma metabolites (including lysophospholipids and cardiolipin) in ApoE4 carriers \cite{pena-bautista2020MetabolomicsEffect}. Further, the plasma metabolome of the latter reveals a preference for aerobic glycolysis \cite{Farmer2021APO4Glycolysis}. Significant correlations of ApoE genotype and sex with metabolites were observed, i.e. several phosphatidylcholines were found in a large study of more than 1500 individuals \cite{Arnold2020SexMetabolome}.
 
 Perturbed serum metabolites associated with \acrshort{ad} are aminoacids, amines \cite{deLeeuw2017Blood-basedDisease, Green2023InvestigatingDisease}, cholesteryl esters \cite{Proitsi2017AssociationAnalysis}, sphingolipids \cite{Varma2018BrainStudy,Sun2022AssociationDisease,Green2023InvestigatingDisease,Oeckl2019GlialImpairment,Barupal2019SetsPathophysiology}, fatty acids \cite{Fernandez-Calle2022APOEDiseases,deLeeuw2017Blood-basedDisease}, glycerophospholipids \cite{Varma2018BrainStudy, Jia2022ATypes,Huo2020BrainAnalysis, Weng2019TheImpairment}, phosphatidylcholines \cite{Simpson2016BloodAging} and lipid peroxidation compounds \cite{Fernandez-Calle2022APOEDiseases}. These molecules are usually identified via high-throughput metabolomic pipelines (coupled with Mass Spectrometry (MS) detectors) that trace all compounds in a sample and result in high-dimensional data \cite{Oka2023MultiomicsCohort}. The latter often require advanced statistical methods e.g. projection to latent structures \cite{Weng2019TheImpairment, Peeters2019StableData} or graphical models \cite{Peeters2022Rags2ridges:Matrices} in order to extract putatively meaningful information. 
-With such techniques, de Leeuw et al. discovered distinct serum metabolic signatures among \acrshort{ad} patients-controls and those carrying at least one ApoE4 allele \cite{deLeeuw2017Blood-basedDisease}, as they are shown in Fig. \ref{netan17}. The different metabolic profiles, however, among ApoE4 non-carriers remain obscure. The present data science approach shows ApoE4-mediated differentially expressed metabolites, potentially unveiling distinct pathways of metabolic deregulation in \acrshort{ad}.
+With such techniques, \citeauthor{deLeeuw2017Blood-basedDisease} discovered distinct serum metabolic signatures among \acrshort{ad} patients-controls and those carrying at least one ApoE4 allele \cite{deLeeuw2017Blood-basedDisease}, as they are shown in Fig. \ref{netan17}. The different metabolic profiles, however, among ApoE4 non-carriers remain obscure.
 
 \begin{figure}[htb]
 \vspace*{-0.2cm}
   \includegraphics[width=0.9\textwidth]{figures/network.jpeg}
-    \caption{Mutual (left-hand panel) and distinct (right-hand panel) metabolic network topologies between ApoE4 carriers with AD and non-carriers with SCD, as published by de Leeuw et al.. Red edges represent links that are present exclusively in ApoE4 carriers with AD. Green edges represent connections found in the SCD group without ApoE4. Solid edges represent positive partial correlations, while dashed edges represent negative partial correlations. Abbreviations: SCD, subjective cognitive decline. Source: \citetitle{deLeeuw2017Blood-basedDisease}, \citeauthor{deLeeuw2017Blood-basedDisease} (\citeyear{deLeeuw2017Blood-basedDisease}) \cite{deLeeuw2017Blood-basedDisease}}
+    \caption{Mutual (left-hand panel) and distinct (right-hand panel) metabolic network topologies between ApoE4 carriers with AD and non-carriers with SCD, as published by \citeauthor{deLeeuw2017Blood-basedDisease}. Red edges represent links that are present exclusively in ApoE4 carriers with AD. Green edges represent connections found in the SCD group without ApoE4. Solid edges represent positive partial correlations, while dashed edges represent negative partial correlations. Abbreviations: SCD, subjective cognitive decline. Source: \citetitle{deLeeuw2017Blood-basedDisease}, \citeauthor{deLeeuw2017Blood-basedDisease} (\citeyear{deLeeuw2017Blood-basedDisease}) \cite{deLeeuw2017Blood-basedDisease}.}
   \label{netan17}
 \end{figure}
 
 \newpage
 \subsection{Research Questions}
-ApoE4 carriers --particularly females-- experience metabolic disturbances and are at increased risk of \acrshort{load}. The mechanistic links, however, between ApoE4 dose, metabolism and \acrshort{ad} development are not entirely known \cite{Fernandez-Calle2022APOEDiseases}. Tracking ApoE4 dose effects on serum metabolites might reveal metabolic perturbations at systemic level, preceding or concurring with AD. Hence, in an effort to elucidate ApoE4-mediated changes in serum metabolites in AD and SCD, one could state the following research questions:
+ApoE4 carriers --particularly females-- experience metabolic disturbances and are at increased risk of \acrshort{load}. The mechanistic links, however, between ApoE4 dose, metabolism and \acrshort{ad} development are not entirely known \cite{Fernandez-Calle2022APOEDiseases}. Tracking ApoE4 dose effects on serum metabolites might reveal metabolic perturbations at systematic level, preceding or concurring with AD. To this end, one may focus on shifted individual metabolite levels, a classification signature, a network signature or all of them. Considering all three approaches, one could state the following overarching research question and subquestions:
 
 Are there mechanistic links between ApoE4 dose and serum metabolome in AD?
-\begin{enumerate}
+\begin{enumerate}[label=\roman*]
     \item Are there ApoE4 dose effects on serum metabolite levels in AD?
     \item What is the (added) classification potential of serum metabolites in predicting ApoE4 and AD status?   
     \item How do the metabolite network topologies differ between ApoE4 carriers and non-carriers?
 \end{enumerate}
 
 \subsection{Approach and Overview}
-An introduction to the data used in this study is found in Section \ref{subjects}. A general overview of the software is found in Section \ref{datamanagement}, while the R session information is found in Appendix \ref{appendixB}. To facilitate statistical analysis, two new features were created for the first two research questions: "ApoE4dose" (0, 1, 2) and "target" (4 possible phenotypes: AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4), respectively, as described in Section \ref{featureeng}.
+To facilitate statistical analysis, two new features were created for the first two research questions: "ApoE4dose" (0, 1, 2) and "target" (4 possible phenotypes: AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4), respectively, as described in Section \ref{featureeng}.
 
-The statistical methods applied to answer the research questions were adapted from \citeauthor{deLeeuw2017Blood-basedDisease}'s \citetitle{deLeeuw2017Blood-basedDisease} and are described in Section \ref{stats}. To screen for ApoE4 dose effects on serum metabolites, two approaches were taken: a global test (correcting only for sex) and nested linear model comparison using ANCOVA F-tests (correcting for several factors: Table \ref{tab:clin}, except CSF markers). 
+\textit{-Are there ApoE4 dose effects on serum metabolite levels in AD?}\\
+To investigate ApoE4 dose effects on individual metabolites two methods were applied: a global test (correcting only for sex) and nested linear model comparison using ANCOVA F-tests (correcting for several factors: Table \ref{tab:clin}, except CSF markers). 
 
-To test the (added) classification potential of serum metabolites against the target, several multi-class classification models were fitted. First, a benchmark multinomial logistic regression model was fitted using only clinical background data as predictors. Second, the full metabolomic panel was addded on top of the clinical data in the same model and feature importance was calculated. Third, the metabolites were projected to a latent orthogonal space, where 6 meta-metabolites (accounting for around 30\% of the variance) replaced the original metabolites. Finally, the meta-metabolites were fitted on top of the clinical data in a multinomial logistic regression model, a decision tree and an \acrfull{xgb} model. The discriminatory performance of the aforementioned models was then comprehensively evaluated and compared.
+\textit{-What is the (added) classification potential of serum metabolites in predicting ApoE4 and AD status?}\\
+To test the (added) classification potential of serum metabolites against the target, several multi-class classification models were fitted considering the bias-variance trade-off. First, a benchmark multinomial logistic regression model was fitted using only clinical background data as predictors. Second, the full metabolomic panel was added on top of the clinical data in the same model and feature importance was calculated. Third, the metabolites were projected to a latent orthogonal space, where 6 meta-metabolites (accounting for around 30\% of the variance) replaced the original metabolites. Finally, the meta-metabolites were fitted on top of the clinical data in a multinomial logistic regression model, a decision tree and a \acrfull{xgb} model. The discriminatory performance of the aforementioned models was comprehensively evaluated and compared.
 
-To visualize and compare the (precision) metabolite network topologies among ApoE4 carriers and non-carriers, the high precision matrices were first regularized with Ridge, sparsified and then pruned controlling the False Discovery Rate. Network topologies were plotted, their statistics were calculated and compared between the ApoE4 carriers and non-carriers using Wilcoxon Signed Rank test.
+\textit{-How do the metabolite network topologies differ between ApoE4 carriers and non-carriers?} \\
+To visualize and compare the (precision) metabolite network topologies among ApoE4 carriers and non-carriers, the high-dimensional matrices were first regularized with Ridge, sparsified and pruned controlling the False Discovery Rate. The metabolites were plotted in GGMs, their centrality measures were calculated and compared between the two groups using Wilcoxon Signed Rank test.
 
-The results of the analysis are presented in Section \ref{results} and discussed in Section \ref{discuss}. The study is concluded in Section \ref{concl}
+An introduction to the data used in this study is found in Section \ref{subjects}. A general overview of the software is found in Section \ref{datamanagement}, while the R session information is found in Appendix \ref{appendixB}. The results of the analysis are presented in Section \ref{results} and discussed in Section \ref{discuss}. The study is concluded in Section \ref{concl}
 
 
 \newpage
 \section{Methods}\label{methods}
 
 \subsection{Subjects}\label{subjects}
-The data were collected from 120 AD patients and 127 SCD ($n$ = 247 in total) individuals recruited within Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a targeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, antidepressants, mean arterial pressure (MAP) and body mass index (BMI) (see Table \ref{tab:clin}). The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds). The methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's disease \cite{deLeeuw2017Blood-basedDisease}: SMT1. The data were cleaned as described in the same article. The resulting datasets for AD and SCD are high-dimensional, in the sense that they contain more variables than observations ($p > n$). Another particularity of the data is the covariance and collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
+The data were collected from 120 AD patients and 127 SCD ($n$ = 247 in total) individuals recruited within Amsterdam Dementia Cohort \cite{VanDerFlier2018AmsterdamCare, deLeeuw2017Blood-basedDisease}. In this study two data sets were used: a semitargeted metabolomics panel and clinical background data, i.e. age at diagnosis, sex, smoking status, alcohol consumption, hypertension (and medication), hyperlipidemia (and medication), anticoagulant medication, antidepressants, \acrfull{map} and \acrfull{bmi} (see Table \ref{tab:clin}). The metabolomics set contains $p =$ 230 metabolites (amines, organic acids, lipids and oxidative stress compounds) measured in serum obtained from peripheral blood. Amines and oxidative stress compounds were measured via \acrfull{uplcms}, organic acids with \acrfull{gcms} and lipids with \acrfull{uplcesitof}. The detailed methodology for the metabolomic analysis and ApoE genotyping can be found at de Leeuw et al.'s  Blood-based metabolic signatures in Alzheimer's disease \cite{deLeeuw2017Blood-basedDisease}: SMT1. The data were cleaned as described in the same article. The metabolomics datasets for AD and SCD are high-dimensional, in the sense that they contain more variables than observations ($p > n$). Another particularity of the data is collinearity of the variables. Therefore, appropriate measures need to be taken to prevent model over-fitting --the algorithm being unable to distinguish signal from noise and fitting the latter--  and to correct for spurious correlations.
 
 \begin{table}[htb]
 \caption{Clinical background characteristics used as control variables of ApoE4 (dose) effects.}
 \label{tab:clin}
 \begin{threeparttable}
-\begin{tabular}{clllll} \toprule
-                                & \textbf{Clinical feature}   & \textbf{Type} \\ \midrule
-\multirow{2}{*}{Anthropometric} & Age                         & Discrete      \\
-                                & Sex                         & Binary        \\
-\multirow{2}{*}{Intoxications}  & Smoking (past, current, no) & Nominal       \\
-                                & Alcohol                     & Binary        \\
-\multirow{3}{*}{Comorbidities}  & Hypertension                & Binary        \\
-                                & Diabetes mellitus           & Binary        \\
-                                & Hypercholesterolemia        & Binary        \\
-\multirow{3}{*}{Medication}     & Cholesterol lowering        & Binary       \\
-                                & Antidepressants             & Binary        \\
-                                & Antiplatelet                & Binary        \\ 
-\multirow{3}{*}{CSF markers$\ast$}    & A$\beta_{42}$               & Continuous       \\
-                                & tau                         & Continuous       \\
-                                & p-tau                       & Continuous       \\\bottomrule
+\begin{tabular}{clcc} \toprule
+                                & \textbf{Clinical feature}   & \textbf{Values} & \textbf{Data type} \\ \midrule
+\multirow{2}{*}{Anthropometric} & Age                   & years   & Discrete   \\
+                                & Sex                   & m, f    & Binary     \\
+\multirow{2}{*}{Intoxications}  & Smoking               & past, current, no & Nominal\\
+                                & Alcohol               & yes, no & Binary     \\
+\multirow{3}{*}{Comorbidities}  & Hypertension          & yes, no & Binary     \\
+                                & Diabetes mellitus     & yes, no & Binary     \\
+                                & Hypercholesterolemia  & yes, no & Binary     \\
+\multirow{3}{*}{Medication}     & Cholesterol lowering  & yes, no & Binary     \\
+                                & Antidepressants       & yes, no & Binary     \\
+                                & Antiplatelet          & yes, no & Binary     \\
+\multirow{3}{*}{CSF markers$\ast$} & A$\beta_{42}$      & pg/mL   & Continuous \\
+                                & tau                   & pg/mL   & Continuous \\
+                                & p-tau                 & pg/mL   & Continuous \\\bottomrule
 \end{tabular}
 \begin{tablenotes}
-  \item[$\ast$] were only used in the ApoE4 and AD status multi-class classification
+  \item[$\ast$] Were only used in the ApoE4 and AD status multi-class classification.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
 \subsection{Data management}\label{datamanagement}
-The FAIR principles for data management and stewardship in science were published by  ~\citeauthor{Wilkinson2016TheStewardship} in 2016 \cite{Wilkinson2016TheStewardship}. FAIR stands for Findable, Accessible, Interactive, and Reusable data; the intention is to create and use data that are well-documented and reproducible. These principles were considered at every step of the study and implemented when applicable. The statistical analysis was performed in R (version 4.3.2), and the current report was written in \LaTeX  (Tex Live version 2023). All files are stored in a private Github repository --with git as \acrfull{vcs}.
+The FAIR principles for data management and stewardship in science were published by  ~\citeauthor{Wilkinson2016TheStewardship} in 2016 \cite{Wilkinson2016TheStewardship}. FAIR stands for Findable, Accessible, Interactive, and Reusable data; the intention is to create and use data that are well-documented and reproducible. These principles were considered at every aspect of the study and implemented when applicable. The statistical analysis was performed in R (version 4.3.2), and the current report was redacted in \LaTeX  (Tex Live version 2023). VSCodium (the open-source version of VSCode) was used as an integrated development environment (IDE) for both the analysis and writing the report. This report was compiled using Overleaf's \textsf{latexmkrc} file. All files (except for the data) are stored in a private Github repository.
 
-\subsection{Outcome measures}\label{featureeng}
-The information of the ApoE genotypes is valuable, and it might be interesting to screen for metabolic nuances between them. However, the genotypes were not equally represented in the data and hence, testing for differences among them would not be possible. The following two subsections describe the features ApoE4dose and target that were created as "outcome" measures to balance the genotypes.
+\newpage \subsection{Outcome measures}\label{featureeng}
+The information of the ApoE genotypes is valuable, and it might be interesting to screen for metabolic nuances between them. However, the genotypes were not equally represented in the data and hence, testing for differences among them would not be possible. The following two subsections describe the features ApoE4dose and target that were created as "outcome" measures to balance the genotype counts.
 
 \begin{table}
   \caption{Observed ApoE genotype (top part), allele (middle part) and ApoE4 allelic (bottom part) counts in AD and SCD}
@@ -475,7 +479,7 @@ The information of the ApoE genotypes is valuable, and it might be interesting t
 \end{table}
 
 \subsubsection{ApoE4 dose effects}
-\citeauthor{deLeeuw2017Blood-basedDisease} divided the subjects into two classes: those carrying at least one $\varepsilon_4$ allele, and $\varepsilon_4$ non-carriers. However, in order to study the $\varepsilon_4$ \textit{dose} effects, the genotypes can be categorized into groups, based on the number of $\varepsilon_4$ alleles they carry: 0, 1 or 2. The number of ApoE4 allele doses is shown in the bottom part of Table \ref{tab:ApoEfreq}.
+\citeauthor{deLeeuw2017Blood-basedDisease} divided the subjects into two classes: those carrying at least one $\varepsilon_4$ allele, and $\varepsilon_4$ non-carriers. In order to study the $\varepsilon_4$ \textit{dose} effects, the genotypes can be categorized into groups, based on the number of $\varepsilon_4$ alleles they carry: 0, 1 or 2. The number of ApoE4 allele doses is shown in the bottom part of Table \ref{tab:ApoEfreq}.
 
 \subsubsection{Classification of ApoE4 and AD status}
 In order to incorporate ApoE4 status, as well as the diagnosis of AD, a four-level feature (AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4, "target") was created, as shown in Table \ref{tab:ApoEfreq}.
@@ -484,11 +488,12 @@ In order to incorporate ApoE4 status, as well as the diagnosis of AD, a four-lev
 \subsubsection{ApoE4 dose effects on serum metabolite levels in AD} \label{rq1}
 To test if the number of ApoE4 alleles have an effect on mean metabolite levels in \acrshort{ad}, two methods were applied: a global test and nested linear model comparison with ANCOVA.
 
-\leavevmode\newline\textbf{Global Test}\hspace{.25cm} The concept of a global test was first introduced by \citeauthor{Simon2004DesignHealth}, and proposed an approach based on permutations to cater to the high dimensionality of gene expression data \cite{Simon2004DesignHealth}. The R package \textsf{globaltest} features a multinomial logistic regression model, fitting genes to predict clinical or biological group membership \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage},number of ApoE4 alleles in this case. This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}. The null hypothesis is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The test statistic under $H_0$ follows, asymptotically, a normal distribution. The \texttt{gt} function of the package was used to screen for nuances in metabolite levels on the number of ApoE4 alleles, correcting for sex. To assess ApoE4 dose effects correcting for clinical data nested linear model comparison was performed, as described in the next section.
+\leavevmode\newline\textbf{Global Test}\hspace{.25cm} The concept of a global test was first introduced by \citeauthor{Simon2004DesignHealth} to cater to the high dimensionality of gene expression data \cite{Simon2004DesignHealth}. The R package \textsf{globaltest} features a multinomial logistic regression model, fitting genes to predict clinical or biological group membership \cite{Goeman2004AOutcome, Goeman2006TestingAlternative, Goeman2023ThePackage}, number of ApoE4 alleles in this case. This method is also appropriate for other types of -omics data, such as metabolomics in this study \cite{Goeman2023ThePackage}. The null hypothesis is that metabolite levels are independent of the ApoE4 dose X, i.e. $H_0 : P(Y|X) = P(Y)$, where $X \in \mathbb{R}^{n x p}$. The test statistic under $H_0$ follows, asymptotically, a normal distribution. The \texttt{gt} function of the package was used to screen for nuances in metabolite levels on the number of ApoE4 alleles, correcting for sex. To assess ApoE4 dose effects correcting for clinical data nested linear model comparison was performed, as described in the next section.
 
 \leavevmode\newline \textbf{Nested linear models}\hspace{.25cm}
-An linear model with the Least Squares estimation creates a regression using categorical and numerical variables, while minimizing the Residual Sum of Squares (RSS) \cite{ott2015introduction}, 
-$$\mathrm{RSS} = \sum (y - \hat{y})^2$$ where $y$ is the response and $\hat{y}$ is its regression estimate. Two models were fitted for each metabolite, a full and a nested model. The dependent variable in each model was a metabolite; the nested model \eqref{rm}, has only clinical variables (Table \ref{tab:clin} except CSF markers) while the full model \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2 -nominal) as explanatory variables. Let $y_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon_4}$ the ApoE4 dose; the nested models then are:
+A linear regression model using the least squares principle calculates the \acrfull{ssr}
+$$\mathrm{SSR} = \sum_{i=1}^{n} (\hat{y_i}-\bar{y})^2$$ where $\bar{y}$ is the sample mean and $\hat{y_i}$ is the estimate for the $i$-th observation, using categorical and numerical variables. It does so while minimizing the \acrfull{rss} \cite{ott2015introduction}, 
+$$\mathrm{RSS} = \sum_{i=1}^{n} (y_i - \hat{y_i})^2$$ where $y_i$ is the $i$-th observation \cite{ott2015introduction}. Two models were fitted for each metabolite, a full and a nested model. The dependent variable in each model was a metabolite; the nested model \eqref{rm}, has only clinical variables (Table \ref{tab:clin} except CSF markers) while the full model \eqref{fm}, features the clinical variables, plus the number of ApoE4 alleles (0, 1 or 2 -nominal) as explanatory variables. Let $y_j$ represent the $j$-th metabolite, $x_k$ the $k$-th clinical variable, and $D_{\varepsilon_4}$ the ApoE4 dose; the nested linear regression models are:
 \begin{align}
     & y_j = \beta_0 + \sum_{k=1}^m\beta_kx_k +\epsilon \label{rm} \\
     & y_j = \beta_0 + \sum_{k=1}^m\beta_kx_k + \beta_{m+1}D_{\varepsilon_4} + \epsilon \label{fm}
@@ -496,65 +501,56 @@ $$\mathrm{RSS} = \sum (y - \hat{y})^2$$ where $y$ is the response and $\hat{y}$ 
 For every metabolite $j$ = 1,...,$p$ the hypothesis test is 
 \[H_0: \beta_{m+1} = 0 \; \mathrm{vs} \; H_\alpha: \beta_{m+1} \neq 0\]
 The test statistic is ANCOVA F-test:
-\[ F = \frac{\mathrm{SSReg}_{full}-\mathrm{SSReg}_{nested}/df_{full}-df_{nested}}{\mathrm{RSS}_{nested}/n-(m+2)}\]
-Under H$_0$ $F$ follows an $F_{1, n-(m+2)}$ distribution \cite{ott2015introduction}. The null hypothesis is rejected for large values of $F$.
+\[ F = \frac{\mathrm{SSR}_{full}-\mathrm{SSR}_{nested}/df_{full}-df_{nested}}{\mathrm{RSS}_{nested}/n-(m+2)}\]
+Under H$_0$ $F \sim \mathcal{F}_{1, n-(m+2)}$ \cite{ott2015introduction}. The null hypothesis is rejected for large values of $F$.
 
-This implies $p$ hypothesis tests, which qualifies as multiple testing (the probability of incorrectly rejecting H$_0$, type I error, increases monotonically with every additional test). A method to treat the latter is controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}, that is controlling the expected ratio of incorrectly rejected H$_0$ hypotheses, globally e.g. at an $\alpha$ of 0.05. With the Benjamini-Hochberg's approach (see Algorithm \ref{alg:fdr}), first, the p-values are sorted in ascending order. Then, for every p-value $j$, $\alpha$ is multiplied by $j$ over the total number of tests \cite{Benjamini1995ControllingTesting} $m=230$ in the AD group in this study. In other words, after adjustment, a null hypothesis $j$ may be rejected only if its associated F-test's p-value is less or equal to a fraction ($j/m$) of $\alpha$.
+This implies $p = 230$ hypothesis tests. The probability of incorrectly rejecting H$_0$ (type I error) increases monotonically with every additional test. Multiple testing provides tools to correct the increase of type I errors, i.e. controlling False Discovery Rate \cite{Benjamini1995ControllingTesting}. That is controlling the expected ratio of incorrectly rejected H$_0$ hypotheses, globally e.g. at a $q$ of 0.05. With the Benjamini-Hochberg's approach (see Algorithm \ref{alg:fdr}), first, the p-values are sorted in ascending order. Then, for every $j$ p-value, $q$ is multiplied by $j$ over the total number of tests \cite{Benjamini1995ControllingTesting} $m=230$ in the AD group in this study. In other words, after adjustment, a null hypothesis $j$ may be rejected only if its associated F-test's p-value is less or equal to a fraction ($j/m$) of $q$.
 
 \begin{algorithm}
-\caption{Benjamini–Hochberg's procedure to control FDR Source: \cite{James2023AnEdition}}\label{alg:fdr}
-Specify $\alpha$, the level at which to control the FDR.\\
+\caption{Benjamini–Hochberg's procedure to control FDR. Source: \cite{James2023AnEdition}}\label{alg:fdr}
+Specify $q$, the level at which to control the FDR.\\
 Compute p-values, $p_1, ... , p_m$, for the $m$ null hypotheses $H_{01},...,H_{0m}$. \\
 Order the $m$ p-values so that $p(1) \leq p(2) \leq ... \leq p(m)$.\\
 Define
-\[L = \max\{j : p(j) \leq \frac{j}{m}\alpha\}\] \\
+\[L = \max\left\{j : p(j) \leq \frac{j}{m}q \right\}\] \\
 Reject all null hypotheses $H_{0j}$ for which $p_j \leq p(L)$.
 \end{algorithm}
 
-To test for ApoE4 dose effects on each metabolite in AD and SCD, $2m=460$ model comparisons were needed in total, hence a function was created to iterate over the metabolites, fit the nested models, compare them using ANCOVA F-tests, store and adjust the p-values, filter those below .05, then consolidate the coefficients of the meaningful full models and the p-values of their t-tests in a table and display it. To decrease run time, as well as harness the power of multiple CPU cores, \textsf{furrr}'s \texttt{future\_map} function was used for parallel iterations.
+To test for ApoE4 dose effects on each metabolite in AD and SCD, $2m=460$ model comparisons were needed in total, hence a function was created to iterate over the metabolites, fit the nested models, compare them using ANCOVA F-tests, store and adjust the p-values, filter those below .05, consolidate the coefficients of the meaningful full models and the p-values of their t-tests in a table and display it. To decrease run time, as well as harness the power of multiple CPU cores, \textsf{furrr}'s \texttt{future\_map} function was used for parallel iterations.
 
 \subsubsection{Classification of ApoE4 and AD status}\label{rq2}
-In statistical learning, a class denotes a group of objects that share common characteristics, such as having \acrshort{ad} or ApoE4 \cite*{Drummond2010}. Classification, in this context, denotes training a (supervised) learning algorithm on labelled data (containing their class) \cite*{Drummond2010}. The classifier learns patterns in the data and is then able to predict class membership for unknown data \cite*{Drummond2010}.
-
-The R package \textsf{caret} streamlines the training and comparison of classification and regression models, offering broad model training and evaluation options, as well as feature importance estimation \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl} and \texttt{train} were used to fit the models. A sampling method used to deal with the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}.
+In statistical learning, a class denotes a group of objects that share common characteristics, such as having \acrshort{ad} or ApoE4 \cite*{Drummond2010}. Classification, in this context, denotes training a (supervised) learning algorithm on labelled data (containing their class) \cite*{Drummond2010}. The classifier learns patterns in the data and is able to predict class membership for unknown data \cite*{Drummond2010}.
 
 \leavevmode\newline \textbf{Bias-Variance trade-off}\hspace{.25cm}The degree to which a user can understand and interpret the prediction or decisions made by a statistical model is defined as \textit{interpretability} \cite{Elshawi2019OnHypertension}. It was of interest in this study to find the optimal balance between the performance of a model and its interpretability. The \textit{bias-variance trade-off} was formally introduced by \citeauthor{Geman1992NeuralDilemma} and refers to the trade-off between the accuracy (opposite of bias) and precision (opposite of variance) of a prediction. It also refers to the trade-off between model flexibility (or complexity) and interpretability \cite{Geman1992NeuralDilemma}. One may consider this trade-off during model and evaluation method selection, as some impose more bias or variance than others.
 
-\leavevmode\newline \textbf{Multi-class classification models}\hspace{.25cm}Considering interpretability, Multinomial Logistic Regression (\acrshort{mnl}) is inherently interpretable. Let $y$ a response with $K$ classes, $k \in N, [1,4]$ representing the k-th class of the target and $\beta_{kj}$ its set of coefficients,  $\beta_{lj}$ the coefficients of the rest of classes for $j$-th metabolite, then a \acrlong{mnl} model calculated the probability
+\leavevmode\newline \textbf{Multi-class classification models}\hspace{.25cm}Considering interpretability, Multinomial Logistic Regression (\acrshort{mnl}) is inherently interpretable. Let $y$ a response with $K$ classes, $k \in N, [1,4]$ representing the k-th class of the target and $\beta_{kj}$ its set of coefficients,  $\beta_{lj}$ the coefficients of the rest of classes for $j$-th metabolite, a \acrlong{mnl} model calculated the probability
 
 \[\textrm{P}(y=k|X=x) =  \dfrac{e^{\sum_{j=1}^{p}\beta_{kj}x_j}}{\sum_{l=1}^{K}\sum_{j=1}^{p}e^{\beta_{lj}x_j}}\]
 
-When $p > n$, the coefficient estimation method has low bias and high variance, in that small changes in the training data can result in very different coefficient estimates \cite{James2023AnEdition}. 
+In the $K$-way classification, the problem is reduced to $\binom{K}{2}$ binary classifications with the one-vs-one method. ApoE4 and AD status contains $K =4$ classes, so 6 binary classifications were performed \cite{James2023AnEdition}. sThe function \texttt{multinom} of the package \textsf{nnet} was used to fit a shallow neural network (with a single hidden layer, but allowing skip-layer connections) \cite{nnet}. For the $i$-th observation, it calculates the weights via a Least Squares estimation of the negative conditional log-likelihood that it belongs to the $k$-th class
+\[E = \sum_{i}\sum_{k}-y_{ik}\log\hat{y}_{ik}, \; \;  \hat{y}_{ik} =  \dfrac{e^{\sum_{j=1}^{p}\hat{\beta}_{kj}x_{ij}}}{\sum_{l=1}^{K}\sum_{j=1}^{p}e^{\hat{\beta}_{lj}x_{ij}}}\]
+where $y_{ik}$, the true class will be exactly one and the others all zero \cite{nnet}. 
 
-Regularization trades off a small increase in bias for a great decrease in variance, by shrinking the low coefficients towards zero \cite{James2023AnEdition}. Ridge or L2 regularization \cite{Cessie1992RidgeRegression} shrinks the coefficients without setting them to exactly zero \cite{Cessie1992RidgeRegression}
-\[\textrm{RSS} + \lambda\sum_{j=1}^{p}\beta_j^2 \]where $\lambda \geq 0$ is a tuning parameter that balances the coefficient shrinking effect. The function \texttt{multinom} of the package \textsf{nnet} fits a shallow neural network (with a single hidden layer, but allowing skip-layer connections) \cite{nnet}. For the $i$-th observation, it calculates the weights using a Least Squares estimation of the negative conditional log-likelihood that it belongs to the $k$-th class
-\[E = \sum_{i}\sum_{k}-y_{ik}\log\hat{y}_{ik}, \; \;  \hat{y}_{ik} =  \dfrac{e^{\sum_{j=1}^{p}\beta_{kj}x_{ij}}}{\sum_{l=1}^{K}\sum_{j=1}^{p}e^{\beta_{lj}x_{ij}}}\]
-where $y_{ik}$, the true class will be exactly one and the others all zero \cite{nnet}. It regularizes the fit via weight decay, a Ridge-like penalty that uses the sum of squares of the weights \cite{nnet}.
+When $p > n$, it is not possible to perform classification fitting all the predictors \cite{James2023AnEdition}. Regularization trades off a small increase in bias for a great decrease in variance, by shrinking the low coefficients towards zero \cite{James2023AnEdition}. Ridge or L2 regularization \cite{Cessie1992RidgeRegression} shrinks the coefficients without setting them to exactly zero \cite{Cessie1992RidgeRegression}. The predictors were regularized with weight decay, a Ridge-like penalty based on the sum of squares of the weights \cite{nnet}: 
+\[\lambda\sum_{j=1}^{p}\beta_j^2 \]where $\lambda \geq 0$ is a tuning parameter that balances the coefficient shrinking effect.
 
-Another method to treat multi-collinearity and high dimensionality is a 2-stage \acrfull{ml} Factor Projection to a Latent orthogonal space, such as the one the package \textsf{FMradio} \cite{Peeters2019StableData} performs. In the 1st stage, a L2-regularised ML estimation is used to filter out redundant features from the data matrix. In the second stage, the aforementioned matrix is projected to an orthogonal space where the features are replaced by -fewer- factors that explain their covariance. One can then use the produced factor scores as predictors in any model.
+Another method to treat multi-collinearity and high dimensionality is a 2-stage \acrfull{ml} Factor Projection to a Latent orthogonal space, such as the one the package \textsf{FMradio} \cite{Peeters2019StableData} performs. In the 1st stage, a ML estimation is used to filter out redundant features from the data matrix. In the second stage, the latter is projected to an orthogonal space where the features are replaced by -fewer- L2-regularised  factors explaining their covariance. One can then use the produced factor scores as predictors in any model.
 
 Decision Trees (\acrshort{dt}) are inherently interpretable, non-parametric models, that fit well large and complicated data sets. They have a tree-like structure that splits the data based on a threshold into branches and leaves (nodes) \cite{Song2015DecisionPrediction}. Several studies used decision trees to support AD diagnosis \cite{saputra2020detecting,dana2014using,kumar2017new,mofrad2019decision}. The \texttt{rpart2} \cite{rpart} function of \textsf{rpart} was used.
 
-Boosting models, are ensemble models that fit several weak learners (such as linear/logistic regression or DTs) sequentially, reweighing the data, and take their weighted majority vote \cite{Friedman2000boosting,Friedman2001gbm}. Despite Boosting tends to outperform DTs, it often operates as a \textit{black box} and is poorly interpretable. The state-of-the-art \acrlong{xgb} (\texttt{xgbTree}) of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used. Ensemble learners, and \acrshort{xgb} in particular, is also being used to predict multiclass AD status \cite{zhang2024multiclass,app13148298}.
+Boosting models, are ensemble models that fit several weak learners (such as linear/logistic regression or DTs) sequentially, reweighing the data, and take their weighted majority vote \cite{Friedman2000boosting,Friedman2001gbm}. Eventhough Boosting tends to outperform DTs, it often operates as a \textit{black box} and is poorly interpretable. The state-of-the-art \acrlong{xgb} (\texttt{xgbTree}) of the package \textsf{xgboost} \cite{Chen2016XGBoost:System} was used. Ensemble learners, and \acrshort{xgb} in particular, is also being used to predict multiclass AD status \cite{zhang2024multiclass,app13148298}.\\
 
-% \begin{algorithm}
-% \caption{Multi-class classification of ApoE4 and AD status pipeline} \label{alg:classification}
-%     Fit clinical data only in \acrlong{mnl}\\
-%     Fit clinical data + 230 serum metabolites in \acrlong{mnl}\\
-%     Fit clinical data + 6 meta-metabolites in \acrlong{mnl}\\
-%     Fit clinical data + 6 meta-metabolites in a Decision Tree\\
-%     Fit clinical data + 6 meta-metabolites in an XGBoost\\
-%     Evaluate performance and compare
-% \end{algorithm}
+\leavevmode\newline \textbf{Implementation}\hspace{.25cm} 
+The R package \textsf{caret} streamlined the training and comparison of classification and regression models, offering broad model training and evaluation options, as well as feature importance estimation \cite{Kuhn2008BuildingPackage}. The functions \texttt{trainControl} and \texttt{train} were invoked to fit the models. A sampling method used to handle the unbalanced classes was \acrshort{smote} (Synthetic Minority Over-Sampling Technique), as implemented by the package \textsf{DMwR2} \cite{DMwR2}. Considering the bias-variance trade-off, three models were implemented: multinomial logistic regression (parametric, interpretable), decision tree (non-parametric, sufficiently interpretable), XGBoost (non-parametric, not interpretable).
 
-\leavevmode\newline \textbf{Implementation}\hspace{.25cm} First, a benchmark model was created fitting the clinical background data to predict the target in a penalized \acrshort{mnl} model ($\lambda$ = 0) (Fig. \ref{fig:flow}). Second, the 230-metabolite panel was fitted on top of the clinical background data in a penalized \acrshort{mnl} model ($\lambda$ = 9.187724, obtained from repeated 10-fold Cross-Validation (CV)) and feature importance was calculated using \textsf{caret}'s \texttt{varImp}. Next, the full metabolite panel was projected into 6 latent factors (meta-metabolites), explaining around 30\% of their variance. The 6-factor metabolite projection was then fitted on top of the clinical data in a penalized \acrshort{mnl} ($\lambda$ = 0), a \acrlong{dt} and an XGBoost model. The aforementioned models were hyperparameter-tuned over a grid of values and the best "tune" was selected using repeated (100 times) 10-fold \acrshort{cv}. The full metabolite panel was initially fitted in a \acrshort{dt} and an \acrshort{xgb} as well, but was omitted from further runs, as their added value was deemed small considering that more parsimonious models with only 19 predictors (clinical data + 6 meta-metabolites) would be fitted next.
-\begin{figure}[H]
+First, a benchmark model was created fitting the clinical background data to predict the target in an unpenalized \acrshort{mnl} model ($\lambda$ = 0) (Fig. \ref{fig:flow}). Second, the 230-metabolite panel was fitted on top of the clinical background data in a penalized \acrshort{mnl} model ($\lambda$ = 9.187724, obtained from repeated 10-fold Cross-Validation (CV)) and feature importance was calculated invoking \textsf{caret}'s \texttt{varImp}. Next, the full metabolite panel was projected into 6 latent factors (meta-metabolites), explaining around 30\% of their variance. The number of latent factors was selected assuming four meta-metabolites account for the variance of the four metabolite classes (amines, lipids, organic acids and oxidative stress compounds) while balancing model complexity and cumulative explained variance. The 6-factor metabolite projection was then fitted on top of the clinical data in a unpenalized \acrshort{mnl} ($\lambda$ = 0), a \acrlong{dt} and an XGBoost model. The aforementioned models were hyperparameter-tuned over a grid of values and the best "tune" was selected via repeated (100 times) 10-fold \acrshort{cv}. The full metabolite panel was initially fitted in a \acrshort{dt} and a \acrshort{xgb} as well, but was omitted from further runs, as their added value was deemed small considering that more parsimonious models with only 19 predictors (clinical data + 6 meta-metabolites) would be fitted next.
+\begin{figure}[ht]
   \includegraphics[width=0.9\textwidth]{figures/flowchart.pdf}
-  \caption{\label{fig:flow} Multi-class classification of ApoE4 and AD status pipeline. First, fit a benchmark model: clinical data only in MLR with $\lambda=0$. Second, fit clinical data + 230 metabolites in MLR, hyperparameter tune, use the best $\lambda$, evaluate performance and get feature importance scores. Third, project the 230 metabolites to 6 latent factors (meta-metabolites), fit these on top of the clinical data in MLR and evaluate performance. Fourth, fit the same data in a decision tree, hyperparameter tune, use the best hyperparameters and evaluate performance. Fifth, fit the same data in an \acrfull{xgb}, hyperparameter tune, use the best hyperparameters and evaluate performance. Performance was evaluated for all models using P(Accuracy$<$NIR), AUC, ROC, confusion matrices obtained from repeated (100 times) 10-fold CV.
-  MLR: \acrlong{mnl} \vspace{-20pt}}
-\end{figure}
+  \caption{\label{fig:flow} Multi-class classification of ApoE4 and AD status pipeline. First, fit a benchmark model: clinical data only in MLR with $\lambda=0$. Second, fit clinical data + 230 metabolites in MLR, hyperparameter tune, use the best $\lambda$, evaluate performance and get feature importance scores. Third, project the 230 metabolites to 6 latent factors (meta-metabolites), fit these on top of the clinical data in MLR and evaluate performance. Fourth, fit the same data in a decision tree, hyperparameter tune, use the best hyperparameters and evaluate performance. Fifth, fit the same data in an \acrfull{xgb}, hyperparameter tune, use the best hyperparameters and evaluate performance. Performance was evaluated for all models using P(Accuracy$\geq$NIR), ROC, AUC, confusion matrices obtained from repeated (100 times) 10-fold CV.\\
+  MLR: \acrlong{mnl}}
+\end{figure}\\
 
-\leavevmode\newline \textbf{Evaluation}\hspace{.25cm} The models were then fitted with the optimal hyperparameters. Model performance was assessed and compared with repeated (100 times) 10-fold CV-obtained \acrfull{roc} curves and their respective \acrfull{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as accuracy and \acrfull{nir} from \textsf{caret}'s \texttt{confusionMatrix} output. The confusion matrices were also plotted using the R package \textsf{cvms}.
+\leavevmode\newline \textbf{Evaluation}\hspace{.25cm} The models were fitted with the optimal hyperparameters. Model performance was assessed and compared with repeated (100 times) 10-fold CV-obtained \acrfull{roc} curves and their respective \acrfull{auc} using the \textsf{pROC} package \cite{pROC} and other metrics such as accuracy and \acrfull{nir} from \textsf{caret}'s \texttt{confusionMatrix} output. The confusion matrices were also plotted using the R package \textsf{cvms}.
 
 ROC plots feature sensitivity (recall, true positive rate) \[ sensitivity = \frac{TP}{TP+FN}\] on the y-axis against 1-specificity (false positive rate) 
 \[ specificity = \frac{TN}{FP+TN}\]
@@ -564,29 +560,39 @@ A well-performing classifier has high sensitivity for low false positive rates, 
 Accuracy represents the percentage of correct predictions over all predictions: 
 \[ accuracy = \frac{TP+TN}{TP+FP+TN+FN}\]
 
-NIR is the expected accuracy of a classifier that assigns the most frequent class to all observations \cite{Kuhn2008BuildingPackage}. Considering the correct predictions $k =TP+TN$ as successes over the total of $n$ predictions, a Binomial test was also performed: $H_0: accuracy = NIR$ against $H_\alpha: accuracy \> NIR$. The associated p-value is:
+NIR is the expected accuracy of a classifier that assigns the most frequent class to all observations \cite{Kuhn2008BuildingPackage}. Considering the correct predictions $k =TP+TN$ as successes over the total of $n$ predictions, a Binomial test was also performed: $H_0: accuracy = NIR$ against $H_\alpha: accuracy \geq NIR$. The associated $p$-value is:
 
-\[p = \sum_{k}^n \binom{n}{k} p^k q^{n-k}\]
+\[p = \sum_{k}^n \binom{n}{k} \textrm{NIR}^k (1-\textrm{NIR})^{n-k}\]
 
-where $p=NIR$ and $q=1-NIR$. Under $H_0: p \sim \mathrm{B}(n,p)$. Under $H_\alpha$ p tends to smaller values, in which case the model classifies better than "blindly" assigning the majority class. In other words, it represents the probability that the difference between accuracy and NIR is due to chance \cite{NIR2023}.
+Under $H_0: p \sim \mathrm{B}(n,p)$. Under $H_\alpha,\ p$ tends to smaller values, in which case the model classifies better than "blindly" assigning the majority class. In other words, it represents the probability that the difference between accuracy and NIR is due to chance \cite{NIR2023}.
 
-\subsubsection{Metabolite Network Analysis}\label{rq3}
-Network science offers a unifying framework for data and system representation, applicable to any domain \cite{Barabasi2015NetworkScience}. A network, in an abstract sense, consists of nodes connected with links, also referred to as edges. In data science, a network whose nodes represent random features, whose joint probability distribution is defined by the ensemble of their edges is called \textit{graphical model} \cite{Peeters2022Rags2ridges:Matrices}. A metabolomic covariance correlation network represents the ensemble of metabolites based on their covariance, showing nuances among the samples that non-graphical statistical methods on individual metabolites may fail to detect \cite{PerezDeSouza2020Network-basedInterpretation}. It may provide insights into correlated metabolites that do not belong in the same metabolic pathway \cite{PerezDeSouza2020Network-basedInterpretation}.
+\newpage\subsubsection{Metabolite Network Analysis}\label{rq3}
+Network science presents a unifying framework for data and system representation, applicable to any domain \cite{Barabasi2015NetworkScience}. A network, in an abstract sense, consists of nodes connected with links, also referred to as edges. In data science, a network whose nodes represent random features, whose joint probability distribution is defined by the ensemble of their edges is called \textit{graphical model} \cite{Peeters2022Rags2ridges:Matrices}. A metabolomic covariance correlation network represents the ensemble of metabolites based on their covariance, showing nuances among the samples that non-graphical statistical methods on individual metabolites may fail to detect \cite{PerezDeSouza2020Network-basedInterpretation}. It may provide insights into correlated metabolites that do not belong in the same metabolic pathway \cite{PerezDeSouza2020Network-basedInterpretation}.
 
 
-A \textit{Gaussian graphical model} (\acrshort{ggm}) is an undirected graph that represents the conditional independence properties of the features \cite{KollerProbabilisticTechniques}. The statistic employed by GGMs is the partial correlation which also adjusts for indirect correlation, i.e. two metabolites are correlated with a third one and are shown correlated with each other \cite{Amara2022NetworksInterpretation}. For instance, let $\mathcal{G=(V,E)}$ be a GGM consisting of a set $\mathcal{V}$ of $p$ vertices, corresponding to random features $Y_1,...,Y_p$ with joint probability distribution $P \sim N_p(\mathbf{0, \Sigma})$, and set of edges $\mathcal{E}$, such that for all pairs $\{Y_i , Y_j\}$ with $i\neq j$:
+A \textit{Gaussian graphical model} (\acrshort{ggm}) is an undirected graph that represents the conditional independence properties of the features \cite{KollerProbabilisticTechniques}. The statistic employed by GGMs is the partial correlation which also adjusts for indirect correlation, i.e. two metabolites are correlated with a third one and are shown correlated with each other \cite{Amara2022NetworksInterpretation}. For instance, let $\mathcal{V}$ a set of $p$ vertices, representing random features $Y_1,...,Y_p$ with joint probability distribution $P \sim N_p(\mathbf{0, \Sigma})$, and $\mathcal{E}$ set of edges, then $\mathcal{G=(V,E)}$ is a GGM if for all pairs $\{Y_i , Y_j\}$ with $i\neq j$:
 
-\[ \mathbf{\Sigma}_{ij}^{-1} = (\mathbf{\Omega}_{ij})=0 \Longleftrightarrow Y_i \Perp Y_j\mid\{Y_k : k \neq i,j\} \Longleftrightarrow (i, j) \notin \mathcal{E} \]
+\[ \mathbf{\Sigma}_{ij}^{-1} = (\mathbf{\Omega}_{ij})=0 \Longleftrightarrow Y_i \Perp Y_j\mid\{Y_k : k \neq i,j\} \Longleftrightarrow (i, j) \notin \mathcal{E}.\]
 
-In natural language, a zero value in the inverse covariance matrix (usually referred to as precision matrix $\mathbf{\Omega}$) implies that the respective random features are independent, given the rest of features, and they are not connected by an undirected edge $((i, j) \notin \mathcal{E})$ \cite{Peeters2022Rags2ridges:Matrices}. In this study, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices} was used to generate the feature covariance matrices of ApoE4 carriers and non-carriers with AD, compute their precision matrices, regularise them and represent them in GGMs. Communities of coregulated metabolites were identified using the community search algorithm by Girvan-Newman \cite{PhysRevE.69.026113} as implemented in \textsf{rags2ridges}. \clearpage
+In natural language, a zero value in the inverse covariance matrix (usually referred to as precision matrix $\mathbf{\Omega}$) implies that the respective random features are independent, given the rest of features, and they are not connected by an undirected edge $((i, j) \notin \mathcal{E})$ \cite{Peeters2022Rags2ridges:Matrices}.
+
+For the metabolite network analysis, the package \textsf{rags2ridges} \cite{Peeters2022Rags2ridges:Matrices} was used to generate the feature covariance matrices of ApoE4 carriers and non-carriers with AD. Their precision matrices were \textit{fused} to incorporate information from both groups, regularized with Ridge penalty and sparsified at a local FDR threshold $q=0.999$ using the \texttt{.fused} functions of \textsf{rags2ridges}. The sparsified networks of each group, as well as their differential edges were plotted in GGMs using \texttt{Ugraph}.  Lastly, communities of strongly correlated metabolites were identified using the community search algorithm by Girvan-Newman \cite{PhysRevE.69.026113} as implemented in \textsf{rags2ridges}'s \texttt{Communities}. These metabolite ensembles may reflect actual corregulated metabolite groups.
+
+The network centrality measures (degree, betweenness, eigenvector centrality, number of positive and negative edges, mutual information and (partial) variance) were calculated using \texttt{GGMnetworkStats.fused}. Degree (of centrality) represents  the sum of connected vertices \cite{newman2010Networks}; each neighbouring node receives one "point".  Eigenvector centrality, instead of awarding vertices just one point per neighbour, it gives each vertex a score proportional to the sum of the scores of its neighbours \cite{newman2010Networks}. Betweenness reflects the extent to which a node lies on paths between other vertices \cite{newman2010Networks}. Mutual information represents the amount of information we obtain for a node considering the rest of the nodes. The aforementioned measures aid in highlighting hub (central) metabolites with a regulatory potential. Wilcoxon Signed Rank tests were performed to test for differences between the network statistics and corrected for FDR at 0.05.    \clearpage
 \section{Results} \label{results}
-The ApoE genotype frequencies in \acrshort{ad} and SCD are shown in Table \ref{tab:ApoEfreq}. Cumulatively, the most abundant allele is $\varepsilon_3$ (64\%), followed by $\varepsilon_4$ (30\%) and $\varepsilon_2$ (6\%). In AD, the allelic frequencies were 74.6\% for $\varepsilon_3$, followed by 15.4\% for $\varepsilon_4$ and 10\% for $\varepsilon_2$. In the SCD group, $\varepsilon_3$, $\varepsilon_4$ and $\varepsilon_2$ showed relative frequencies of 53.5\%, 44.5\% and 2\%. The most common genotype was $\varepsilon_3/\varepsilon_3$, followed by $\varepsilon_3/\varepsilon_4$ and $\varepsilon_4/\varepsilon_4$.
-\subsection{ApoE4 dose effects on serum metabolite levels in AD}
-\subsubsection{Global Test}
-Testing for ApoE4 dose-effect on serum metabolites of AD patients, correcting for sex (Ho: ApoE4 dose has no effect on mean metabolite levels, Ha: it has an effect), showed a significant global difference in metabolites (p = 0.017). The most significantly affected metabolites are triglycerides and diglycerides (FDR-adjusted p-value $<$0.05) See Table \ref{tab:gt} and Fig. \ref{plot:gt}. In SCD individuals, the global test showed no significant differences among ApoE4 doses (p=0.544). Generally, fewer metabolites were altered in this group and none of the associations remained significant after adjusting for FDR. Interestingly, the affected metabolites are different between AD and SCD.
+The ApoE genotype frequencies in \acrshort{ad} and SCD are shown in Table \ref{tab:ApoEfreq}. The most common genotype was $\varepsilon_3/\varepsilon_3$, followed by $\varepsilon_3/\varepsilon_4$ and $\varepsilon_4/\varepsilon_4$. Cumulatively, the most abundant allele is $\varepsilon_3$ (64\%), followed by $\varepsilon_4$ (30\%) and $\varepsilon_2$ (6\%). In AD, the allelic frequencies were 74.6\% for $\varepsilon_3$, followed by 15.4\% for $\varepsilon_4$ and 10\% for $\varepsilon_2$. In the SCD group, $\varepsilon_3$, $\varepsilon_4$ and $\varepsilon_2$ showed relative frequencies of 53.5\%, 44.5\% and 2\%. The increased $\varepsilon_4$ (Fig. \ref{plot:sankey}) frequency in SCD patients might reflect compensatory mechanisms in place in this group or an increased risk for AD in the future.
 \begin{figure}[H]
-  \includegraphics[width=0.9\textwidth]{figures/gt2.png}
-    \caption{Covariates plot showing the metabolites affected by the number of ApoE4 alleles in AD. The contribution of each such metabolite is itself a test with p-value against the alternative hypothesis (bottom). The plotted metabolites are ordered in a hierarchical clustering graph (top). The part of the clustering graph in black shows the metabolites and clusters of metabolites that are most clearly associated with ApoE4 dose, correcting for family-wise error rate at 0.05. This can be interpreted as that the multiple testing algorithm employed can confidently infer that at least one of the metabolites below the last significant branch is associated with number of ApoE4 alleles, but it cannot pinpoint with enough confidence which one(s).\vspace{-100pt}}
+  \includegraphics[width=0.7\textwidth]{figures/sankey@2x.png}
+    \caption{\label{plot:sankey} Sankey chart showing the allelic composition of the sample based on the ApoE genotypes in AD (top) and SCD (bottom). ApoE3 is the most common allele, followed by ApoE4 and ApoE2 in both groups. A higher frequency of ApoE4 is observed in the SCD group compared to AD. This is attributted to the higher count of $\varepsilon_3/\varepsilon_4$ and homozygous $\varepsilon_4$.}
+\end{figure}
+
+
+\newpage \subsection{ApoE4 dose effects on serum metabolite levels in AD}
+\subsubsection{Global Test}
+Testing for ApoE4 dose-effects on serum metabolites of AD patients, correcting for sex (Ho: ApoE4 dose has no effect on mean metabolite levels, Ha: it has an effect), showed a significant global difference in metabolites (p = 0.017). The most significantly altered metabolites are triglycerides and diglycerides (FDR-adjusted p-value $<$0.05) See Table \ref{tab:gt} and Fig. \ref{plot:gt}. In SCD individuals, the global test showed no significant differences among ApoE4 doses (p=0.544). Generally, fewer metabolites were altered in this group and none of the associations remained significant after adjusting for FDR. Interestingly, the affected metabolites are different between AD and SCD.
+\begin{figure}[H]
+  \includegraphics[width=0.8\textwidth]{figures/gt2.png}
+    \caption{Covariates plot showing the metabolites affected by the number of ApoE4 alleles in AD. The contribution of each such metabolite is itself a test via p-value against the alternative hypothesis (bottom). The plotted metabolites are ordered in a hierarchical clustering graph (top). The part of the clustering graph in black shows the metabolites and clusters of metabolites that are most clearly associated with ApoE4 dose, correcting for family-wise error rate at 0.05. This can be interpreted as that the multiple testing algorithm employed can confidently infer that at least one of the metabolites below the last significant branch is associated with the number of ApoE4 alleles, without being able to pinpoint with enough confidence which one(s).}
   \label{plot:gt}
 \end{figure}
 \begin{table} 
@@ -700,10 +706,10 @@ Several metabolites from all classes were altered by ApoE4 dose, both in AD and 
 \newpage
 \subsection{Classification of ApoE4 and AD status}
 All classification models had a multi-class ROC \acrshort{auc} above 0.8 and accuracies significantly higher than the No-Information Rate (p$<2.2e^{-16}$) (Table \ref{tab:clin}) in predicting AD without ApoE4, AD with at least 1 ApoE4, SCD without ApoE4, SCD with at least 1 ApoE4. The worst-performing model was  Multinomial Logistic Regression fitting the clinical data only, while the best-performing one was XGBoost fitting the clinical data and the 6 meta-metabolites (obtained from the Latent Factor Projection). Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to slightly increase the discriminatory power of the models.
-Notably, looking at the individual ROC curves (Fig. \ref{roc:full}, \ref{roc:6mlogit} and Appendix \ref{appendixA}), as well as the confusion matrices (Fig. \ref{cm:full} and \ref{cm:xgboost}) all models were able to discriminate better among certain classes (AD+E4 vs. SCD+E4, AD+E4 vs. SCD, AD-E4 vs. SCD+E4 and AD-E4 vs. SCD-E4) compared to others (AD+E4 vs. AD-E4 and SCD+E4 vs. SCD-E4).
+Notably, looking at the individual ROC curves (Fig. \ref{roc:full}, \ref{roc:mlr6} and Appendix \ref{appendixA}), as well as the confusion matrices (Fig. \ref{cm:full} and \ref{cm:xgboost}) all models were able to discriminate better among certain classes (AD+E4 vs. SCD+E4, AD+E4 vs. SCD, AD-E4 vs. SCD+E4 and AD-E4 vs. SCD-E4) compared to others (AD+E4 vs. AD-E4 and SCD+E4 vs. SCD-E4).
 \begin{table}[H]
   \centering
-\caption{Performance metrics of multi-class classification of ApoE4 and AD status, obtained from 10-fold CV repeated 100 times.} 
+\caption{Performance metrics of multi-class classification of ApoE4 and AD status, obtained from 10-fold CV repeated 100 times. The multi-class AUC is the average of the 6 one-vs-one classifications (see ROC curves (Fig. \ref{roc:full}, \ref{roc:xgb} and Appendix \ref{appendixA}) for the binary AUCs)} 
 \label{tab:class_results}
 \begin{threeparttable}
 \begin{tabular}{clllll}\toprule
@@ -715,26 +721,26 @@ Decision Tree & & 0.818 & 0.5082 (0.502, 0.5145) & $<2.2e^{-16}$ &  \\
 XGBoost & & 0.836 & 0.5944 (0.5882, 0.6005) & $<2.2e^{-16}$ &  \\ \bottomrule
 \end{tabular}
 \begin{tablenotes}
-  \item[]  AUC: Area Under the (ROC) Curve, MLR: Multinomial Logistic Regression, NIR: No-Information Rate
+  \item[]  AUC: multi-class Area Under the (ROC) Curve, MLR: Multinomial Logistic Regression, NIR: No-Information Rate
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 \begin{figure}[h]
-  \includesvg[width=0.6\linewidth]{figures/fullmultinom.svg}
+  \includesvg[width=0.5\linewidth]{figures/mlr.svg}
   \caption{\label{roc:full}ROC curves of Multinomial Logistic Regression fitting the 230 metabolites on top of clinical background variables, obtained from repeated (100 times) 10-fold CV. }
 \end{figure} \clearpage
 \begin{figure}[h]
-  \includesvg[width=0.6\linewidth]{figures/6factor.svg}
-  \caption{\label{roc:6mlogit} ROC curves of Multinomial Logistic Regression fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV. }
+  \includesvg[width=0.5\linewidth]{figures/xgb.svg}
+  \caption{\label{roc:xgb} ROC curves of \acrlong{xgb} fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV. }
   \end{figure} 
 \begin{figure}[h]
   \includesvg[width=0.6\linewidth]{figures/cm_mlr.svg}
-  \caption{Confusion matrix showing the true (Target) and predicted (Prediction) classes of Multinomial Logistic Regression fitting the 230 metabolites on top of clinical background variables, obtained from repeated (100 times) 10-fold CV. Each tile displays the \textit{normalized} count (overall percentage) and the count of predicted classes. In the bottom of the tile the \textit{column normalized} count reflects the proportion of the prediction against all predictions per true class. On the right of the tile, the row percentage shows the fraction of the prediction against the rest of true classes. The left diagonal represents the correctly predicted classes (TP and TN).}
+  \caption{Confusion matrix of the true (Target) and predicted (Prediction) classes of Multinomial Logistic Regression fitting the 230 metabolites on top of clinical background variables, obtained from repeated (100 times) 10-fold CV. Each tile displays the \textit{normalized} count (overall percentage) and the count of predicted classes in the middle. In the bottom of each tile the \textit{column normalized} count reflects the proportion of the prediction over all predictions per true class. On the right of the tile, the row percentage shows the fraction of the prediction over the rest of true classes. The diagonal represents the correctly predicted classes (True Positive and True Negative).}
   \label{cm:full}
 \end{figure} \clearpage
 \begin{figure}[ht]
     \includesvg[width=0.6\linewidth]{figures/cm_xgb.svg}
-    \caption{Confusion matrix showing the true (Target) and predicted (Prediction) classes of XGBoost fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV.}
+    \caption{Confusion matrix of the true (Target) and predicted (Prediction) classes of XGBoost fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV.}
   \label{cm:xgboost}
 \end{figure}
 \begin{table}[H] 
@@ -748,85 +754,112 @@ XGBoost & & 0.836 & 0.5944 (0.5882, 0.6005) & $<2.2e^{-16}$ &  \\ \bottomrule
     Organic acid & Uracil         & 91.78  \\
     Lipid & TG (56:0)             & 88.86  \\
     Organic acid & 3.Hydroxybutyric.acid & 87.29  \\
-    Clinical &    Cholesterol medication   & 84.54  \\
+    Clinical & Cholesterol medication   & 84.54  \\
     Amine & Sarcosine             & 83.54  \\
-    Lipid & PE.O. (38:5)           & 81.60  \\
-    Ox. stress & HpH.LPA.C20.5         & 72.43  \\
+    Lipid & PE.O. (38:5)          & 81.60  \\
+    Ox. stress & HpH.LPA.C20.5    & 72.43  \\
     Amine & L-Tryptophan          & 71.34  \\
     Lipid & SM (d18:1/20:1)       & 70.52  \\
-    Amino acid & Glutathione           & 69.96  \\
-    Amino acid & L-Serine              & 69.49  \\
-    Amino acid & L-Histidine           & 69.41  \\
-    Ox. stress & HpH.LPA.C18.0         & 68.81  \\
-    Amino acid & Histamine             & 67.99  \\
-    Amino acid & L-Threonine           & 67.85  \\
-    Amino acid & L-Glutamine           & 67.70  \\
+    Amino acid & Glutathione      & 69.96  \\
+    Amino acid & L-Serine         & 69.49  \\
+    Amino acid & L-Histidine      & 69.41  \\
+    Ox. stress & HpH.LPA.C18.0    & 68.81  \\
+    Amino acid & Histamine        & 67.99  \\
+    Amino acid & L-Threonine      & 67.85  \\
+    Amino acid & L-Glutamine      & 67.70  \\
     Lipid & PC (38:3)             & 65.30  \\
-    Organic acid & Pyruvic.acid          & 64.96 \\ \bottomrule
+    Organic acid & Pyruvic.acid   & 64.96 \\ \bottomrule
 	\end{tabular}
 \end{table}
 The most important metabolites in identifying the four ApoE4 and AD status phenotypes were putrescine, sphingosine 1-phosphate (18:0), uracil, triglyceride (56:0), 3- hydroxybutyric acid, sarcosine, phosphoethanolamine (38:5), LPA (20:5), L-trypthophan, sphingomyelin (d18:1/20:1), glutathione, L-serine, L-histidine, LPA (18:0), histamine, L-threonine, L-glutamine, phosphatidylcholine (38:3), see Table \ref{tab:fimp}. 
 
 \subsection{Metabolite Network Analysis}
-The Gaussian graphical modelling between ApoE4 carriers and non-carriers with AD showed distinct correlations between the metabolites (Fig. \ref{netAD}). The ApoE4 carriers' network was less sparse, having less edges compared to the non-carriers'. Moreover, the communities of covarying metabolites are distinct among the two groups, as shown in Fig. \ref{comms}.
-\begin{figure}[!hb]
-\centerline{\includesvg[width=1.2\textwidth]{figures/NetAD.svg}}
-\caption{\label{netAD} Metabolite precision network topologies among ApoE4 non-carriers (top-left), carriers (top-right) and differential edge network (bottom) in AD.}  
-\end{figure}
+The Gaussian graphical modelling between ApoE4 carriers and non-carriers with AD showed distinct correlations between the metabolites (Fig. \ref{netAD}). The ApoE4 carriers' network was more sparse, having less edges compared to the non-carriers'.  Moreover, the metabolites could be clearly separated in communities based on their covariances in ApoE4 carriers, as shown in Fig. \ref{comms}. The communities found contain similar compounds (phosphatidylcholines, triglycerides, sphingomyelines, prostaglandines) or molecules that share metabolic pathways (amines, amines-organic acids, aspartic-glutamic acid, oxidative stress compounds-lipids). The ApoE4 non-carrier's network appeared less cohesive, with a few amine and organic acid communities.
 
-The Wilcoxon Signed Rank Test showed higher degrees of centrality in ApoE4 carriers compaired to non-carriers (p = 0.001). In the ApoE4 positive group, central metabolites were 1-methylhistidine, citrulline and pyroglutamic acid, followed by asymmetric dimethylarginine (ADMA), symmetric dimethylarginine (SDMA), 2-ketoglutaric acid, uracil, histamine, L-arginine, 5 organic acids, 3 lipids and 2 oxidative stress compounds (Table \ref{tab:degrees}). ApoE4 non-carriers had 3-methylhistidine as top central metabolite, followed by lyso-sphingolipid 1-P(18:1), methoxytyrosine, 3-aminoisobutyric acid, dopamine, putrescine, glutamate and succinate, sphingomyelin (d18:1/21:0) and oxidative stress compound cLPA (18:2).
-
+The Wilcoxon Signed Rank tests revealed most network statistics to be larger in ApoE4 carriers compared to non-carriers (p-values $<$0.05) with AD (Table \ref{tab:netstats}). In the ApoE4 positive group, top central metabolites were amines (dopamine and citrulline) (Table \ref{tab:degrees}). ApoE4 non-carriers had 3-methoxytyrosine as top central metabolite, followed by the oxidative stress compound nitro fatty acid (C18:3).
 \begin{table}[H]
-  \caption{\label{tab:degrees} Central (centrality degreee $>$5) metabolites in ApoE4 carriers and non-carriers with AD.}
+  \caption{\label{tab:netstats} p-values of Wilcoxon Signed Rank test (alternative hypothesis: network statistics of ApoE4 carriers $>$ ApoE4 non-carriers)}
+  \begin{tabular}{lcc}
+  \toprule
+  Statistic & p-value & FDR \\ \midrule
+  Centrality                   & $8.459e^{-26}$ & $1.973e^{-25}$    \\
+  Betweennes                   & $4.110e^{-18}$ & $5.754e^{-18}$    \\
+  Eigenvector Centrality       & $1.366e^{-06}$ & $8.837e^{-06}$    \\
+  Number of negative edges     & $8.837e^{-06}$ & $1.594e^{-06}$    \\
+  Number of positive edges     & $2.712e^{-23}$ & $4.745e^{-23}$    \\
+  Mutual Information           & $4.087e^{-30}$ & $1.603e^{-29}$    \\
+  Variance                     & $4.582e^{-30}$ & $1.603e^{-29}$    \\ \bottomrule
+  \end{tabular}
+  \end{table}
+\clearpage
+\begin{table}[H]
+  \caption{\label{tab:degrees} Top central metabolites in ApoE4 carriers and non-carriers with AD.}
   \begin{threeparttable}
   \begin{tabular}{lclc}\toprule
   \multicolumn{2}{c}{ApoE4 carriers} & \multicolumn{2}{c}{ApoE4 non-carriers} \\
   Metabolite & Degree & Metabolite & Degree \\ \midrule
-  Am.X1.Methylhistidine & 7 & Am.X3.Methylhistidine & 7 \\
-  Am.Citrulline & 7 & Lip.SM.d18.1.20.0. & 6 \\
-  OA.Pyroglutamic.acid & 7 & Am.X3.Methoxytyrosine & 5 \\
-  Am.ADMA & 6 & Am.DL.3.aminoisobutyric.acid & 5 \\
-  Am.SDMA & 6 & Am.Dopamine & 5 \\
-  OA.2.ketoglutaric.acid & 6 & Am.Putrescine & 5 \\
-  OA.Uracil & 6 & OA.Glutamic.Acid & 5 \\
-  Am.Histamine & 5 & OA.Succinic.acid & 5 \\
-  Am.L.Arginine & 5 & Lip.SM.d18.1.21.0. & 5 \\
-  Am.L.Kynurenine & 5 & OS.HpH.cLPA.C18.2 & 5 \\
-  Am.N6.N6.N6.Trimethyl.L.lysine & 5 &  &  \\
-  Am.Putrescine & 5 &  &  \\
-  OA.Lactic.acid & 5 &  &  \\
-  OA.Fumaric.acid & 5 &  &  \\
-  OA.Aspartic.acid & 5 &  &  \\
-  OA.Iminodiacetate & 5 &  &  \\
-  OA.3.hydroxyisovaleric.acid & 5 &  &  \\
-  Lip.PC.36.5. & 5 &  &  \\
-  Lip.SM.d18.1.21.0. & 5 &  &  \\
-  Lip.SM.d18.1.23.0. & 5 &  &  \\
-  OS.HpH.cLPA.C18.2 & 5 &  &  \\
-  OS.cHpH.cLPA.C20.3 & 5 &  & \\ \bottomrule
+  Am.Dopamine                    & 6      & Am.X3.Methoxytyrosine         & 5      \\
+  Am.Citrulline                  & 5      & OS.LpH.NO2.OA                 & 4      \\
+  Am.X3.Methoxytyramine          & 4      & Am.Cysteine                   & 3      \\
+  Am.ADMA                        & 4      & Am.Dopamine                   & 3      \\
+  Am.DL.3.aminoisobutyric.acid   & 4      & Am.Glutathione                & 3      \\
+  Am.Ethanolamine                & 4      & Am.L.Aspartic.acid            & 3      \\
+  Am.L.4.hydroxy.proline         & 4      & Am.X3.Methylhistidine         & 2      \\
+  Am.L.Kynurenine                & 4      & Am.Hydroxylysine              & 2      \\
+  Am.SDMA                        & 4      & Am.L.4.hydroxy.proline        & 2      \\
+  OA.Glycolic.acid               & 4      & Am.L.carnosine                & 2      \\
+  OA.3.Hydroxybutyric.acid       & 4      & Am.Methyldopa                 & 2      \\
+  OA.Aspartic.acid               & 4      & OA.Citric.acid                & 2      \\
+  OA.Glyceric.acid               & 4      & OA.Pyruvic.acid               & 2      \\
+  Lip.TG.56.8.                   & 4      & OA.Aspartic.acid              & 2      \\
+  Lip.SM.d18.1.20.1.             & 4      & OA.Iminodiacetate             & 2      \\
+  OS.LpH.NO2.LA                  & 4      & OA.Uracil                     & 2      \\
+  OS.HpH.PAF.C16.0               & 4      & Lip.TG.60.2.                  & 2      \\
+  OS.HpH.cLPA.C18.2              & 4      & Lip.SM.d18.1.24.0.            & 2      \\
+  Am.X3.Methoxytyrosine          & 3      & OS.LpH.NO2.LA                 & 2      \\
+  Am.X3.Methylhistidine          & 3      & OS.LpH.NO2.aLA                & 2      \\
+  Am.gamma.aminobutyric.acid     & 3      & OS.LpH.PGE2                   & 2      \\
+  Am.Glycine                     & 3      & OS.cLpH.PGA2                  & 2      \\
+  Am.L.2.aminoadipic.acid        & 3      & OS.cLpH.PGF2a                 & 2      \\
+  Am.L.Arginine                  & 3      & Am.X1.Methylhistidine         & 1      \\
+  Am.L.Aspartic.acid             & 3      & Am.Citrulline                 & 1      \\
+  Am.L.homoserine                & 3      & Am.DL.3.aminoisobutyric.acid  & 1      \\
+  Am.N6.N6.N6.Trimethyl.L.lysine & 3      & Am.Ethanolamine               & 1      \\
+  Am.Sarcosine                   & 3      & Am.gamma.aminobutyric.acid    & 1      \\
+  Am.Serotonine                  & 3      & Am.gamma.L.glutamyl.L.alanine & 1      \\
+  OA.Lactic.acid                 & 3      & Am.Glycylglycine              & 1      \\
+  OA.Malic.acid                  & 3      & Am.Histamine                  & 1      \\
+  OA.2.ketoglutaric.acid         & 3      & Am.L.2.aminoadipic.acid       & 1      \\
+  OA.Fumaric.acid                & 3      & Am.L.Alanine                  & 1      \\
+  OA.Pyruvic.acid                & 3      & Am.L.Alpha.aminobutyric.acid  & 1      \\
+  OA.Pyroglutamic.acid           & 3      & Am.L.Asparagine               & 1      \\
+  OA.3.hydroxyisovaleric.acid    & 3      & Am.L.Glutamic.acid            & 1      \\
+  OA.Uracil                      & 3      & Am.L.homoserine               & 1      \\
+  Lip.TG.42.0.                   & 3      & Am.L.Kynurenine               & 1      \\ \bottomrule
   \end{tabular}
 \begin{tablenotes}
-\item[] ADMA: Asymmetric Dimethilarginine, SD, Am: Aminoacid, Lip: Lipid, DG: Diglyceride, LPA: Lyso-sphingolipid, SM: Sphingomyelin, TG: Triglyceride, OA: Organic Acid, OS: Oxidative Stress compound, PC: Phosphatidylcholine, SDMA: Symmetric Dimethilarginine
-  
-\end{tablenotes}
+\item[] ADMA: Asymmetric Dimethilarginine, SD, Am: Aminoacid, Lip: Lipid, DG: Diglyceride, LPA: Lyso-sphingolipid, SM: Sphingomyelin, TG: Triglyceride, OA: Organic Acid, OS: Oxidative Stress compound, PAF: Platelet Activating Factor, PGA2-PGE2: isoprostanes, NO2(a)La: nitro fatty acid, NO2.OA: nitro organic acid, SDMA: Symmetric Dimethilarginine. \end{tablenotes}
 \end{threeparttable}
-  \end{table}
-
+  \end{table} \clearpage
+\begin{figure}[!h]
+  \centerline{\includesvg[width=1.2\textwidth]{figures/NetAD.svg}}
+  \caption{\label{netAD} Metabolite precision network topologies among ApoE4 carriers (top-left), non-carriers (top-right) and differential edge network (bottom) in AD.}  
+  \end{figure}
 \begin{figure}
   \includesvg[width=0.7\textwidth]{figures/comms.svg}
-  \caption{\label{comms} Communities of (densely correlated) metabolites in ApoE4 non-carriers (top) and ApoE4 carriers with AD (bottom).}
+  \caption{\label{comms} Communities of (densely correlated) metabolites in ApoE4 carriers (top) and ApoE4 non-carriers with AD (bottom) representing functional metabolic groups. The metabolome of ApoE4 carriers can be separated in communities, while those of ApoE4 non-carriers are less cohesive.}
 \end{figure}
 
 \clearpage
 \section{Discussion} \label{discuss}
-This study had two objectives: to unveil pathways of systemic metabolic deregulation potentially attributed to ApoE4 (number of alleles or status), and to propose a comprehensive methodology for high-dimensional data analysis in the context of AD. To this end, serum metabolic signatures were assessed among SCD and AD following three approaches: differential expression, multi-class classification and network analysis. Differential expression highlighted metabolites whose levels are shifted by ApoE4 dose. The multi-classs classification reveals metabolites that, on top of clinical background variables, can be fitted to predict ApoE4 and AD status. Metabolite network analysis reveals metabolic interdependencies among ApoE4 carriers and non-carriers in AD. The serum metabolites reported here might serve as a \textit{proxy} of metabolic perturbations in the brain. The metabolites were measured in serum obtained from peripheral blood, an (almost) non-invasive alternative to spinal aspiration for \acrshort{csf}.
+This study had two objectives: to unveil mechanistic links between systematic metabolism and ApoE4 (number of alleles or status) in AD, and to propose a comprehensive omics data analysis methodology. To this end, three serum metabolic signatures were assessed among SCD and AD patients: individual metabolite levels, multi-class classification and network analysis. Individual metabolites were highlighted whose levels were shifted by ApoE4 dose. The multi-classs classification revealed metabolites that, on top of clinical background variables, can be fitted to predict ApoE4 and AD status. Metabolite network analysis unravelled metabolic interdependencies among ApoE4 carriers and non-carriers in AD. The serum metabolites reported here might serve as a \textit{proxy} of metabolic perturbations in the brain. The metabolites were measured in serum obtained from peripheral blood, an (almost) non-invasive alternative to spinal aspiration for \acrshort{csf}.
 
 \subsection{Mechanistic links between ApoE4 dose and serum metabolome in AD}
-The metabolites that emerged from the analysis were generally different among the approaches, and among AD-SCD. Nevertheless, certain metabolites appeared in all, or many of the metabolic signatures. The differential expression signature revealed increased tri- and diglycerides, while the classification and network analysis showed a more pronounced aminic and oxidative stress signature.
+The metabolites that emerged from the analysis were generally different among the approaches, and among AD-SCD. Nevertheless, certain metabolites appeared in all, or many of the metabolic signatures. The differential expression signature -as expected- revealed increased triglycerides and diglycerides, while the classification and network analysis -strikingly- showed a more pronounced aminic and organic acid signature.
 
 A metabolite that appeared in all three metabolic signatures was putrescine: trends of positive ApoE4 dose effects in AD, top metabolite in determining ApoE4 and AD status and central metabolite (5 dependent metabolites regardless of ApoE4 status) in AD. Putrescine appeared increased in a recent study \cite{Ju2021AstrocyticUC}, where it is described as a toxic by-product of activated urea cycle in A$\beta$-reactive astrocytes of AD brains \cite*{Ju2021AstrocyticUC,Wong2022PathogenicP}.
 
-Trends of decreased putrescine and four amino acids with increasing ApoE4 presence were observed in the SCD group: L-serine, L-tryptophan, glycine and L-homoserine. Tryptophan and serine proved also important in predicting ApoE4 and AD status. In the brain, tryptophan is catabolized to kynurenine by the enzymes indoleamine 2,3-dioxygenase and tryptophan 2,3-dioxygenase, through the kynurenine pathway \cite*{Liang2022KynureninePM}. In this study, L-kynurenine was found central in the serum metabolome, branched with five  metabolites. Recent reviews discussed kurenine pathway metabolites to be closely associated with AD pathogenesis \cite{Liang2022KynureninePM,Sharma2022KynurenineMA}. Increased kynurenine pathway metabolites may reflect the extent of neuroinflammation in amyotrophic lateral sclerosis, frontotemporal dementia and early onset AD \cite*{Heylen2023BrainKP}. A whole-blood targeted metabolomics panel also revealed increased kynurenine pathway metabolites \cite{Teruya2021WholebloodMO}. Conversely, L-serine levels appear to be deficient in AD brains due to impaired glycolysis \cite{LeDouce2020ImpairmentOG}. 
+Trends of decreased putrescine and four amino acids with increasing ApoE4 presence were observed in the SCD group: L-serine, L-tryptophan, glycine and L-homoserine. Tryptophan and serine proved also important in predicting ApoE4 and AD status. In the brain, tryptophan is catabolized to kynurenine by the enzymes indoleamine 2,3-dioxygenase and tryptophan 2,3-dioxygenase, through the kynurenine pathway \cite*{Liang2022KynureninePM}. No ApoE4 is positively correlated with L-tryptophan levels in this study, while negatively correlated with 1 or 2 ApoE4 alleles. This could be potentially explained by increased catabolism via the kynurenine pathway. In this study, L-kynurenine was found central in the serum metabolome of ApoE4 carriers with AD, branched with five  metabolites. Recent reviews discussed kynurenine pathway metabolites to be closely associated with AD pathogenesis \cite{Liang2022KynureninePM,Sharma2022KynurenineMA}. Increased kynurenine pathway metabolites may reflect the extent of neuroinflammation in amyotrophic lateral sclerosis, frontotemporal dementia and early onset AD \cite*{Heylen2023BrainKP}. A whole-blood targeted metabolomics panel also revealed increased kynurenine pathway metabolites \cite{Teruya2021WholebloodMO}. Conversely, L-serine levels appear to be deficient in AD brains due to impaired glycolysis \cite{LeDouce2020ImpairmentOG}. 
 
 Ketoglutarate showed trends of decreased levels with increasing ApoE4 presence in the global test and the ANCOVA F-tests exclusively in the AD group. The metabolite network analysis revealed it is also a central metabolite, driving the variance of six other metabolites. In the brain, the $\alpha$-ketoglutarate dehydrogenase complex is perceived as a "hub of plasticity in neurodegeneration and regeneration", as it reflects the impaired glucose metabolism and key enzymes of the tricarboxylic acid cycle \cite*{Hansen2022TheD}.
 
@@ -837,24 +870,24 @@ The nested linear model comparison did not reveal any significant ApoE4 dose eff
 
 \subsubsection{What is the (added) classification potential of serum metabolites in predicting ApoE4 and AD
 status?}
-Serum metabolic information, in the form of a semi-targeted metabolomic panel or its latent 6-factor projection seems to slightly increase the classification performance of the models. The added performance, however is minor. As expected, \acrshort{xgb} performed better than the multinomial logistic regression on the same data. Interestingly, all models discriminated better among certain classes (AD+E4 vs. SCD+E4, AD+E4 vs. SCD, AD-E4 vs. SCD+E4 and AD-E4 vs. SCD-E4) compared to others (AD+E4 vs. AD-E4 and SCD+E4 vs. SCD-E4). This can be putatively attributed to the class imbalance between AD+E4 (n = 34) and AD (n = 86), as well as SCD+E4 (n = 87) and SCD (n = 40). It might also show that the metabolic nuances among ApoE4 carriers and non-carriers are not as pronounced as among AD and SCD.
+Serum metabolic information, in the form of a semi-targeted metabolomic panel or its latent 6-factor projection seems to slightly increase the classification performance of the models. The added performance, however, is minor. As expected, \acrshort{xgb} performed marginally better than the multinomial logistic regression on the same data, at the cost, however, of a great loss in interpretability. Interestingly, all models discriminated better among certain classes (AD+E4 vs. SCD+E4, AD+E4 vs. SCD, AD-E4 vs. SCD+E4 and AD-E4 vs. SCD-E4) compared to others (AD+E4 vs. AD-E4 and SCD+E4 vs. SCD-E4). This can be putatively attributed to the class imbalance between AD+E4 (n = 34) and AD (n = 86), as well as SCD+E4 (n = 87) and SCD (n = 40). It might also show that the metabolic nuances among ApoE4 carriers and non-carriers are not as pronounced as among AD and SCD.
 
 Each of the top four metabolites in delineating ApoE4 and AD status belonged to one of the major metabolite classes studied: amines (putrescine), oxidative stress compounds (sphingosine-1-phosphate (C18:0)), organic acids (uracil) and lipids (TG (56:0)). Perturbations in sphingolipid metabolism are observed in AD \cite{mielke2010alterations}, even in the stage of MCI \cite{den2023sphingolipids}. \Citeauthor{den2023sphingolipids} reported increased sphingosine-1-phosphate in CSF and plasma of homozygous ApoE4 carriers \cite{den2023sphingolipids}. Another recent study highlights sphingolipids and especially sphingosine-1-phosphate as diagnostic markers for AD \cite{d2022sphingolipid}.
 
 \subsubsection{How do the metabolite network topologies differ between ApoE4 carriers and non-carriers?}
-The metabolite precision network of ApoE4 carriers was more random and less cohesive compared to ApoE4 non-carriers, in line with \citeauthor{deLeeuw2017Blood-basedDisease}'s findings. Amines and amino acids are the top central metabolites in both groups, followed by organic acids. 1-methylhistidine was the top central metabolite in ApoE4 carriers, while 3-methylhistidine in ApoE4 non-carriers. Both compounds are produced by methylation of the amino acid histidine at different positions. A recent metabolomics analysis revealed disturbances in methylhistidine metabolism in AD \cite{kalecky2022targeted}.
+The GGMs revealed largely different metabolite network topologies between ApoE4 carriers and non-carriers. The metabolite network of ApoE4 carriers was less cohesive compared to non-carriers', in line with \citeauthor{deLeeuw2017Blood-basedDisease}'s findings. Further, the metabolite communities of the first include either molecules of the same biochemical subclass (e.g. phosphatidylcholines, sphingomyelines) or molecules sharing metabolic pathways (amines-organic acids, lipids-oxidative stress compounds) and might reflect functional groups. All the calculated metabolite network statistics were significantly larger in ApoE4 carriers compared to non-carriers. Amines are the top central metabolites in ApoE4 carriers, followed by organic acids. Dopamine was the most central metabolite in ApoE4 carriers. In this regard, evidence shows decreased dopaminergic neurotransmitters in AD \cite{shaikh2023targeting,pan2019dopamine}.
 
-\subsection{Strengths and Limitations} This analytical study was based on -and thus enabled by- detailed and unique datasets in AD research. The $n = 247$ subjects included in this study were screened for AD biomarkers in CSF, possible comorbidities, as well as several other risk factors. The clinical data alone were able to predict ApoE4 and AD status with an AUC of 81\%. In this regard, another strength of this study is the comprehensive and efficient methodology it presents for -omics data analysis. The employed statistical methods here comprise a state-of-the-art analytical framework for metabolomics (or any -omics) data to extract insights or assist diagnostic processes of neurodegenerative diseases. An innovation of this study is the use of a four-class target (outcome, response) in classification models, instead of a binary one (AD yes or no). In this sense, the multi-class classification models predicting ApoE4 and AD status performed on par, either fitting the 230 metabolites or six meta-metabolites accounting for $\sim$30\% of their variance, obtained with \textsf{FMradio}. Thus, the latter is reported as a powerful package for dimension reduction, that still retains important variance in the data, even with very low-dimension outputs.
+\subsection{Strengths and Limitations} This analytical study was based on -and thus enabled by- uniquely detailed datasets in AD research. The $n = 247$ subjects included in this study were screened for AD biomarkers in CSF, possible comorbidities, as well as several other risk factors. The clinical data alone were able to predict ApoE4 and AD status with an AUC of 81\%. In this regard, another strength of this study is the comprehensive and efficient methodology it presents for -omics data analysis. The employed statistical methods here comprise a state-of-the-art analytical framework for metabolomics (or any -omics) data to extract insights or complement diagnostic protocols. An innovation of this study is the use of a four-class target (outcome, response) in classification models, instead of a binary one (AD yes or no). To reach a high multi-class AUC, all the binary AUCs should be large. In this sense, the multi-class classification models predicting ApoE4 and AD status reached similar AUCs, either fitting the 230 metabolites (in multinomial logistic regression) or six meta-metabolites accounting for $\sim$30\% of their variance (in \acrlong{xgb}).
 
-AD is a complex and multifaceted disease with several proposed pathophysiological mechanisms. Hence, focusing on links between ApoE4 (status or dose) and serum metabolome in AD provides a limited view of the underlying pathologies at brain. In this sense, gaining insights in ApoE genotype effects on an untargeted metabolomics panel might prove more informative. Nevertheless, the relative genotype counts did not allow further analysis without grouping. Further, the metabolites were measured in blood -rather than CSF- which only reveals metabolic perturbations at systemic level. Another limitation is the fact that the metabolomics data were semi-target, thus several potentially important metabolites were not measured. Additionally, the significantly increased tri- and diglycerides in the global test might be attributed to hypertriglyceremia (that often coexists with hypercholesterolemia) and was not measured in this study. Moreover, it is important to note that the SCD group in the data is not a \textit{control} group, as subjects with varying degrees of cognitive impairment were included, who might develop AD or another neurodegenerative disease later.
+AD is a complex and multifaceted disease with several proposed pathophysiological mechanisms. Hence, focusing on links between ApoE4 (status or dose) and serum metabolome in AD provides a limited view of the underlying pathologies at brain level. In this sense, gaining insights in ApoE genotype effects via an untargeted metabolomics panel might prove more informative. Nevertheless, the relative genotype counts did not allow further analysis without grouping. Further, the metabolites were measured in blood -rather than CSF- which only reveals metabolic perturbations at systematic level. Another limitation is the fact that the metabolomics data were semi-target, thus several potentially important metabolites were not measured. Additionally, the significantly increased tri- and diglycerides in the global test might be attributed to hypertriglyceremia (that often coexists with hypercholesterolemia) and was not measured in this study. Moreover, it is important to note that the SCD group in the data is not a \textit{control} group, but it represented subjects with varying degrees of subjective cognitive impairment, who might or  might not develop AD or another neurodegenerative disease at later stages. Lastly, another limitation of the study is that the blood samples were obtained without prior fasting.
 
 \subsection{Future directions}
-The metabolites reported in this study (putrescine and sphingosine 1-phosphate) can be targeted in cohort studies to measure their levels in CSF and blood, throughout the AD continuum. In an effort to further elucidate molecular mechanisms implicated in AD development, further research should integrate other -omics data, over time. Such studies might provide additional stage-dependent AD biomarkers that can then be monitored in large-scale cohorts. Regarding the ApoE4 lipoprotein, it could be insightful to measure its levels in CSF and serum in different stages of AD, while considering other risk factors that modify its increased LOAD risk (ancestry, sex, or other inherited gene variants). Moreover, to allow further assessment of its effects it is recommended to stratify per ApoE4 gene dose, status, or ApoE genotype during participant selection and sampling. Lastly, it could be insightful for disease predicting models to integrate as many of the reported AD-related biomarkers as possible. In this fashion, their relative diagnostic potential can be assessed.
+The metabolites reported in this study (putrescine and sphingosine 1-phosphate) can be targeted in cohort studies to measure their levels in CSF and blood, throughout the AD continuum. In an effort to further elucidate molecular mechanisms implicated in AD development, further research should integrate other -omics data, over time. Such studies might provide additional stage-dependent AD biomarkers that can then be monitored in large-scale cohorts. Regarding the ApoE4 lipoprotein, it could be insightful to measure its levels in CSF and serum in different stages of AD, while considering other risk factors that modify the increased LOAD risk (ancestry, sex, or other inherited gene variants). Moreover, to allow further assessment of its effects, it is recommended to stratify per ApoE4 gene dose, status, or ApoE genotype during participant selection and sampling. Lastly, it could be insightful for disease predicting models to integrate as many of the reported AD-related biomarkers as possible. In this fashion, their relative diagnostic potential can be assessed.
 
-Multi-class classification models in differential diagnosis support should be preferred to binary, as they allow a plurality of disease outcomes and better reflect reality. The R package \textsf{globaltest} offers a simple but robust approach to test for differences in metabolites (or any biological high-dimentional data) attributed to a (multi-class) clinical feature -e.g. number of ApoE4 alleles. Even though \textsf{caret} is not the newest package for classification and regression pipelines in R, it is very simple, intuitive, well documented and maintained and is thus recommended for statistical learning research. Further, \textsf{rags2ridges} is an excellent package for single and fused precision network analysis and Gaussian graphical modelling, able to unravel metabolites (or features in general) with regulatory potential.
+\subsubsection{Statistical Analysis}Multi-class classification models in differential diagnosis support should be preferred to binary, as they can predict a plurality of disease outcomes and better reflect reality. The R package \textsf{globaltest} offers a simple but robust approach to test for nuances in metabolite levels (or any biological high-dimentional data) attributed to a (multi-class) clinical feature -e.g. number of ApoE4 alleles. Even though \textsf{caret} is not the newest package for classification and regression pipelines in R, it is very simple, intuitive, well documented and maintained and is thus recommended for statistical learning research.
 \clearpage
 \section{Conclusion} \label{concl}
-Serum metabolome is reported to be shifted by ApoE4 presence or dose. The multi-class classification of ApoE4 status and AD, as well as the metabolite network analysis provide additional insights into peripheral metabolic perturbations. Tri- and diglycerides seem to be increased with increasing number of ApoE4 alleles in AD. The added classification potential of serum metabolome in identifying ApoE4 and AD status is small. However, putrescine was the top metabolite in delineating ApoE4 and AD status and might be insightful to assess its levels in CSF throughout the AD continuum. Finally, methylhistidine isomers seem to be the most central, and putatively regulatory metabolites in AD, regardless of ApoE4 status. Further research is needed to validate these findings in CSF and \textit{post-mortem} brain tissue. 
+The serum metabolome is reported to be shifted by ApoE4 presence or dose. The multi-class classification of ApoE4 status and AD, as well as the metabolite network analysis provide additional insights into metabolic perturbations in the periphery. Tri- and diglycerides seem to be increased with increasing number of ApoE4 alleles in AD. The added classification potential of serum metabolome in identifying ApoE4 and AD status is small, but significant. Nevertheless, putrescine was the top metabolite in predicting ApoE4 and AD status, and thus might be worthwhile to assess in CSF at different stages of AD progression. Finally, the metabolite network analysis revealed distinct constellations of metabolites between ApoE4 carriers and non-carriers: metabolites of ApoE4 carriers could be grouped in communities of correlated metabolites, while among ApoE4 non-carriers not. Dopamine seems to be the most central metabolite in ApoE4 carriers with AD. Nevertheless, further investigation is needed to validate these findings, both in CSF and \textit{post-mortem} brain tissues of AD patients, as well as in age-matched healthy controls having ApoE4 allelic presence, in service of a control group. 
 %--------------- Main matter ----------------------------------------
 %--------------------------------------------------------------------
 
@@ -871,22 +904,23 @@ Serum metabolome is reported to be shifted by ApoE4 presence or dose. The multi-
 \clearpage
 \section{Multiclass ROC curves} \label{appendixA}
 \begin{figure}[htb]
-  \includesvg[width=0.75\textwidth]{figures/bench.svg}
+  \includesvg[width=0.6\textwidth]{figures/bench.svg}
   \caption{ROC curves of benchmark model: Multinomial Logistic Regression fitting the clinical background features only, obtained from repeated (100 times) 10-fold CV.}
   \label{roc:bench}
 \end{figure}
-\begin{figure}[htb]
-\includesvg[width=.75\textwidth]{figures/tree.svg}
-\caption{ROC curves of Decision Tree fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV}
-\label{roc:tree}
-\end{figure}
-\begin{figure}
-\includesvg[width=.75\textwidth]{figures/xgb.svg}
-\caption{ROC curves of Xtreme Gradient Booster fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV}
-\label{roc:xgb}
+\begin{figure}[!h]
+\includesvg[width=.6\textwidth]{figures/mlr6.svg}
+\caption{ROC curves of \acrlong*{mnl} fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV.}
+\label{roc:mlr6}
 \end{figure}
 
-\clearpage
+\begin{figure}[htb]
+\includesvg[width=.6\textwidth]{figures/tree.svg}
+\caption{ROC curves of Decision Tree fitting the 6 ML-estimated latent factors on top of the clinical background variables, obtained from repeated (100 times) 10-fold CV.}
+\label{roc:tree}
+\end{figure}
+
+\clearpage  
 \section{R Session Information} \label{appendixB}
 
 \begin{verbatim}
@@ -918,7 +952,7 @@ other attached packages:
 [22] e1071_1.7-14            cvms_1.6.0 
 
 loaded via a namespace (and not attached):
- [1] splines_4.3.2           bitops_1.0-7            tibble_3.2 1                              
+ [1] splines_4.3.2           bitops_1.0-7            tibble_3.2.1                              
  [4] XML_3.99-0.16           lifecycle_1.0.4         globals_0.16.2                            
  [7] magrittr_2.0.3          Hmisc_5.1-1             rmarkdown_2.25                        
 [10] lubridate_1.9.3         zlibbioc_1.48.0         sfsmisc_1.1-16                                 
@@ -970,5 +1004,5 @@ loaded via a namespace (and not attached):
 \end{document}
 
 
-
+% add interpretability in classification performance
 % This is a template for a thesis at Biometris created by C.F.W. Peeters in 2021 
