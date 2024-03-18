@@ -1,7 +1,7 @@
 ---
 title: "ApoE4 dose effects on serum metabolome in Alzheimer's Disease"
 subtitle: "a Data Science approach"
-author: "George Miliarakis, MSc Thesis"
+author: "George Miliarakis, MSc Thesis results"
 date: "18-03-2024"
 output:
     tufte::tufte_html: default
@@ -221,7 +221,7 @@ Xclin <- cbind.data.frame(X, clin_dummy)
 ctrl <- trainControl(
   method = "repeatedcv",
   number = 10,
-  repeats = 1,
+  repeats = 100,
   savePredictions = "final",
   classProbs = T,
   summaryFunction = multiClassSummary,
@@ -353,13 +353,11 @@ aucs
 ```
 Observations:
 
-1. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to increase the discriminatory power of the models.  
+1. Adding serum metabolite information (either the full 230-metabolite matrix or its 6-factor projection) seems to slightly increase the discriminatory power of the models. 
 
+2. Fitting 6 ML-estimated factors obtained by the FMradio package (cummulatively explaining 30% of variace) yields slightly increased classification performance.
 
-2. Fitting 6 ML-estimated factors obtained by the FMradio package (cummulatively explaining 30% of variace) yields increased classification performance, serving as a valuable dimension reduction technique for high-dimensional data.
-
-
-3. Looking at the confusion matrix and individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/AD-E4 and SCD+E4/SCD-E4).
+3. Looking at the confusion matrices and individual ROC curves, all models were able to discriminate better among certain classes (AD+E4/SCD+E4, AD+E4/SCD, AD-E4/SCD+E4 and AD-E4/SCD-E4) compared to others (AD+E4/AD-E4 and SCD+E4/SCD-E4).
 
 
 ## Metabolite Covariance Network Analysis in AD
@@ -412,7 +410,14 @@ P0s <- sparsify.fused(Ps,
   FDRcut = 0.9999
 )
 ```
-GGMs showing distinct metabolic compositions among ApoE4 carriers (left), non-carriers(middle) and the differential edges (right).
+The Gaussian graphical modelling between ApoE4 carriers and non-
+carriers with AD unveiled distinct correlations between the metabolites. The ApoE4 carriers’
+network was more sparse, having less edges compared to the non-carriers’. Moreover, the metabolites
+could be clearly separated in communities based on their covariances in ApoE4 carriers, as shown in
+The communities found contain similar compounds (phosphatidylcholines, triglycerides, sphin-
+gomyelines, prostaglandines) or molecules that share metabolic pathways (amines, amines-organic acids,
+aspartic-glutamic acid, oxidative stress compounds-lipids). The ApoE4 non-carrier’s network appeared less
+cohesive, with only a few small aminic and organic acid communities.
 ```{r GGMs per class and diff, message=FALSE, results = FALSE}
 # Merge the sparse high precision matrices
 TST <- Union(P0s$S1$sparseParCor, P0s$S2$sparseParCor)
@@ -434,24 +439,6 @@ Coords <- Ugraph(PCE4YES,
   Vcolor = Colors, prune = FALSE, Vsize = 5, Vcex = 0.3, cut = 0.5,
   main = "ApoE4 carriers with AD"
 )
-# plot(NULL, xaxt = "n", yaxt = "n", bty = "n", ylab = "", xlab = "", xlim = 0:1, ylim = 0:1)
-# legend("topleft",
-#   legend = c(
-#     "Amines, aminoacids", "Organic Acids", "Lipids",
-#     "Oxidative stress compounds"
-#   ), pch = 16, pt.cex = 3, cex = 1.5, bty = "n",
-#   col = c("pink", "lightblue", "yellow", "grey")
-# )
-
-
-# names <- c("ApoE4 non-carrier edges", "ApoE4 carrier edges", "positive partial cor.", "negative partial cor.")
-# clrs <- c("red", "green", "black", "black")
-# ltype <- c(1, 1, 1, 2)
-# plot(NULL, xaxt = "n", yaxt = "n", bty = "n", ylab = "", xlab = "", xlim = 0:1, ylim = 0:1)
-# legend("topleft",
-#   title = "", legend = names, lty = ltype, lwd = 2, cex = 1.5,
-#   bty = "n", col = clrs
-# )
 # Plot the sparsified ridge matrix of ApoE4 non-carriers with AD
 Ugraph(PCE4NO,
   type = "fancy", lay = NULL, coords = Coords,
@@ -492,8 +479,11 @@ DegreesE4no <- as.data.frame(NetStatsE4no[, 1], row.names = row.names(NetStatsE4
 head(DegreesE4yes[order(DegreesE4yes[, 1], decreasing = TRUE), , drop = FALSE], 20)
 head(DegreesE4no[order(DegreesE4no[, 1], decreasing = TRUE), , drop = FALSE], 20)
 ```
-### Network statistics
-Wilcoxon Signed Rank test between the network statistics of ApoE4 carriers and non-carriers. The test shows distinct centrality degrees and average number of negative and positive edges.
+### Network centrality measures
+The Wilcoxon Signed Rank tests revealed most network statistics to be larger in ApoE4 carriers compared
+to non-carriers (p-values <0.05) with AD (Table 7). In the ApoE4 positive group, top central metabolites
+were amines (dopamine and citrulline) (Table 8). ApoE4 non-carriers had 3-methoxytyrosine as top central
+metabolite, followed by the oxidative stress compound nitro fatty acid (C18:3)
 ```{r wilcoxon rank sum }
 # Perform a Wilcoxon signed rank test
 w <- furrr::future_map2(NetStatsE4yes[, 1:7], NetStatsE4no[, 1:7], ~ {
