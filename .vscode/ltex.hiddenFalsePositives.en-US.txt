@@ -1,2 +1,0 @@
-{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Q[backend=biber, style=nature, maxcitenames=1, mincitenames=1, safeinputenc] biblatex\\E$"}
-{"rule":"MORFOLOGIK_RULE_EN_US","sentence":"^\\Q[mathcal]\\E$"}
